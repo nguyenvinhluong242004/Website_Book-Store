@@ -1,0 +1,29 @@
+* {
+    box-sizing: border-box;
+  }
+  #root {
+    width: 100%;
+  
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .ctn-row{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  
+    margin-bottom: 50px;
+  }
+  
+  .notification {
+    padding: 3px;
+    background-color: rgb(1, 137, 255);
+  
+    display: flex;
+    justify-content: center;
+    
+    font-weight: bold;
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+  }

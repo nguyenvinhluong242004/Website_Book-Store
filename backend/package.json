@@ -1,0 +1,22 @@
+{
+  "name": "website_book-store",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nguyenvinhluong242004/Website_Book-Store.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nguyenvinhluong242004/Website_Book-Store/issues"
+  },
+  "homepage": "https://github.com/nguyenvinhluong242004/Website_Book-Store#readme",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
