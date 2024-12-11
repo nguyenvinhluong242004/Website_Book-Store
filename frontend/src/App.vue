@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import "./app-css/app.css"; // Import file CSS vào App.vue
+import "./app-css/app.css"; 
 
 import HeaderApp from "./components/vue-component/HeaderApp.vue";
 import NavApp from "./components/vue-component/NavApp.vue";
@@ -42,16 +42,16 @@ export default {
   //   },
   // },
   mounted() {
-    // Lấy dữ liệu từ file JSON khi component được mount
+ 
     fetch("/DATABASE/data.json")
-      .then((response) => response.json()) // Chuyển đổi dữ liệu thành đối tượng JavaScript
+      .then((response) => response.json()) 
       .then((data) => {
         this.notification = data.notification;
         
         this.categories = data.categories;
         this.subcategories = data.subcategories;
       })
-      .catch((error) => console.error("Có lỗi xảy ra:", error)); // Xử lý lỗi nếu có
+      .catch((error) => console.error("Có lỗi xảy ra:", error));
   },
 };
 </script>
