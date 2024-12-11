@@ -57,9 +57,9 @@ export default {
 //     },
 //   },
   mounted() {
-    // Lấy dữ liệu từ file JSON khi component được mount
+
     fetch("/DATABASE/data.json")
-      .then((response) => response.json()) // Chuyển đổi dữ liệu thành đối tượng JavaScript
+      .then((response) => response.json()) 
       .then((data) => {
         this.posters = data.posters;
         this.products_top = data.products_top;
@@ -72,9 +72,7 @@ export default {
         this.poster_family = data.poster_family;
         this.poster_literature = data.poster_literature;
       })
-      .catch((error) => console.error("Có lỗi xảy ra:", error)); // Xử lý lỗi nếu có
-
-     
+      .catch((error) => console.error("Có lỗi xảy ra:", error)); 
   },
 };
 </script>
