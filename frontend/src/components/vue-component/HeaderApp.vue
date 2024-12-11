@@ -1,7 +1,9 @@
 <template>
   <div class="header">
     <div class="grid-item-logo">
-      <i class="fas fa-book"></i>
+
+      <router-link to="/"> <i class="fas fa-book"></i></router-link>
+     
       <div class="logo">BÁCH KHOA SÁCH</div>
     </div>
     <div class="grid-item-search">
@@ -48,13 +50,14 @@
         <i class="fas fa-shopping-cart"></i>
       </div>
       <div class="iconUser">
-        <i class="fas fa-user" @click="userClick"></i> 
+        <router-link to="/account"><i class="fas fa-user"></i> </router-link> 
+        <!-- <i class="fas fa-user" @click="userClick"></i>  -->
         <div v-if="userVisible" class="userBox">
           <div class="userBoxHeader">
             <div class="userInfor">
               <div class="userAvatar"></div>
               
-              <div class="userName"><router-link to="/account">Chitiet</router-link></div>
+              <div class="userName">Chitiet</div>
 
             </div>
             <i class="fa-solid fa-angle-right"></i>
