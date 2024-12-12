@@ -414,7 +414,7 @@
 <script>
 import "../css-component/profile.css";
 export default {
-  name: "ProfileTabs",
+  name: "ProfileUser",
   data() {
     return {
       activeTab: "fav", // Tab mặc định
