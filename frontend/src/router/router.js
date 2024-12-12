@@ -3,6 +3,7 @@ import DetailAccount from "../components/vue-component/DetailAccount.vue";
 import Home from "../components/vue-component/Home.vue";
 import Register from "../components/vue-component/Register.vue";
 import Profile from "../components/vue-component/Profile.vue";
+import Book from "../components/vue-component/Book.vue";
 
 
 const routes = [
@@ -10,6 +11,7 @@ const routes = [
   { path: "/account", component: DetailAccount, name: "DetailAccount" },
   { path: "/register", component: Register, name: "Register" },
   { path: "/profile", component: Profile, name: "Profile" },
+  { path: "/book", component: Book, name: "Book" },
 ];
 
 
