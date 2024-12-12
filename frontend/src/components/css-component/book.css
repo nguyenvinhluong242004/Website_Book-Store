@@ -1,0 +1,76 @@
+.book-container{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 50%;
+    width: 90%;
+    height: 2500px;
+    background-color: beige;
+    transform: translateX(-50%);
+    border-radius: 10px;
+}
+.book-name{
+    font-size: 30px;
+    font-weight: bold;
+
+}
+.book-view-intro{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.bool-col-slide{
+    width: 60%;
+    background-color: red;
+}
+.book-col-price{
+    width: 40%;
+    background-color: rgb(167, 167, 53);
+}
+.book-col-infor{
+    width: 40%;
+    background-color: aquamarine;
+}
+.book-infor-product{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    width: 200px;
+    height: 50px;
+    color: rgb(0, 149, 255);
+    font-size: 20px;
+    background-color: rgb(255, 255, 255);
+    font-weight: bold;
+    border: 2px,rgb(0, 0, 0),solid;
+    border-radius: 5px;
+}
+.book-see-more{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    width: 200px;
+    height: 30px;
+    border:2px,rgb(0, 0, 0),solid;
+    border-radius: 5px;
+}
+.book-text-book{
+    width: 50%;
+
+}
+.book-review{
+    width: 45%;
+    height: 1000px;
+    background-color: rgb(125, 125, 125);
+}
+.book-same{
+    width: 45%;
+    height: 1000px;
+    background-color: rgb(36, 36, 36);
+}
+.book-row-bot{
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    gap: 5%;
+}
