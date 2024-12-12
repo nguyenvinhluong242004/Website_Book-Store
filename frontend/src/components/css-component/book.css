@@ -1,76 +1,125 @@
-.book-container{
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-left: 50%;
-    width: 90%;
-    height: 2500px;
-    background-color: beige;
-    transform: translateX(-50%);
-    border-radius: 10px;
+.book-container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 50%;
+  width: 90%;
+  height: 2500px;
+  background-color: beige;
+  transform: translateX(-50%);
+  border-radius: 10px;
 }
-.book-name{
+.book-name {
+  font-size: 30px;
+  font-weight: bold;
+}
+.book-view-intro {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.bool-col-slide {
+  width: 60%;
+  background-color: rgb(82, 82, 82);
+}
+.book-col-price {
+  width: 40%;
+  background-color: rgb(167, 167, 53);
+}
+.book-col-infor {
+  width: 40%;
+  background-color: aquamarine;
+}
+.book-infor-product {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  width: 200px;
+  height: 50px;
+  color: rgb(0, 149, 255);
+  font-size: 20px;
+  background-color: rgb(255, 255, 255);
+  font-weight: bold;
+  border: 2px, rgb(0, 0, 0), solid;
+  border-radius: 5px;
+}
+.book-see-more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  width: 200px;
+  height: 30px;
+  border: 2px, rgb(0, 0, 0), solid;
+  border-radius: 5px;
+}
+.book-text-book {
+  width: 50%;
+}
+.book-review {
+  width: 45%;
+  height: 1000px;
+  background-color: rgb(125, 125, 125);
+}
+.book-same {
+  width: 45%;
+  height: 1000px;
+  background-color: rgb(36, 36, 36);
+}
+.book-row-bot {
+  margin-top: 100px;
+  display: flex;
+  justify-content: center;
+  gap: 5%;
+}
+.book-flex-slide {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  transition: transform 0.5s ease;
+}
+.book-view-frame {
+  width: 300px;
+  overflow: hidden;
+}
+.book-body-slide {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  gap:50px;
+  align-items: center;
+}
+.book-small-img {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.book-body-small {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.book-highlight {
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.book-highlight.active {
+  border: 2px solid #007bff; 
+}
+.book-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    color:rgb(147, 147, 147);
     font-size: 30px;
     font-weight: bold;
-
+    border-radius: 50px;
 }
-.book-view-intro{
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-.bool-col-slide{
-    width: 60%;
-    background-color: red;
-}
-.book-col-price{
-    width: 40%;
-    background-color: rgb(167, 167, 53);
-}
-.book-col-infor{
-    width: 40%;
-    background-color: aquamarine;
-}
-.book-infor-product{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 50px;
-    width: 200px;
-    height: 50px;
-    color: rgb(0, 149, 255);
-    font-size: 20px;
-    background-color: rgb(255, 255, 255);
-    font-weight: bold;
-    border: 2px,rgb(0, 0, 0),solid;
-    border-radius: 5px;
-}
-.book-see-more{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    width: 200px;
-    height: 30px;
-    border:2px,rgb(0, 0, 0),solid;
-    border-radius: 5px;
-}
-.book-text-book{
-    width: 50%;
-
-}
-.book-review{
-    width: 45%;
-    height: 1000px;
-    background-color: rgb(125, 125, 125);
-}
-.book-same{
-    width: 45%;
-    height: 1000px;
-    background-color: rgb(36, 36, 36);
-}
-.book-row-bot{
-    margin-top: 100px;
-    display: flex;
-    justify-content: center;
-    gap: 5%;
+.book-btn:hover{
+    color:rgb(0, 0, 0);
+    background-color: rgb(114, 113, 113);
 }
