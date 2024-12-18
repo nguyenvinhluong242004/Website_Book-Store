@@ -4,6 +4,7 @@ const express = require('express'); // Web framework cho Node.js
 const morgan = require('morgan'); // Module ghi log
 // const passport = require('passport'); // Module ghi log
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const app = express();
 
 // Load biến môi trường từ file .env
@@ -39,6 +40,9 @@ app.use(morgan('combined'));
 // Xử lý dữ liệu JSON từ yêu cầu HTTP
 app.use(express.json()); 
 app.use(express.urlencoded({extended: true}));
+
+// Cài đặt cookie
+app.use(cookieParser());
 
 // Kiểm tra kết nối với PostgreSQL
 pool.connect((err, client, release) => {
