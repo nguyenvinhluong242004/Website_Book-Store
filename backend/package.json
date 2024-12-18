@@ -20,9 +20,11 @@
   "homepage": "https://github.com/nguyenvinhluong242004/Website_Book-Store#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
     "express-session": "^1.18.1",
+    "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.7",
     "passport": "^0.7.0",
