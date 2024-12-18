@@ -6,18 +6,18 @@ class UserModel {
     }
     
     // CRUD
-    // 1. Create User
-    async createUser(email, name, phone, gender, birthDate, type, role, passwordorgoogleid) {
+    // 1. Create User - REGISTER 
+    async createUser(email, name, phone, role, passwordorgoogleid) {
         const result = await this.pool.query(
-            `INSERT INTO Users (Email, Name, Phone, Gender, Birth_Date, Type, Role, PasswordOrGoogleID) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+            `INSERT INTO users (email, name, phone, role, passwordorgoogleid) 
+             VALUES ($1, $2, $3, $4, $5) 
              RETURNING *`,
-            [email, name, phone, gender, birthDate, type, role, passwordorgoogleid]
+            [email, name, phone, role, passwordorgoogleid]
         );
         return result.rows[0]; 
     }
 
-    // 2. Read User by email
+    // 2. Get user by Email - FIND CONFLICT
     async getUserByEmail(email) {
         const result = await this.pool.query(
             'SELECT * FROM Users WHERE Email = $1',
@@ -26,31 +26,52 @@ class UserModel {
         return result.rows[0]; 
     }
 
-    // 3. Update User (bao gồm cập nhật refresh_token)
-    async updateUser(id, { email, name, phone, gender, birthDate, type, role, passwordorgoogleid, refresh_token }) {
+    // 3. Update User - Cập nhật theo email (Vì nó như là độc nhất)
+    async updateUser(email, { name, phone, gender, birthdate, type, role, passwordorgoogleid}) {
         const result = await this.pool.query(
-            `UPDATE Users 
-            SET Email = $1, Name = $2, Phone = $3, Gender = $4, Birth_Date = $5, Type = $6, Role = $7, PasswordOrGoogleID = $8, refresh_token = $9 
-            WHERE ID_User = $10 
+            `UPDATE users 
+            SET name = $1, phone = $2, gender = $3, birth_date = $4, type = $5, role = $6, passwordorgoogleid = $7
+            WHERE email = $8
             RETURNING *`,
-            [email, name, phone, gender, birthDate, type, role, passwordorgoogleid, refresh_token, id]
+            [name, phone, gender, birthdate, type, role, passwordorgoogleid, email]
         );
         return result.rows[0]; 
     }
 
     // 4. Delete User
-    async deleteUser(id) {
+    async deleteUser(email) {
         const result = await this.pool.query(
-            'DELETE FROM Users WHERE ID_User = $1 RETURNING *',
-            [id]
+            'DELETE FROM users WHERE email = $1 RETURNING *',
+            [email]
         );
         return result.rows[0]; 
     }
 
     // 5. Get All Users
     async getAllUsers() {
-        const result = await this.pool.query('SELECT * FROM Users');
+        const result = await this.pool.query('SELECT * FROM users');
         return result.rows; 
+    }
+
+    // 6. Get User by Refreshtoken
+    async getUserByRefreshToken(refreshToken) {
+        const result = await this.pool.query(
+            'SELECT * FROM users WHERE refresh_token = $1',
+            [refreshToken]
+        );
+        return result.rows[0]; 
+    }
+
+    // 7. Update user - refreshtoken
+    async updateRefreshToken(email, refreshToken) {
+        const result = await this.pool.query(
+            `UPDATE users 
+            SET refresh_token = $1
+            WHERE email = $2
+            RETURNING *`,
+            [refreshToken, email]
+        );
+        return result.rows[0]; 
     }
 }
 

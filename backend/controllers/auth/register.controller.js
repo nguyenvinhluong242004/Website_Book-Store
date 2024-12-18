@@ -3,9 +3,9 @@ const bcrypt = require('bcrypt');
 
 const handleNewUser = async(req, res) => {
     console.log('BODY CLIENT SENT: ', req.body);
-    const { email, pwd } = req.body;
+    const { email, name, phone, pwd } = req.body;
     // Mã 400: Lỗi phía client
-    if(!email || !pwd) return res.status(400).json({'message': 'Email and password are required. '});
+    if(!email || !pwd || !name || !phone) return res.status(400).json({'message': 'All field are required. '});
 
     try {
         // Kiểm tra xem email đã tồn tại chưa
@@ -19,7 +19,10 @@ const handleNewUser = async(req, res) => {
 
         // Tạo người dùng mới
         // Tại đây chỉ thêm hai trường email và password (Đã mã hóa) --> Còn lại thì để vào trang cài đặt cá nhân điền rồi thêm sau
-        const newUser = await userModel.createUser(email, null, null, null, null, null, null, hashedPassword);
+        // Mặc định người dùng đăng nhập sẽ có role là user: 1
+        // createUser(email, name, phone, role, passwordorgoogleid)
+        const userRole = 1;
+        const newUser = await userModel.createUser(email, name, phone, userRole, hashedPassword);
 
         // Trả về thông báo thành công
         // Mã 201: Tạo thành công

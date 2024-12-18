@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const userModel = require('../../models/auth/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -10,23 +8,29 @@ const handleLogin = async (req, res) => {
     if (!email || !pwd) return res.status(400).json({ 'message': 'Email and password are required.' });
 
     try {
-        console.log('Email:', email);
-        console.log('Password:', pwd);
+        // console.log('Email:', email);
+        // console.log('Password:', pwd);
         // Sử dụng UserModel để tìm người dùng theo email
         const foundUser = await userModel.getUserByEmail(email);
-        console.log('Found User:', foundUser);
+        // console.log('Found User:', foundUser);
 
         if (!foundUser) {
             return res.status(401).json({ 'message': 'Email not found' });
         }
 
-        console.log('PasswordOrGoogleID (hashed password):', foundUser.passwordorgoogleid);
+        // console.log('PasswordOrGoogleID (hashed password):', foundUser.passwordorgoogleid);
         // So sánh mật khẩu
         const match = await bcrypt.compare(pwd, foundUser.passwordorgoogleid);
         if (match) {
+            const role = Object.values(foundUser.role);
             // Tạo accessToken trả về cho frontend
             const accessToken = jwt.sign(
-                { "email": foundUser.email },
+                { 
+                    "UserInfo": {
+                        "email": foundUser.email,
+                        "role": role
+                    }
+                },
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '30s' } // Hạn 30s
             );
@@ -38,10 +42,10 @@ const handleLogin = async (req, res) => {
             );
 
             // Cập nhật refresh token trong cơ sở dữ liệu
-            await userModel.updateUser(foundUser.id_user, { ...foundUser, refresh_token: refreshToken });
+            await userModel.updateRefreshToken(foundUser.email, refreshToken);
 
             // Đặt refresh token trong cookie
-            res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+            res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
             res.json({ accessToken });
         } else {
             // Mã 401: Lỗi xác thực
