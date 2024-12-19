@@ -23,12 +23,12 @@
 
 <script>
 import "../css-component/home.css";
-import PosterSlide from "../vue-component/PosterSlide.vue";
-import TopSeller from "../vue-component/TopSeller.vue";
-import CategoryBook from "../vue-component/CategoryBook.vue";
+import PosterSlide from "./PosterSlide.vue";
+import TopSeller from "./TopSeller.vue";
+import CategoryBook from "./CategoryBook.vue";
 
 export default {
-  name: "App",
+  name: "SearchPage",
   components: {
     PosterSlide,
     TopSeller,
