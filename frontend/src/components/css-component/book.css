@@ -4,7 +4,7 @@
   margin-left: 50%;
   width: 90%;
   height: 2500px;
-  background-color: beige;
+  background-color: rgb(218, 218, 218);
   transform: translateX(-50%);
   border-radius: 10px;
 }
@@ -19,7 +19,7 @@
 }
 .bool-col-slide {
   width: 60%;
-  background-color: rgb(82, 82, 82);
+  background-color: rgb(255, 255, 255);
 }
 .book-col-price {
   width: 40%;
