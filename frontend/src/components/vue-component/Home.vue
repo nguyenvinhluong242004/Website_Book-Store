@@ -1,5 +1,6 @@
 <template>
-   <div class="ctn-row">
+  <div class="home-container">
+    <div class="ctn-row">
       <PosterSlide :posters="posters" />
     </div>
     <div class="ctn-row">
@@ -11,16 +12,17 @@
         :poster_skill="poster_skill"
         :products_family="products_family"
         :poster_family="poster_family"
-        :products_science="products_science"  
+        :products_science="products_science"
         :poster_science="poster_science"
-        :products_literature="products_literature"  
+        :products_literature="products_literature"
         :poster_literature="poster_literature"
       />
     </div>
+  </div>
 </template>
 
 <script>
-import "../css-component/home.css"; 
+import "../css-component/home.css";
 import PosterSlide from "../vue-component/PosterSlide.vue";
 import TopSeller from "../vue-component/TopSeller.vue";
 import CategoryBook from "../vue-component/CategoryBook.vue";
@@ -50,16 +52,15 @@ export default {
       subcategories: [],
     };
   },
-//   computed: {
-//     isDetailAccountPage() {
-//       // Kiểm tra nếu đường dẫn hiện tại là `/account`
-//       return this.$route.path === "/";
-//     },
-//   },
+  //   computed: {
+  //     isDetailAccountPage() {
+  //       // Kiểm tra nếu đường dẫn hiện tại là `/account`
+  //       return this.$route.path === "/";
+  //     },
+  //   },
   mounted() {
-
     fetch("/DATABASE/data.json")
-      .then((response) => response.json()) 
+      .then((response) => response.json())
       .then((data) => {
         this.posters = data.posters;
         this.products_top = data.products_top;
@@ -72,7 +73,7 @@ export default {
         this.poster_family = data.poster_family;
         this.poster_literature = data.poster_literature;
       })
-      .catch((error) => console.error("Có lỗi xảy ra:", error)); 
+      .catch((error) => console.error("Có lỗi xảy ra:", error));
   },
 };
 </script>
