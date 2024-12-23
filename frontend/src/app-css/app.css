@@ -3,7 +3,7 @@
   }
   #root {
     width: 100%;
-  
+    background-color: rgb(228, 228, 228);
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

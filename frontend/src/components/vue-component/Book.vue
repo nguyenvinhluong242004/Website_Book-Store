@@ -35,6 +35,8 @@
             </div>
           </div>
         </div>
+        <div class="">Thêm vào giỏ hàng</div>
+        <div class="">Mua ngay</div>
         <div class="book-infor-product">Thong tin san pham</div>
       </div>
       <div class="book-col-price">
