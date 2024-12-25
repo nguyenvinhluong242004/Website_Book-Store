@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const userModel = require('../../models/user.model');
 const addressModel = require('../../models/user/address.model');
 
@@ -53,14 +55,14 @@ class AccountController {
     async getAllAddress(req, res) {
         try {
             const email = req.email;
-            const allAddress = await addressModel.getAllAddress(email); 
+            const allAddress = await addressModel.getAllAddress(email);
             if (allAddress.length === 0) {
-                return res.status(404).json({ message: 'No addresses found.' }); 
+                return res.status(404).json({ message: 'No addresses found.' });
             }
 
             res.status(200).json({
                 message: 'Addresses fetched successfully.',
-                allAddress: allAddress 
+                allAddress: allAddress
             });
         } catch (error) {
             console.error('Error getting all addresses:', error);
@@ -148,6 +150,47 @@ class AccountController {
         } catch (error) {
             console.error('Error updating address:', error);
             res.status(500).json({ message: 'An error occurred while deleting address.' });
+        }
+    }
+
+    // [PUT]: account/password
+    async changePassword(req, res) {
+        try {
+            const { password, newPassword, newPasswordAgain } = req.body;
+            console.log('REQ BODY CHANGE PASSWORD: ', req.body);
+            const email = req.email;
+            console.log('EMAIL: ', email);
+
+            if (!password || !newPassword || !newPasswordAgain) {
+                return res.status(400).json({ message: 'All fields are required.' });
+            }
+
+            if (newPassword !== newPasswordAgain) {
+                return res.status(400).json({ error: "Passwords do not match" });
+            }
+
+            const user = await userModel.getUserByEmail(email);
+            if (!user) {
+                return res.status(404).json({
+                    error: "User not found"
+                });
+            }
+            const match = await bcrypt.compare(password, user.passwordorgoogleid);
+            if (!match) {
+                return res.status(401).json({
+                    error: "Invalid password"
+                });
+            }
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            const newPassUser = await userModel.changePassword(hashedPassword, email);
+
+            res.status(200).json({
+                message: 'Password updated successfully.',
+                newPassUser: newPassUser
+            });
+        } catch (error) {
+            console.error('Error updating password:', error);
+            res.status(500).json({ message: 'An error occurred while updating password.' });
         }
     }
 }

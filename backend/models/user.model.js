@@ -82,6 +82,18 @@ class UserModel {
         );
         return result.rows[0];
     }
+
+    // 9. Change password
+    async changePassword(newPassword, email) {
+        const result = await this.pool.query(
+            `UPDATE users 
+            SET passwordorgoogleid = $1
+            WHERE email = $2
+            RETURNING *`,
+            [newPassword, email]
+        );
+        return result.rows[0];
+    }
 }
 
 module.exports = new UserModel(); 

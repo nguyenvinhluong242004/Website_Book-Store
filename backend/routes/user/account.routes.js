@@ -14,5 +14,6 @@ router.get('/address', verifyJWT, verifyRole('user'), accountController.getAllAd
 router.post('/create-address', verifyJWT, verifyRole('user'), accountController.createAddress);
 router.put('/update-address/:id_address', verifyJWT, verifyRole('user'), accountController.updateAddress);
 router.delete('/delete-address', verifyJWT, verifyRole('user'), accountController.deleteAddress);
+router.put('/password', verifyJWT, verifyRole('user'), accountController.changePassword);
 
 module.exports = router;
