@@ -1,10 +1,10 @@
-const pool = require('../../config/database');
+const pool = require('../config/database');
 
 class UserModel {
     constructor() {
         this.pool = pool;
     }
-    
+
     // CRUD
     // 1. Create User - REGISTER 
     async createUser(email, name, phone, role, passwordorgoogleid) {
@@ -14,7 +14,7 @@ class UserModel {
              RETURNING *`,
             [email, name, phone, role, passwordorgoogleid]
         );
-        return result.rows[0]; 
+        return result.rows[0];
     }
 
     // 2. Get user by Email - FIND CONFLICT
@@ -23,19 +23,19 @@ class UserModel {
             'SELECT * FROM Users WHERE Email = $1',
             [email]
         );
-        return result.rows[0]; 
+        return result.rows[0];
     }
 
-    // 3. Update User - Cập nhật theo email (Vì nó như là độc nhất)
-    async updateUser(email, { name, phone, gender, birthdate, type, role, passwordorgoogleid}) {
+    // 3. Update User - Profile
+    async updateUser(email, { name, phone, gender, birthday }) {
         const result = await this.pool.query(
             `UPDATE users 
-            SET name = $1, phone = $2, gender = $3, birth_date = $4, type = $5, role = $6, passwordorgoogleid = $7
-            WHERE email = $8
+            SET name = $1, phone = $2, gender = $3, birth_date = $4
+            WHERE email = $5
             RETURNING *`,
-            [name, phone, gender, birthdate, type, role, passwordorgoogleid, email]
+            [name, phone, gender, birthday, email]
         );
-        return result.rows[0]; 
+        return result.rows[0];
     }
 
     // 4. Delete User
@@ -44,13 +44,13 @@ class UserModel {
             'DELETE FROM users WHERE email = $1 RETURNING *',
             [email]
         );
-        return result.rows[0]; 
+        return result.rows[0];
     }
 
     // 5. Get All Users
     async getAllUsers() {
         const result = await this.pool.query('SELECT * FROM users');
-        return result.rows; 
+        return result.rows;
     }
 
     // 6. Get User by Refreshtoken
@@ -59,7 +59,7 @@ class UserModel {
             'SELECT * FROM users WHERE refresh_token = $1',
             [refreshToken]
         );
-        return result.rows[0]; 
+        return result.rows[0];
     }
 
     // 7. Update user - refreshtoken
@@ -71,7 +71,16 @@ class UserModel {
             RETURNING *`,
             [refreshToken, email]
         );
-        return result.rows[0]; 
+        return result.rows[0];
+    }
+
+    // 8. Get profile user 
+    async getProfileByEmail(email) {
+        const result = await this.pool.query(
+            'SELECT name, phone, email, gender, birth_date FROM Users WHERE email = $1',
+            [email]
+        );
+        return result.rows[0];
     }
 }
 
