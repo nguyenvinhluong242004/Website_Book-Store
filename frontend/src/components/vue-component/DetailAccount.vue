@@ -1,39 +1,67 @@
 <template>
-  <div class="body">
-    <div class="login-container">
-      <div class="frame-login">
-        <div class="name-tag">ĐĂNG NHẬP</div>
-        <hr />
-        <div class="happy">Vui lòng nhập email và mật khẩu</div>
+  <div class="login-body">
+    <form class="login-container" @submit="validateAndSubmit">
+      <h3 class="text-primary mb-4">ĐĂNG NHẬP</h3>
 
-        <!-- Input Email -->
+      <div class="form-outline mb-4">
+        <label class="form-label ps-1 mb-1" for="login-email">Email</label>
         <input
-          class="email"
+          name="email"
           type="text"
-          placeholder="book@gmail.com"
+          id="login-email"
+          class="form-control"
+          :class="{ 'is-invalid': emailErr !== '' }"
+          placeholder="Nhập email"
           v-model="email"
-          @blur="validateEmail"
         />
-        <div v-if="emailError" class="error">{{ emailError }}</div>
+        <div class="invalid-feedback ps-1">
+          {{ emailErr }}
+        </div>
+      </div>
 
-        <!-- Input Password -->
+      <div class="form-outline mb-4">
+        <label class="form-label ps-1 mb-1" for="login-password"
+          >Mật khẩu</label
+        >
         <input
-          class="password"
+          name="password"
           type="password"
-          placeholder="Mật khẩu"
+          id="login-password"
+          class="form-control"
+          :class="{ 'is-invalid': passwordErr !== '' }"
+          placeholder="Nhập mật khẩu"
           v-model="password"
         />
-
-        <div class="forget">Quên mật khẩu</div>
-        <div class="login" @click="submitForm">ĐĂNG NHẬP</div>
-        <div class="login-gg">ĐĂNG NHẬP BẰNG GOOGLE</div>
-        <div class="login-fb">ĐĂNG NHẬP BẰNG FACEBOOK</div>
+        <div class="invalid-feedback ps-1">
+          {{ passwordErr }}
+        </div>
       </div>
-      <div class="new-mb">Dành cho khách hàng mới</div>
 
-          <div class="regiter" @click="DK" >ĐĂNG KÝ</div>
+      <div class="text-center mb-3">
+        <button
+          id="btn-login"
+          type="submit"
+          class="btn btn-primary btn-block w-100 mb-2 py-2"
+        >
+          ĐĂNG NHẬP
+        </button>
+        <a class="text-muted" href="#!">Quên mật khẩu</a>
+      </div>
 
-    </div>
+      <div class="text-center mb-1">
+        Bạn chưa có tài khoản? <a href="/register">Đăng ký</a>
+      </div>
+
+      <div class="d-flex align-items-center justify-content-center">
+        Hoặc đăng nhập với
+        <a href="/gg"
+          ><img
+            src="../../../public/gg_icon.svg"
+            alt="Google Logo"
+            class="gg-icon"
+        /></a>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -45,42 +73,40 @@ export default {
     return {
       email: "",
       password: "",
-      emailError: null, // Lỗi email sẽ hiển thị tại đây
+      emailErr: "",
+      passwordErr: "",
     };
   },
   methods: {
-    DK(){
-      this.$router.push('/register'); 
-    },
-    // Kiểm tra định dạng email
-    validateEmail() {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    validateAndSubmit(event) {
+      // Validate
+      const emailRegex =
+        /^(?=.{1,256}$)(?=.{1,64}@)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)[^\s]{6,13}$/;
+
       if (!this.email) {
-        this.emailError = "Email không được để trống.";
+        this.emailErr = "Hãy nhập email";
+        event.preventDefault();
       } else if (!emailRegex.test(this.email)) {
-        this.emailError = "Định dạng email không hợp lệ.";
+        this.emailErr = "Email không đúng định dạng";
+        event.preventDefault();
       } else {
-        this.emailError = null; // Xóa lỗi nếu hợp lệ
+        this.emailErr = "";
       }
-    },
-    // Gửi form sau khi kiểm tra
-    submitForm() {
-      this.validateEmail();
-      if (!this.emailError && this.password) {
-        alert("Form hợp lệ, đang gửi...");
-        // Thực hiện gửi dữ liệu tại đây (API, Backend, v.v.)
+
+      if (!this.password) {
+        this.passwordErr = "Hãy nhập mật khẩu";
+        event.preventDefault();
+      } else if (!passwordRegex.test(this.password)) {
+        this.passwordErr =
+          "Mật khẩu phải có 6-13 chữ số, phải có ký tự chữ cái, chữ số 0-9 và không được có khoảng trắng";
+        event.preventDefault();
       } else {
-        alert("Vui lòng kiểm tra thông tin!");
+        this.passwordErr = "";
       }
+
+      //Nếu không có lỗi thì submit form như thường
     },
   },
 };
 </script>
-
-<style>
-.error {
-  color: red;
-  font-size: 14px;
-  margin-top: 5px;
-}
-</style>
