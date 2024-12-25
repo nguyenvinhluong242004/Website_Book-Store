@@ -1,5 +1,5 @@
 const express = require('express'); // Web framework cho Node.js
-const  router = express.Router();
+const router = express.Router();
 const searchController = require('../../controllers/user/search.controller');
 
 router.get('/filter', searchController.filter);

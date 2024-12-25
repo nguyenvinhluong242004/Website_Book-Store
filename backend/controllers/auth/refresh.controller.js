@@ -1,6 +1,7 @@
-const userModel = require('../../models/auth/user.model');
+const userModel = require('../../models/user.model');
 const jwt = require('jsonwebtoken');
 
+// [GET]: /refresh
 const handleRefreshToken = async (req, res) => {
     const cookies = req.cookies;
     console.log('COOKIES: ', req.cookies);
