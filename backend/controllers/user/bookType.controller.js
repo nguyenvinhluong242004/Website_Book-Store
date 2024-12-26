@@ -27,7 +27,7 @@ class BookTypeController {
             });
         } catch (err) {
             console.error('Lỗi truy vấn!', err);
-            return res.status(500).json({ error: 'Có lỗi xảy ra khi tìm kiếm' });
+            return res.status(500).json({ error: 'Có lỗi xảy ra khi lấy sách theo thể loại' });
         }
     }
 
@@ -75,7 +75,7 @@ class BookTypeController {
             });
         } catch (err) {
             console.error('Lỗi truy vấn!', err);
-            return res.status(500).json({ error: 'Có lỗi xảy ra khi tìm kiếm' });
+            return res.status(500).json({ error: 'Có lỗi xảy ra khi lấy sách theo thể loại' });
         }
     }
 }
