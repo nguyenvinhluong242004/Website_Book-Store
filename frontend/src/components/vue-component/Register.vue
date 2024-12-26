@@ -146,7 +146,7 @@
       </div>
 
       <button
-        id="btn-login"
+        id="btn-regist"
         type="submit"
         class="btn btn-primary btn-block w-100 mb-4 mt-2"
       >
