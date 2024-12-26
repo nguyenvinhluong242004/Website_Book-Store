@@ -64,12 +64,6 @@ CREATE TABLE Deposit (
 );
 
 -- Create Address table
-<<<<<<< HEAD
-CREATE TABLE Address (
-    ID_Address SERIAL PRIMARY KEY,
-    Email VARCHAR(255) NOT NULL,
-    Address TEXT,
-=======
 CREATE TABLE Address_Booking (
     ID_Address SERIAL PRIMARY KEY,
     Name VARCHAR(50),
@@ -80,7 +74,6 @@ CREATE TABLE Address_Booking (
     Ward VARCHAR(50),
     Address VARCHAR(100),
     Email VARCHAR(255) NOT NULL,
->>>>>>> feature-authentication
     CONSTRAINT fk_email FOREIGN KEY (Email) REFERENCES Users (Email)
 );
 
