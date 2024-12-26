@@ -3,7 +3,7 @@
     <div class="grid-item-logo">
       <router-link to="/"> <i class="fas fa-book"></i></router-link>
 
-      <div class="logo">BÁCH KHOA SÁCH</div>
+      <div class="header-logo">BÁCH KHOA SÁCH</div>
     </div>
     <div class="grid-item-search">
       <input

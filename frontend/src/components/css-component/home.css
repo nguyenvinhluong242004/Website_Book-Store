@@ -1,23 +1,12 @@
-* {
-  box-sizing: border-box;
-}
-
-#root {
-  width: 100%;
-
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 .home-container{
-  padding-top: 40px;
+  padding: 40px 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 
 .ctn-row {
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  margin-bottom: 50px;
 }

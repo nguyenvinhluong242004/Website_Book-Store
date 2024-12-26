@@ -5,7 +5,7 @@
       <div>SÁCH BÁN CHẠY</div>
     </div>
 
-    <div class="book-list-container">
+    <div class="top-seller-book-list-container">
       <ProductCard
         v-for="(product, index) in products_top"
         :key="index"

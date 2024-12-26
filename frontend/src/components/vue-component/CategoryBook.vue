@@ -35,7 +35,7 @@
     <!-- Content for each tab -->
     <div v-if="selectedTab === 'skill'">
       <img :src="poster_skill" width="100%" alt="poster" />
-      <div class="book-list-container">
+      <div class="category-book-list-container">
         <ProductCard
           v-for="(product, index) in products_skill"
           :key="index"
@@ -50,7 +50,7 @@
 
     <div v-if="selectedTab === 'family'">
       <img :src="poster_family" width="100%" alt="family" />
-      <div class="book-list-container">
+      <div class="category-book-list-container">
         <ProductCard
           v-for="(product, index) in products_family"
           :key="index"
@@ -64,7 +64,7 @@
     </div>
     <div v-if="selectedTab === 'science'">
       <img :src="poster_science" width="100%" alt="science" />
-      <div class="book-list-container">
+      <div class="category-book-list-container">
         <ProductCard
           v-for="(product, index) in products_science"
           :key="index"
@@ -78,7 +78,7 @@
     </div>
     <div v-if="selectedTab === 'literature'">
       <img :src="poster_literature" width="100%" alt="literature" />
-      <div class="book-list-container">
+      <div class="category-book-list-container">
         <ProductCard
           v-for="(product, index) in products_literature"
           :key="index"
