@@ -69,7 +69,7 @@
 import "../css-component/book.css";
 
 export default {
-  name: "NavApp",
+  name: "BookPage",
   data() {
     return {
       images: [

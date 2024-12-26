@@ -154,7 +154,7 @@
       </button>
 
       <div class="text-center mb-1">
-        Bạn đã có tài khoản? <a href="/account">Đăng nhập</a>
+        Bạn đã có tài khoản? <a href="/login">Đăng nhập</a>
       </div>
 
       <div class="d-flex align-items-center justify-content-center">
@@ -173,7 +173,7 @@
 <script>
 import "../css-component/register.css";
 export default {
-  name: "registerAccount",
+  name: "RegisterPage",
   data() {
     return {
       name: "",

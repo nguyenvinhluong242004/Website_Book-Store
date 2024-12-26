@@ -68,7 +68,7 @@
 <script>
 import "../css-component/login-account.css";
 export default {
-  name: "DetailAccount",
+  name: "LoginPage",
   data() {
     return {
       email: "",
