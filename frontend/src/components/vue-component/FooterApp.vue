@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="footer">
     <div class="bottom">
       <div class="header-bottom">
         <div class="new-register">
