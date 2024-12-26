@@ -14,8 +14,8 @@
           class="profile-side-tab border rounded-3"
           :class="{
             'border-white': activeTab !== 'info',
-            'text-danger border border-danger': activeTab === 'info',
-            'text-danger': hoverTab === 'info',
+            'text-primary border-primary': activeTab === 'info',
+            'text-primary': hoverTab === 'info',
           }"
           @mouseenter="hoverTab = 'info'"
           @mouseleave="hoverTab = null"
@@ -28,8 +28,8 @@
           class="profile-side-tab border rounded-3"
           :class="{
             'border-white': activeTab !== 'address',
-            'text-danger border border-danger': activeTab === 'address',
-            'text-danger': hoverTab === 'address',
+            'text-primary border-primary': activeTab === 'address',
+            'text-primary': hoverTab === 'address',
           }"
           @mouseenter="hoverTab = 'address'"
           @mouseleave="hoverTab = null"
@@ -42,8 +42,8 @@
           class="profile-side-tab border rounded-3"
           :class="{
             'border-white': activeTab !== 'order',
-            'text-danger border border-danger': activeTab === 'order',
-            'text-danger': hoverTab === 'order',
+            'text-primary border-primary': activeTab === 'order',
+            'text-primary': hoverTab === 'order',
           }"
           @mouseenter="hoverTab = 'order'"
           @mouseleave="hoverTab = null"
@@ -56,8 +56,8 @@
           class="profile-side-tab border rounded-3"
           :class="{
             'border-white': activeTab !== 'changePW',
-            'text-danger border-danger': activeTab === 'changePW',
-            'text-danger': hoverTab === 'changePW',
+            'text-primary border-primary': activeTab === 'changePW',
+            'text-primary': hoverTab === 'changePW',
           }"
           @mouseenter="hoverTab = 'changePW'"
           @mouseleave="hoverTab = null"
