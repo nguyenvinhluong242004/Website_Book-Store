@@ -118,20 +118,35 @@ CREATE TABLE Review (
     CONSTRAINT fk_email FOREIGN KEY (Email) REFERENCES Users (Email)
 );
 
--- Create Order table: Đơn hàng
+-- Create Cart table
+CREATE TABLE Cart (
+    ID_Cart SERIAL PRIMARY KEY, 
+    Email VARCHAR(100) NOT NULL, 
+    ID_Book INT NOT NULL, 
+    Quantity INT NOT NULL CHECK (Quantity > 0), 
+    Added_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    FOREIGN KEY (ID_Book) REFERENCES Book(ID_Book) ON DELETE CASCADE
+);
+
+-- Create Orders table
 CREATE TABLE Orders (
     ID_Order SERIAL PRIMARY KEY,
-    Order_Date DATE,
-    Quantity INT,
-    ID_Voucher INT,
-    Address TEXT,
-    Email VARCHAR(255),
-    ID_Book INT,
-    Amount NUMERIC(15, 2),
-    Status VARCHAR(50),
-    CONSTRAINT fk_email FOREIGN KEY (Email) REFERENCES Users (Email),
-    CONSTRAINT fk_book FOREIGN KEY (ID_Book) REFERENCES Book (ID_Book),
-    CONSTRAINT fk_voucher FOREIGN KEY (ID_Voucher) REFERENCES Voucher (ID_Voucher)
+    Email VARCHAR(100) NOT NULL,
+    Total_Amount NUMERIC(15, 2) NOT NULL CHECK (Total_Amount >= 0), 
+    Status VARCHAR(50) DEFAULT 'Pending', -- pending, paid, cancelled and completed 
+    Created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Email) REFERENCES Users(Email) ON DELETE CASCADE
+);
+
+-- Craete Order_Detail table
+CREATE TABLE Order_Detail (
+    ID_Detail SERIAL PRIMARY KEY, 
+    ID_Order INT NOT NULL,
+    ID_Book INT NOT NULL, 
+    Quantity INT NOT NULL CHECK (Quantity > 0),
+    Price NUMERIC(15, 2) NOT NULL CHECK (Price >= 0), 
+    FOREIGN KEY (ID_Order) REFERENCES Orders(ID_Order) ON DELETE CASCADE, 
+    FOREIGN KEY (ID_Book) REFERENCES Book(ID_Book) ON DELETE CASCADE 
 );
 
 -- Create Invoice table: Hóa đơn

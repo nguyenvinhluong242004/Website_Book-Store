@@ -1,7 +1,8 @@
-const userModel = require('../../models/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const userModel = require('../../models/user.model');
+const cartModel = require('../../models/user/cart.model');
 // [POST]: /login
 const handleLogin = async (req, res) => {
     const { email, password } = req.body;
@@ -24,7 +25,7 @@ const handleLogin = async (req, res) => {
             const role = Object.values(foundUser.role);
             // Tạo accessToken trả về cho frontend
             const accessToken = jwt.sign(
-                { 
+                {
                     "UserInfo": {
                         "email": foundUser.email,
                         "role": role
@@ -42,10 +43,32 @@ const handleLogin = async (req, res) => {
             await userModel.updateRefreshToken(foundUser.email, refreshToken);
 
             res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+
+            // Kiểm tra giỏ hàng tạm thời trong session
+            if (req.session.cart && req.session.cart.length > 0) {
+                // Merge giỏ hàng từ session vào cơ sở dữ liệu
+                for (let item of req.session.cart) {
+                    const existingProduct = await cartModel.getBookByIDBook(foundUser.email, item.id_book);
+
+                    if (!existingProduct) {
+                        // Nếu sản phẩm chưa có trong giỏ hàng của người dùng, thêm mới vào
+                        await cartModel.addBookIntoCart(foundUser.email, item.id_book, item.quantity);
+                    } else {
+                        // Nếu sản phẩm đã có, cập nhật số lượng
+                        await cartModel.updateQuantity(foundUser.email, item.id_book, item.quantity);
+                    }
+                }
+
+                // Xóa giỏ hàng tạm thời trong session sau khi đã merge
+                req.session.cart = [];
+
+                console.log('Cart has been merged into the user\'s database.');
+            }
+
             res.json({ accessToken });
         } else {
             // Mã 401: Lỗi xác thực
-            res.sendStatus(401); 
+            res.sendStatus(401);
         }
     } catch (err) {
         console.error(err);
