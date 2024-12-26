@@ -122,10 +122,11 @@
             </div>
             <div><i class="fas fa-shipping-fast"></i> Giao hàng tiêu chuẩn</div>
             <div>Dự kiến giao <b>Thứ năm - 26/12</b></div>
-            <div>Số lượng <input class="book-quantity" type="number" /></div>
+            <div>Số lượng <input class="book-quantity" type="number" v-model="quantity" /></div>
           </div>
         </div>
-        <div class="book-detail-infor mt-3">
+
+        <div :class="['book-detail-infor', { expanded: status }]" >
           <div><b>Thông tin chi tiết</b></div>
           <div class="book-row-ma-hang mt-4">
             <span>Mã hàng </span>
@@ -166,10 +167,13 @@
           <hr />
           <div>Hình thức <span class="book-ma-giao-hang">Bìa mềm</span></div>
         </div>
+        <button class="book-btn-infor" @click="toggle">{{ status ? 'Thu gọn' : 'Xem thêm' }}</button>
+        
         <div class="book-spec mt-3">
-          <span
-            >Mô tả sản phẩm
-             Hoàng Tử Bé (Song Ngữ Việt-Anh) Hoàng tử bé được
+          <span  v-bind:class="{ expanded: isExpanded }"
+            >
+            Mô tả sản phẩm
+            Hoàng Tử Bé (Song Ngữ Việt-Anh) Hoàng tử bé được
             xuất bản lần đầu năm 1943 của nhà văn, phi công người Pháp Antoine
             de Saint-exupéry là một trong những cuốn tiểu thuyết kinh điển nổi
             tiếng nhất mọi thời đại. Câu chuyện ngắn gọn về cuộc gặp gỡ diệu kỳ
@@ -208,13 +212,15 @@
             còn được tặng kèm link download phiên bản audio cho các độc giả muốn
             nghe truyện bằng tiếng Anh.</span
           >
+          <button class="book-btn-see-more-des" @click="toggleDescription">{{ isExpanded ? 'Thu gọn' : 'Xem thêm' }}</button>
         </div>
+
       </div>
     </div>
 
     <!-- Phần đánh giá của sách -->
-    <div class="book-review">
-      
+    <div class="book-review mt-5">
+
       <div class="book-review-title">Đánh giá sản phẩm</div>
 
      
@@ -432,6 +438,9 @@ export default {
   name: "NavApp",
   data() {
     return {
+      quantity:1,
+      status: true,
+      isExpanded: false,
       isModalVisible: false,
       images: [
         "/IMG/caigia.jpg",
@@ -450,6 +459,12 @@ export default {
     };
   },
   methods: {
+    toggle() {
+      this.status = !this.status;  // Chuyển đổi giữa thu gọn và mở rộng
+    },
+    toggleDescription() {
+      this.isExpanded = !this.isExpanded;  // Chuyển đổi giữa thu gọn và mở rộng
+    },
     showModal() {
       this.isModalVisible = true;
     },
