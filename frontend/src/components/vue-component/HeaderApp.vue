@@ -1,9 +1,8 @@
 <template>
   <div class="header">
     <div class="grid-item-logo">
-
       <router-link to="/"> <i class="fas fa-book"></i></router-link>
-     
+
       <div class="logo">BÁCH KHOA SÁCH</div>
     </div>
     <div class="grid-item-search">
@@ -17,48 +16,60 @@
       <div class="glass"><i class="fas fa-search"></i></div>
     </div>
     <div class="grid-item-icon">
-      <div class="iconNoti">
-        <i class="fas fa-bell" @click="notiClick"></i>
+      <div
+        class="iconNoti"
+        @mouseenter="notiVisible = true"
+        @mouseleave="notiVisible = false"
+      >
+        <i class="fas fa-bell"></i>
         <div v-if="notiVisible" class="notiBox">
           <div class="notiBoxHeader">
             <div>Thông báo</div>
             <div class="notiBoxTxtAllNoti">Xem tất cả</div>
           </div>
-          <div class="notiItem">
-            <div class="notiItemTitle">Thông báo số 1</div>
-            <div class="notiItemContent">hello Thong báo đây lo</div>
-          </div>
-          <div class="notiItem">
-            <div class="notiItemTitle">Thông báo số 2</div>
-            <div class="notiItemContent">
-              hello Thong báo số 2 đây ai không muốn học thì đi về, không làm
-              thì ngủ aaaaaaaaaaaa về nhà... mà cãi nhaoaaaaaaaaa
-              aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaa
+          <div class="notiItemList">
+            <div class="notiItem">
+              <div class="notiItemTitle">Thông báo số 1</div>
+              <div class="notiItemContent">hello Thong báo đây lo</div>
             </div>
-          </div>
-          <div class="notiItem">
-            <div class="notiItemTitle">Thông báo nghỉ học</div>
-            <div class="notiItemContent">hello cả nhà yêu của kem</div>
-          </div>
-          <div class="notiItem">
-            <div class="notiItemTitle">Bạn có một tin nhắn chưa đọc</div>
-            <div class="notiItemContent">hello Thong báo đây lo</div>
+            <div class="notiItem">
+              <div class="notiItemTitle">Thông báo số 2</div>
+              <div class="notiItemContent">
+                hello Thong báo số 2 đây ai không muốn học thì đi về, không làm
+                thì ngủ aaaaaaaaaaaa về nhà... mà cãi nhaoaaaaaaaaa
+                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaa
+              </div>
+            </div>
+            <div class="notiItem">
+              <div class="notiItemTitle">Thông báo nghỉ học</div>
+              <div class="notiItemContent">hello cả nhà yêu của kem</div>
+            </div>
+            <div class="notiItem">
+              <div class="notiItemTitle">Bạn có một tin nhắn chưa đọc</div>
+              <div class="notiItemContent">hello Thong báo đây lo</div>
+            </div>
+            <div class="notiItem">
+              <div class="notiItemTitle">Thông báo số 5</div>
+              <div class="notiItemContent">hello haizzz đây lo</div>
+            </div>
           </div>
         </div>
       </div>
       <div class="iconCart">
         <i class="fas fa-shopping-cart"></i>
       </div>
-      <div class="iconUser">
-        <router-link to="/account"><i class="fas fa-user"></i> </router-link> 
-        <!-- <i class="fas fa-user" @click="userClick"></i>  -->
+      <div
+        class="iconUser"
+        @mouseenter="userVisible = true"
+        @mouseleave="userVisible = false"
+      >
+        <router-link to="/login"><i class="fas fa-user"></i> </router-link>
         <div v-if="userVisible" class="userBox">
           <div class="userBoxHeader">
             <div class="userInfor">
               <div class="userAvatar"></div>
-              
-              <div class="userName">Chitiet</div>
 
+              <div class="userName">Chitiet</div>
             </div>
             <i class="fa-solid fa-angle-right"></i>
           </div>
@@ -78,7 +89,7 @@
 </template>
 
 <script>
-import '../css-component/header-app.css'; 
+import "../css-component/header-app.css";
 
 export default {
   name: "HeaderApp",
@@ -87,25 +98,6 @@ export default {
       notiVisible: false,
       userVisible: false,
     };
-  },
-  methods: {
-    notiClick() {
-      // Ẩn hiện thông báo khi ấn nút
-      if (this.notiVisible === false) {
-        this.notiVisible = true;
-      } else {
-        this.notiVisible = false;
-      }
-      this.userVisible = false;
-    },
-    userClick() {
-      if (this.userVisible === false) {
-        this.userVisible = true;
-      } else {
-        this.userVisible = false;
-      }
-      this.notiVisible = false;
-    },
   },
 };
 </script>

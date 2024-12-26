@@ -28,7 +28,7 @@ import TopSeller from "../vue-component/TopSeller.vue";
 import CategoryBook from "../vue-component/CategoryBook.vue";
 
 export default {
-  name: "App",
+  name: "HomePage",
   components: {
     PosterSlide,
     TopSeller,
@@ -52,12 +52,6 @@ export default {
       subcategories: [],
     };
   },
-  //   computed: {
-  //     isDetailAccountPage() {
-  //       // Kiểm tra nếu đường dẫn hiện tại là `/account`
-  //       return this.$route.path === "/";
-  //     },
-  //   },
   mounted() {
     fetch("/DATABASE/data.json")
       .then((response) => response.json())

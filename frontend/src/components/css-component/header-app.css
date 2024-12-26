@@ -67,6 +67,7 @@
   }
   .iconNoti {
     width: 50px;
+    height: 100%;
     color: rgb(10, 57, 98);
     display: flex;
     flex-direction: column;
@@ -76,16 +77,14 @@
     position: relative;
   }
   .notiBox {
-    max-height: 350px;
     position: absolute;
-    top: 64px;
+    top: 100%;
     right: 0px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     width: 400px;
     z-index: 1001;
-    overflow: auto;
     color: rgb(75, 75, 75);
   }
   .notiBoxHeader {
@@ -103,6 +102,11 @@
   .notiBoxTxtAllNoti {
     color: #2e85ff;
   }
+  .notiItemList{
+    width: 100%;
+    max-height: 300px;
+    overflow: auto;
+  }
   .notiItem {
     width: 100%;
     height: 100px;
@@ -118,6 +122,7 @@
   
   .iconCart {
     width: 50px;
+    height: 100%;
     color: rgb(10, 57, 98);
     display: flex;
     flex-direction: column;
@@ -127,6 +132,7 @@
   
   .iconUser {
     width: 50px;
+    height: 100%;
     color: rgb(10, 57, 98);
     display: flex;
     flex-direction: column;
@@ -137,7 +143,7 @@
   }
   .userBox {
     position: absolute;
-    top: 64px;
+    top: 100%;
     right: 0px;
     background: white;
     border-radius: 10px;

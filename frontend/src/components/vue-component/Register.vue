@@ -1,153 +1,261 @@
 <template>
-  <div class="body-register">
-    <div class="frame-register">
-      <div class="name-tag">ĐĂNG KÝ</div>
-      <hr />
-      <div class="infor-register">
-        <div style="display: flex">
-          <div>Họ</div>
-          <div style="color: red">*</div>
-        </div>
+  <div class="register-body">
+    <form class="register-container" @submit="validateAndSubmit">
+      
+      <h3 class="text-primary mb-4">ĐĂNG KÝ</h3>
 
+      <div class="form-outline mb-4">
+        <label class="form-label ps-1 mb-1" for="register-name"
+          >Họ và tên</label
+        >
         <input
-          class="last-name"
+          name="name"
           type="text"
-          placeholder="Nguyễn"
-          v-model="lastName"
+          id="register-name"
+          class="form-control"
+          :class="{ 'is-invalid': nameErr !== '' }"
+          placeholder="Nhập họ và tên của bạn"
+          v-model="name"
         />
-
-        <!-- Tên -->
-        <div style="display: flex">
-          <div>Tên</div>
-          <div style="color: red">*</div>
+        <div class="invalid-feedback ps-1">
+          {{ nameErr }}
         </div>
-        <input class="name" type="text" placeholder="A" v-model="firstName" />
+      </div>
 
-        <!-- Số điện thoại -->
-        <div style="display: flex">
-          <div>Số Điện Thoại</div>
-          <div style="color: red">*</div>
-        </div>
+
+      <div class="form-outline mb-4">
+        <label class="form-label ps-1 mb-1" for="register-email">Email</label>
         <input
-          class="number-phone"
+          name="email"
           type="text"
-          placeholder="SĐT"
-          v-model="phoneNumber"
-          @blur="validatePhoneNumber"
-        />
-        <div v-if="phoneError" class="error">{{ phoneError }}</div>
-
-        <!-- Email -->
-        <div style="display: flex">
-          <div class="happy">Email</div>
-          <div style="color: red">*</div>
-        </div>
-        <input
-          class="email"
-          type="text"
-          placeholder="Email"
+          id="register-email"
+          class="form-control"
+          :class="{ 'is-invalid': emailErr !== '' }"
+          placeholder="Nhập email"
           v-model="email"
-          @blur="validateEmail"
         />
-        <div v-if="emailError" class="error">{{ emailError }}</div>
-
-        <!-- Mật khẩu -->
-        <div style="display: flex">
-          <div>Mật Khẩu</div>
-          <div style="color: red">*</div>
+        <div class="invalid-feedback ps-1">
+          {{ emailErr }}
         </div>
+      </div>
+
+
+      <div class="form-outline mb-4">
+        <label class="form-label ps-1 mb-1" for="register-phone"
+          >Số điện thoại</label
+        >
         <input
-          class="password"
+          name="phone"
+          type="tel"
+          id="register-phone"
+          class="form-control"
+          :class="{ 'is-invalid': phoneErr !== '' }"
+          placeholder="Nhập số điện thoại"
+          v-model="phone"
+        />
+        <div class="invalid-feedback ps-1">
+          {{ phoneErr }}
+        </div>
+      </div>
+
+
+      <div class="form-outline mb-4">
+        <label class="form-label ps-1 mb-1">Giới tính</label>
+        <div class="d-flex justify-content-start">
+          <input
+            name="gender"
+            type="radio"
+            class="btn-check"
+            id="register-radio-male"
+            autocomplete="off"
+            value="male"
+            checked
+          />
+          <label
+            class="btn btn-outline-secondary me-4"
+            for="register-radio-male"
+            >Nam <i class="fa-solid fa-mars"></i
+          ></label>
+
+          <input
+            name="gender"
+            type="radio"
+            class="btn-check"
+            id="register-radio-female"
+            value="female"
+            autocomplete="off"
+          />
+          <label class="btn btn-outline-secondary" for="register-radio-female"
+            >Nữ <i class="fa-solid fa-venus"></i
+          ></label>
+        </div>
+      </div>
+
+
+      <div class="form-outline mb-4">
+        <label class="form-label ps-1 mb-1" for="register-birthdate"
+          >Ngày sinh</label
+        >
+        <input
+          name="birthdate"
+          type="date"
+          id="register-birthdate"
+          class="form-control"
+          :class="{ 'is-invalid': birthdateErr !== '' }"
+          v-model="birthdate"
+        />
+        <div class="invalid-feedback ps-1">
+          {{ birthdateErr }}
+        </div>
+      </div>
+
+
+      <div class="form-outline mb-4">
+        <label class="form-label ps-1 mb-1" for="register-password"
+          >Mật khẩu</label
+        >
+        <input
+          name="password"
           type="password"
-          placeholder="Mật khẩu"
+          id="register-password"
+          class="form-control"
+          :class="{ 'is-invalid': passwordErr !== '' }"
+          placeholder="Nhập mật khẩu"
           v-model="password"
         />
-      </div>
-      <!-- Họ -->
-
-      <!-- Đăng ký -->
-      <div style="display: flex; justify-content: center; margin-top: 20px">
-        <button class="btn-register" @click="submitForm">ĐĂNG KÝ</button>
+        <div class="invalid-feedback ps-1">
+          {{ passwordErr }}
+        </div>
       </div>
 
-      <hr />
-      <div class="or">Hoặc đăng nhập bằng</div>
-      <div
-        style="
-          display: flex;
-          justify-content: center;
-          gap: 10px;
-          margin-top: 10px;
-        "
+      <div class="form-outline mb-4">
+        <label class="form-label ps-1 mb-1" for="register-confirm-password"
+          >Xác nhận mật khẩu</label
+        >
+        <input
+          type="password"
+          id="register-confirm-password"
+          class="form-control"
+          :class="{ 'is-invalid': confirmPasswordErr !== '' }"
+          placeholder="Nhập lại mật khẩu"
+          v-model="confirmPassword"
+        />
+        <div class="invalid-feedback ps-1">
+          {{ confirmPasswordErr }}
+        </div>
+      </div>
+
+      <button
+        id="btn-regist"
+        type="submit"
+        class="btn btn-primary btn-block w-100 mb-4 mt-2"
       >
-        <div class="login-by-fb">Facebook</div>
-        <div class="login-by-gg">Google</div>
+        ĐĂNG KÝ
+      </button>
+
+      <div class="text-center mb-1">
+        Bạn đã có tài khoản? <a href="/login">Đăng nhập</a>
       </div>
-    </div>
+
+      <div class="d-flex align-items-center justify-content-center">
+        Hoặc đăng nhập với
+        <a href="/gg"
+          ><img
+            src="../../../public/gg_icon.svg"
+            alt="Google Logo"
+            class="gg-icon"
+        /></a>
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
 import "../css-component/register.css";
 export default {
-  name: "registerAccount",
+  name: "RegisterPage",
   data() {
     return {
-      lastName: "",
-      firstName: "",
-      phoneNumber: "",
+      name: "",
       email: "",
+      phone: "",
+      birthdate: "",
       password: "",
-      phoneError: null, // Lỗi định dạng SĐT
-      emailError: null, // Lỗi định dạng email
+      confirmPassword: "",
+      nameErr: "",
+      emailErr: "",
+      phoneErr: "",
+      birthdateErr: "",
+      passwordErr: "",
+      confirmPasswordErr: "",
     };
   },
   methods: {
-    // Kiểm tra định dạng số điện thoại
-    validatePhoneNumber() {
-      const phoneRegex = /^[0-9]{10}$/; // Định dạng SĐT: 10 chữ số
-      if (!this.phoneNumber) {
-        this.phoneError = "Số điện thoại không được để trống.";
-      } else if (!phoneRegex.test(this.phoneNumber)) {
-        this.phoneError = "Số điện thoại phải gồm 10 chữ số.";
-      } else {
-        this.phoneError = null; // Hợp lệ
-      }
-    },
+    validateAndSubmit(event) {
+      // Validate
+      const emailRegex =
+        /^(?=.{1,256}$)(?=.{1,64}@)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      const phoneRegex = /^[0-9]{10}$/;
+      const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)[^\s]{6,13}$/;
 
-    // Kiểm tra định dạng email
-    validateEmail() {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!this.name) {
+        this.nameErr = "Hãy nhập tên của bạn";
+        event.preventDefault();
+      } else {
+        this.nameErr = "";
+      }
+
       if (!this.email) {
-        this.emailError = "Email không được để trống.";
+        this.emailErr = "Hãy nhập email";
+        event.preventDefault();
       } else if (!emailRegex.test(this.email)) {
-        this.emailError = "Định dạng email không hợp lệ.";
+        this.emailErr = "Email không đúng định dạng";
+        event.preventDefault();
       } else {
-        this.emailError = null; // Hợp lệ
+        this.emailErr = "";
       }
-    },
 
-    // Gửi form đăng ký
-    submitForm() {
-      // Kiểm tra lại toàn bộ form trước khi gửi
-      this.validatePhoneNumber();
-      this.validateEmail();
-
-      if (!this.phoneError && !this.emailError && this.password) {
-        alert("Đăng ký thành công!");
-        // Gửi dữ liệu đăng ký tới server
+      if (!this.phone) {
+        this.phoneErr = "Hãy nhập số điện thoại";
+        event.preventDefault();
+      } else if (!phoneRegex.test(this.phone)) {
+        this.phoneErr = "Số điện thoại không đúng định dạng 10 chữ số";
+        event.preventDefault();
       } else {
-        alert("Vui lòng kiểm tra thông tin!");
+        this.phoneErr = "";
       }
+
+      if (!this.birthdate) {
+        this.birthdateErr = "Hãy nhập ngày sinh";
+        event.preventDefault();
+      } else {
+        this.birthdateErr = "";
+      }
+
+      if (!this.password) {
+        this.passwordErr = "Hãy nhập mật khẩu";
+        event.preventDefault();
+      } else if (!passwordRegex.test(this.password)) {
+        this.passwordErr =
+          "Mật khẩu phải có 6-13 chữ số, phải có ký tự chữ cái, chữ số 0-9 và không được có khoảng trắng";
+        event.preventDefault();
+      } else {
+        this.passwordErr = "";
+      }
+
+      if (!this.confirmPassword) {
+        this.confirmPasswordErr = "Hãy nhập mật khẩu xác nhận";
+        event.preventDefault();
+      } else if (this.password !== this.confirmPassword) {
+        this.confirmPasswordErr =
+          "Mật khẩu xác nhận không đúng";
+        event.preventDefault();
+      } else {
+        this.confirmPasswordErr = "";
+      }
+
+      //Nếu không có lỗi thì submit form như thường
     },
   },
 };
 </script>
-
-<style>
-.error {
-  color: red;
-  font-size: 14px;
-  margin-top: 5px;
-}
-</style>
