@@ -2,6 +2,7 @@
 
   <div id="root">
     <div v-if="notification" class="notification">{{ notification }}</div>
+    
     <HeaderApp />
     <NavApp :categories="categories" :subcategories="subcategories" />
     
