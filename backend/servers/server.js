@@ -16,7 +16,7 @@ const pool = require('../config/database');
 
 const port =process.env.PORT || 8888; // Cổng để chạy server
 
-console.log(process.env.DTB_PORT)
+console.log('ll' + process.env.DTB_PORT)
 
 // Middleware session
 app.use(session({
