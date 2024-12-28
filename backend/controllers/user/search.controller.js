@@ -56,7 +56,7 @@ class SearchController {
                 keyword,
                 page: parseInt(page, 10),
                 perPage: per_page,
-                genre,
+                genre: parseInt(genre),
                 startPrice: startPrice ? parseFloat(startPrice) : undefined,
                 endPrice: endPrice ? parseFloat(endPrice) : undefined,
                 age,

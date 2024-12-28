@@ -11,18 +11,18 @@ class BookTypeController {
 
         try {
             const result = await BookModel.findBookTypesByGenre(
-                genre,
+                parseInt(genre),
                 parseInt(page, 10),
                 per_page
             );
 
             return res.json({
                 success: true,
+                message: 'Tìm kiếm thành công',
                 per_page: result.per_page,
                 total_pages: result.total_pages,
                 current_page: result.current_page,
                 total_records: result.total_records,
-                message: 'Tìm kiếm thành công',
                 data: result.data,
             });
         } catch (err) {
@@ -34,7 +34,7 @@ class BookTypeController {
     // [GET] /get-list/filter
     async filter(req, res) {
         const {
-            genre = '',
+            genre = null,
             page = 1,
             startPrice = null,
             endPrice = null,
@@ -52,7 +52,7 @@ class BookTypeController {
         try {
             // Gọi hàm tìm kiếm với các tham số
             const result = await BookModel.findBookTypesByFilters({
-                genre,
+                genreId: parseInt(genre),
                 page: parseInt(page, 10),
                 perPage: per_page,
                 startPrice: startPrice ? parseFloat(startPrice) : undefined,
@@ -66,11 +66,11 @@ class BookTypeController {
             // Trả về kết quả tìm kiếm
             return res.json({
                 success: true,
+                message: 'Tìm kiếm thành công',
                 per_page: result.per_page,
                 total_pages: result.total_pages,
                 current_page: result.current_page,
                 total_records: result.total_records,
-                message: 'Tìm kiếm thành công',
                 data: result.data,
             });
         } catch (err) {
