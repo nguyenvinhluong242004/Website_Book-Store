@@ -372,9 +372,9 @@
               </div>
               <div class="single-order-amount">Số lượng: 20</div>
             </div>
-            <div class="single-order-price">5,250,300 vnđ</div>
+            <div class="single-order-price">5.250.300 vnđ</div>
           </div>
-          <div class="single-order-total">Thành tiền:<span class="fs-5 text-primary ms-3">100,060,000 vnđ</span></div>
+          <div class="single-order-total">Thành tiền:<span class="fs-5 text-primary ms-3">100.060.000 vnđ</span></div>
           <div class="single-order-more-action">
             <div class="singe-order-status text-muted ms-2">Đã hủy</div>
           </div>
@@ -395,9 +395,9 @@
               </div>
               <div class="single-order-amount">Số lượng: 20</div>
             </div>
-            <div class="single-order-price">5,250,300 vnđ</div>
+            <div class="single-order-price">5.250.300 vnđ</div>
           </div>
-          <div class="single-order-total">Thành tiền:<span class="fs-5 text-primary ms-3">100,060,000 vnđ</span></div>
+          <div class="single-order-total">Thành tiền:<span class="fs-5 text-primary ms-3">100.060.000 vnđ</span></div>
           <div class="single-order-more-action">
             <div class="singe-order-status text-muted ms-2">Đã hủy</div>
           </div>
