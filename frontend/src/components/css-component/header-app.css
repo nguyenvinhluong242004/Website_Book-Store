@@ -57,6 +57,7 @@
   background-color: rgb(105, 162, 211);
   margin-left: 5px;
   font-size: 22px;
+  cursor: pointer;
 }
 
 .grid-item-icon {
