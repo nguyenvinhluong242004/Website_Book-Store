@@ -270,7 +270,7 @@ export default {
       }
     },
 
-    Data() {
+    fetchData() {
       this.isLoading = true;
 
       if(this.selectGenre === null){
