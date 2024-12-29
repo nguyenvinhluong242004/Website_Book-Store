@@ -68,7 +68,7 @@ const handleLogin = async (req, res) => {
              return res.status(200).json({ accessToken });
         } else {
             // Mã 401: Lỗi xác thực
-            res.sendStatus(401);
+            return res.status(401).json({ 'message': 'Password is incorrect' });
         }
     } catch (err) {
         console.error(err);
