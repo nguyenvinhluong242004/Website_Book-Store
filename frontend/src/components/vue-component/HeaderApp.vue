@@ -12,8 +12,9 @@
         id="myInput"
         name="myInput"
         placeholder="Bạn muốn đọc sách gì..."
+        v-model="searchQuery"
       />
-      <div class="glass"><i class="fas fa-search"></i></div>
+      <div class="glass" @click="search"><i class="fas fa-search"></i></div>
     </div>
     <div class="grid-item-icon">
       <div
@@ -90,14 +91,25 @@
 
 <script>
 import "../css-component/header-app.css";
-
 export default {
   name: "HeaderApp",
   data() {
     return {
+      searchQuery: "", // Lưu trữ giá trị tìm kiếm
       notiVisible: false,
       userVisible: false,
     };
+  },
+  methods: {
+    search() {
+      if (this.searchQuery.trim()) {
+        // Chuyển đến route /search với query parameter là giá trị nhập vào
+        this.$router.push({
+          path: "/search",
+          query: { query: this.searchQuery },
+        });
+      }
+    },
   },
 };
 </script>

@@ -66,9 +66,14 @@
 .search-result-list{
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
-  row-gap: 40px;
-
+  justify-content:flex-start;
+  gap:27px;
   padding: 20px 0px;
+}
+.search-loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
 }
 
