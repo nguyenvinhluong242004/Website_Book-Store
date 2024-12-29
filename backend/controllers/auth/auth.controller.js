@@ -7,7 +7,7 @@ const cartModel = require('../../models/user/cart.model');
 const handleLogin = async (req, res) => {
     const { email, password } = req.body;
     // Mã 400: Bad request
-    if (!email || !password) return res.status(400).json({ 'message': 'Email and password are required.' });
+    if (!email || !password ) return res.status(400).json({ 'message': 'All fields are required.' });
 
     try {
         // console.log('Email:', email);
@@ -32,12 +32,12 @@ const handleLogin = async (req, res) => {
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '1h' } // Hạn 1 tiếng
+                { expiresIn: '15s' } // Hạn 1 tiếng
             );
             const refreshToken = jwt.sign(
                 { "email": foundUser.email },
                 process.env.REFRESH_TOKEN_SECRET,
-                { expiresIn: '3d' } // Hạn 1 ngày
+                { expiresIn: '5m' } // Hạn 1 ngày
             );
 
             await userModel.updateRefreshToken(foundUser.email, refreshToken);
@@ -65,7 +65,7 @@ const handleLogin = async (req, res) => {
                 console.log('Cart has been merged into the user\'s database.');
             }
 
-            res.json({ accessToken });
+             return res.status(200).json({ accessToken });
         } else {
             // Mã 401: Lỗi xác thực
             res.sendStatus(401);

@@ -1,11 +1,17 @@
 const userModel = require('../../models/user.model');
 const bcrypt = require('bcrypt');
 
-const handleNewUser = async(req, res) => {
-    console.log('BODY CLIENT SENT: ', req.body);
-    const { email, name, phone, password } = req.body;
+// [POST]: /register
+const handleNewUser = async (req, res) => {
+    // console.log('BODY CLIENT SENT: ', req.body);
+    const { email, name, phone, password, confirmedPassword } = req.body;
     // Mã 400: Lỗi phía client
-    if(!email || !password || !name || !phone) return res.status(400).json({'message': 'All field are required. '});
+    if (!email || !password || !confirmedPassword || !name || !phone) return res.status(400).json({ 'message': 'All field are required. ' });
+
+    // Kiểm tra password và confirmedPassword
+    if (password !== confirmedPassword) {
+        return res.status(400).json({ 'message': 'Password and Confirmed Password do not match.' });
+    }
 
     try {
         // Kiểm tra xem email đã tồn tại chưa
