@@ -2,9 +2,13 @@
 const path = require('path'); // Xử lý đường dẫn tệp
 const express = require('express'); // Web framework cho Node.js
 const morgan = require('morgan'); // Module ghi log
-// const passport = require('passport'); // Module ghi log
+// const passport = require('passport'); 
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const corsOptions = require('../config/corsOptions');
+const credentials = require('../middlewares/auth/credentials');
+
 const app = express();
 
 // Load biến môi trường từ file .env
@@ -18,6 +22,9 @@ const port =process.env.PORT || 8888; // Cổng để chạy server
 
 console.log('DBPORT: ', process.env.DTB_PORT)
 
+// Middle cors
+app.use(credentials);
+app.use(cors(corsOptions));
 
 // Middleware session
 app.use(session({
