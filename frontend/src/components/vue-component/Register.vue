@@ -1,7 +1,6 @@
 <template>
   <div class="register-body">
-    <form class="register-container" @submit="validateAndSubmit">
-      
+    <form class="register-container">
       <h3 class="text-primary mb-4">ĐĂNG KÝ</h3>
 
       <div class="form-outline mb-4">
@@ -22,7 +21,6 @@
         </div>
       </div>
 
-
       <div class="form-outline mb-4">
         <label class="form-label ps-1 mb-1" for="register-email">Email</label>
         <input
@@ -38,7 +36,6 @@
           {{ emailErr }}
         </div>
       </div>
-
 
       <div class="form-outline mb-4">
         <label class="form-label ps-1 mb-1" for="register-phone"
@@ -58,8 +55,7 @@
         </div>
       </div>
 
-
-      <div class="form-outline mb-4">
+      <!-- <div class="form-outline mb-4">
         <label class="form-label ps-1 mb-1">Giới tính</label>
         <div class="d-flex justify-content-start">
           <input
@@ -107,8 +103,7 @@
         <div class="invalid-feedback ps-1">
           {{ birthdateErr }}
         </div>
-      </div>
-
+      </div> -->
 
       <div class="form-outline mb-4">
         <label class="form-label ps-1 mb-1" for="register-password"
@@ -133,6 +128,7 @@
           >Xác nhận mật khẩu</label
         >
         <input
+          name="confirmedPassword"
           type="password"
           id="register-confirm-password"
           class="form-control"
@@ -145,10 +141,13 @@
         </div>
       </div>
 
+      <div class="text-danger ms-1 mb-2">{{errMsg}}</div>
+
       <button
         id="btn-regist"
-        type="submit"
+        type="button"
         class="btn btn-primary btn-block w-100 mb-4 mt-2"
+        @click="validateAndSubmit"
       >
         ĐĂNG KÝ
       </button>
@@ -179,82 +178,126 @@ export default {
       name: "",
       email: "",
       phone: "",
-      birthdate: "",
+      // birthdate: "",
       password: "",
       confirmPassword: "",
       nameErr: "",
       emailErr: "",
       phoneErr: "",
-      birthdateErr: "",
+      // birthdateErr: "",
       passwordErr: "",
       confirmPasswordErr: "",
+
+      errMsg: null,
     };
   },
   methods: {
-    validateAndSubmit(event) {
+    async validateAndSubmit() {
       // Validate
       const emailRegex =
         /^(?=.{1,256}$)(?=.{1,64}@)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       const phoneRegex = /^[0-9]{10}$/;
       const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)[^\s]{6,13}$/;
 
+      let formValid = true;
+
       if (!this.name) {
         this.nameErr = "Hãy nhập tên của bạn";
-        event.preventDefault();
+        formValid = false;
       } else {
         this.nameErr = "";
       }
 
       if (!this.email) {
         this.emailErr = "Hãy nhập email";
-        event.preventDefault();
+        formValid = false;
       } else if (!emailRegex.test(this.email)) {
         this.emailErr = "Email không đúng định dạng";
-        event.preventDefault();
+        formValid = false;
       } else {
         this.emailErr = "";
       }
 
       if (!this.phone) {
         this.phoneErr = "Hãy nhập số điện thoại";
-        event.preventDefault();
+        formValid = false;
       } else if (!phoneRegex.test(this.phone)) {
         this.phoneErr = "Số điện thoại không đúng định dạng 10 chữ số";
-        event.preventDefault();
+        formValid = false;
       } else {
         this.phoneErr = "";
       }
 
-      if (!this.birthdate) {
-        this.birthdateErr = "Hãy nhập ngày sinh";
-        event.preventDefault();
-      } else {
-        this.birthdateErr = "";
-      }
+      // if (!this.birthdate) {
+      //   this.birthdateErr = "Hãy nhập ngày sinh";
+      //   formValid=false;
+      // } else {
+      //   this.birthdateErr = "";
+      // }
 
       if (!this.password) {
         this.passwordErr = "Hãy nhập mật khẩu";
-        event.preventDefault();
+        formValid = false;
       } else if (!passwordRegex.test(this.password)) {
         this.passwordErr =
           "Mật khẩu phải có 6-13 chữ số, phải có ký tự chữ cái, chữ số 0-9 và không được có khoảng trắng";
-        event.preventDefault();
+        formValid = false;
       } else {
         this.passwordErr = "";
       }
 
       if (!this.confirmPassword) {
         this.confirmPasswordErr = "Hãy nhập mật khẩu xác nhận";
-        event.preventDefault();
+        formValid = false;
       } else if (this.password !== this.confirmPassword) {
-        this.confirmPasswordErr =
-          "Mật khẩu xác nhận không đúng";
-        event.preventDefault();
+        this.confirmPasswordErr = "Mật khẩu xác nhận không đúng";
+        formValid = false;
       } else {
         this.confirmPasswordErr = "";
       }
 
+      if (!formValid) {
+        return;
+      }
+
       //Nếu không có lỗi thì submit form như thường
+      try {
+        const response = await fetch("http://localhost:8888/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: this.name,
+            email: this.email,
+            phone: this.phone,
+            password: this.password,
+            confirmedPassword: this.confirmPassword,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.status === 201) {
+          // Nếu thành công, chuyển hướng về trang login
+          alert(`${data.success}`);
+          this.$router.push("/login"); // Điều hướng đến trang login
+        } else if (response.status === 400) {
+          // Nếu thiếu dữ liệu
+          this.errMsg = data.message;
+        } else if (response.status === 409) {
+          // Tài khoản đã tồn tại
+          this.errMsg = data.message;
+        } else if (response.status === 500) {
+          // Nếu có lỗi server
+          this.errMsg = data.message;
+        }
+      } catch (error) {
+        // Xử lý lỗi bất đồng bộ hoặc kết nối mạng
+        console.error("Error:", error);
+        this.errMsg = "Lỗi kết nối mạng hoặc lỗi không xác định!";
+        alert(this.errMsg);
+      }
     },
   },
 };
