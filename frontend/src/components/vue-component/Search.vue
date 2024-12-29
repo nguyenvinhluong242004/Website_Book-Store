@@ -269,8 +269,8 @@ export default {
         this.selectAge = null;
       }
     },
-    
-    fetchData() {
+
+    Data() {
       this.isLoading = true;
 
       if(this.selectGenre === null){
