@@ -209,3 +209,84 @@
  + 500: "Đã xảy ra lỗi trong quá trình cập nhật mật khẩu"
 
 ========================== CART ==============================
+1. Lấy toàn bộ sản phẩm trong giỏ hàng
+[GET]: https://localhost:8888/cart
+[Response]:
+- Thành công: 200
+{
+    success: true,
+    message: "Lấy sản phẩm trong giỏ hàng thành công",
+    cart: cart
+}
+- Thất bại:
++ 500: .
+    {
+        "success": false,
+        "message": "Đã xảy ra lỗi trong quá trình lấy sản phẩm trong giỏ hàng"
+    }
+
+2. Thêm vào giỏ hàng
+[POST]: https://localhost:8888/cart/add
+[Body]: 
+{
+    "id_book": "string",
+    "quantity": "number"
+}
+[Response]:
+- Thành công: 200
+    {
+        success: true,
+        message: "Sản phẩm được thêm vào giỏ hàng thành công",
+        cart: cart
+    }
+- Thất bại: 
++ 500: Lỗi khi thêm sản phẩm.
+    {
+        "success": false,
+        "message": "Đã xảy ra lỗi trong quá trình thêm sản phẩm"
+    }
+
+3. Cập nhật số lượng sản phẩm trong giỏ hàng:
+[PATCH]: https://localhost:8888/cart/update
+[Body]:
+{
+    "id_book": "string",
+    "quantity": "number"
+}
+[Response]:
+- Thành công: 200
+    {
+        success: true,
+        message: "Số lượng được cập nhật thành công",
+        cart: cart
+    }
+- Thất bại: Lỗi khi cập nhật số lượng
+    {
+        success: false,
+        message: "Đã xảy ra lỗi trong khi xóa sản phẩm",
+    }
+
+3. Xóa sản phẩm trong giỏ hàng
+[DELETE]: https://localhost:8888/cart/delete
+[Body]:
+{
+    "id_book": "string",
+}
+[Response]:
+- Thành công: 200
+    {
+        success: true,
+        message: "Sản phẩm được xóa thành công",
+        cart: cart 
+    }
+- Thất bại: Lỗi khi xóa sản phẩm
+    {
+        success: false,
+        message: "Đã xảy ra lỗi trong khi xóa sản phẩm",
+    }
+    
+
+
+
+
+
