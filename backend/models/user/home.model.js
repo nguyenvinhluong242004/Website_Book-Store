@@ -16,6 +16,21 @@ class HomeModel {
     }
 
     /**
+     * Lấy danh sách Category
+     */
+    static async getCategories() {
+        const result = await pool.query(
+            `SELECT * 
+             FROM Categories
+             ORDER BY Categories.ID_Category ASC`
+        );
+
+        return {
+            data: result.rows,
+        };
+    }
+
+    /**
      * Lấy top 4 sách bán chạy nhất
      */
     static async getTopSellingBooks() {
