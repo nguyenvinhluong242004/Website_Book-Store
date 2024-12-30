@@ -6,9 +6,9 @@
     <HeaderApp />
     <NavApp :categories="categories" :subcategories="subcategories" />
     
-    <router-view />
+    <router-view/>
 
-    <FooterApp />
+    <FooterApp/>
     <ChatBox />
   </div>
 </template>

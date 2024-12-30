@@ -1,6 +1,6 @@
 <template>
   <div class="login-body">
-    <form class="login-container" @submit="validateAndSubmit">
+    <form class="login-container">
       <h3 class="text-primary mb-4">ĐĂNG NHẬP</h3>
 
       <div class="form-outline mb-4">
@@ -37,11 +37,14 @@
         </div>
       </div>
 
+      <div class="text-danger ms-1 mb-2">{{errMsg}}</div>
+
       <div class="text-center mb-3 pt-2">
         <button
           id="btn-login"
-          type="submit"
+          type="button"
           class="btn btn-primary btn-block w-100 mb-2 py-2"
+          @click="validateAndSubmit"
         >
           ĐĂNG NHẬP
         </button>
@@ -67,6 +70,8 @@
 
 <script>
 import "../css-component/login-account.css";
+import axiosInstance from '../../services/axiosInstance.js';
+
 export default {
   name: "LoginPage",
   data() {
@@ -75,37 +80,82 @@ export default {
       password: "",
       emailErr: "",
       passwordErr: "",
+      errMsg: null,
     };
   },
   methods: {
-    validateAndSubmit(event) {
+    async validateAndSubmit() {
       // Validate
       const emailRegex =
         /^(?=.{1,256}$)(?=.{1,64}@)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)[^\s]{6,13}$/;
 
+      let formValid = true;
+
       if (!this.email) {
         this.emailErr = "Hãy nhập email";
-        event.preventDefault();
+        formValid = false;
       } else if (!emailRegex.test(this.email)) {
         this.emailErr = "Email không đúng định dạng";
-        event.preventDefault();
+        formValid = false;
       } else {
         this.emailErr = "";
       }
 
       if (!this.password) {
         this.passwordErr = "Hãy nhập mật khẩu";
-        event.preventDefault();
+        formValid = false;
       } else if (!passwordRegex.test(this.password)) {
         this.passwordErr =
           "Mật khẩu phải có 6-13 chữ số, phải có ký tự chữ cái, chữ số 0-9 và không được có khoảng trắng";
-        event.preventDefault();
+        formValid = false;
       } else {
         this.passwordErr = "";
       }
 
+      
+      if (!formValid) {
+        return;
+      }
+
       //Nếu không có lỗi thì submit form như thường
+      try {
+        // Gửi yêu cầu đăng nhập
+        const response = await axiosInstance.post('/login', {
+          email: this.email,
+          password: this.password,
+        });
+
+        // Kiểm tra token từ phản hồi và lưu vào localStorage
+        const token = response.data.accessToken; // Giả sử bạn trả về accessToken trong body response
+        // console.log(token);
+
+        // Lưu token vào LocalStorage
+        localStorage.setItem('accessToken', token);
+        console.log('Access token saved to localStorage:', localStorage.getItem('accessToken'));
+        alert('Đăng nhập thành công!');
+        // Sau khi đăng nhập thành công, điều hướng tới một trang khác nếu cần
+        
+        this.$router.push('/search');
+      } catch (error) {
+        // Xử lý lỗi khi đăng nhập
+        if (error.response) {
+          const status = error.response.status;
+          const message = error.response.data.message;
+
+          // Xử lý các mã lỗi cụ thể
+          if (status === 400) {
+            this.errMsg = message;
+          } else if (status === 401) {
+            this.errMsg = message;
+          } else if (status === 500) {
+            this.errMsg = message;
+          }
+        } //else {
+        //   // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
+        //   alert('Lỗi mạng: Không thể kết nối đến server.');
+        // }
+      }
     },
   },
 };

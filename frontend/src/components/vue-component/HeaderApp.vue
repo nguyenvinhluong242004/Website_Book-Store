@@ -66,23 +66,26 @@
       >
         <router-link to="/login"><i class="fas fa-user"></i> </router-link>
         <div v-if="userVisible" class="userBox">
-          <div class="userBoxHeader">
-            <div class="userInfor">
-              <div class="userAvatar"></div>
+          <div class="userBoxLogined" v-if="name">
+            <div class="userBoxHeader">
+              <div class="userInfor">
+                <div class="userAvatar"></div>
 
-              <div class="userName">Chitiet</div>
+                <div class="userName">Chitiet</div>
+              </div>
+              <i class="fa-solid fa-angle-right"></i>
             </div>
-            <i class="fa-solid fa-angle-right"></i>
+            <div class="userItem" id="myOrder">
+              <i class="fa-solid fa-file-invoice-dollar"></i>Đơn hàng của tôi
+            </div>
+            <div class="userItem" id="favoriteProduct">
+              <i class="fa-regular fa-heart"></i>Sản phẩm yêu thích
+            </div>
+            <div class="userItem" id="logOut">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>Đăng xuất
+            </div>
           </div>
-          <div class="userItem" id="myOrder">
-            <i class="fa-solid fa-file-invoice-dollar"></i>Đơn hàng của tôi
-          </div>
-          <div class="userItem" id="favoriteProduct">
-            <i class="fa-regular fa-heart"></i>Sản phẩm yêu thích
-          </div>
-          <div class="userItem" id="logOut">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>Đăng xuất
-          </div>
+          <div class="userBoxLogined" v-else>aaa</div>
         </div>
       </div>
     </div>
@@ -91,6 +94,9 @@
 
 <script>
 import "../css-component/header-app.css";
+import axiosInstance from "../../services/axiosInstance.js";
+
+
 export default {
   name: "HeaderApp",
   data() {
@@ -98,8 +104,10 @@ export default {
       searchQuery: "", // Lưu trữ giá trị tìm kiếm
       notiVisible: false,
       userVisible: false,
+      name: null,
     };
   },
+
   methods: {
     search() {
       if (this.searchQuery.trim()) {
@@ -110,6 +118,23 @@ export default {
         });
       }
     },
+
+  async created() {
+    console.log("hi");
+    try {
+      // Gửi yêu cầu để lấy xem người dùng có đang đăng nhập không
+      const response = await axiosInstance.get("/account/profile");
+      console.log("hi");
+      if (response.status === 200) {
+        console.log("hi2");
+        const user = response.data.user;
+        this.name = user.name;
+        console.log(user);
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
   },
 };
 </script>

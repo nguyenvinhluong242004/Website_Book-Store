@@ -7,7 +7,7 @@ const cartModel = require('../../models/user/cart.model');
 const handleLogin = async (req, res) => {
     const { email, password } = req.body;
     // Mã 400: Bad request
-    if (!email || !password) return res.status(400).json({ 'message': 'Email and password are required.' });
+    if (!email || !password ) return res.status(400).json({ 'message': 'Các trường đều phải được nhập' });
 
     try {
         // console.log('Email:', email);
@@ -16,7 +16,7 @@ const handleLogin = async (req, res) => {
         // console.log('Found User:', foundUser);
 
         if (!foundUser) {
-            return res.status(401).json({ 'message': 'Email not found' });
+            return res.status(401).json({ 'message': 'Email không tồn tại' });
         }
 
         // console.log('PasswordOrGoogleID (hashed password):', foundUser.passwordorgoogleid);
@@ -42,7 +42,15 @@ const handleLogin = async (req, res) => {
 
             await userModel.updateRefreshToken(foundUser.email, refreshToken);
 
-            res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+            // res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+
+            res.cookie('jwt', refreshToken, {
+                httpOnly: true,
+                secure: true, // Chỉ sử dụng secure cookie trong môi trường production
+                sameSite: 'None', // Cho phép cookie được gửi trong các yêu cầu cross-origin
+                maxAge: 24 * 60 * 60 * 1000 // Thời gian sống của cookie (1 ngày)
+            });
+            // console.log('Set-Cookie Header:', res.getHeaders()['set-cookie']); // Log thông tin cookie trong header
 
             // Kiểm tra giỏ hàng tạm thời trong session
             if (req.session.cart && req.session.cart.length > 0) {
@@ -62,18 +70,18 @@ const handleLogin = async (req, res) => {
                 // Xóa giỏ hàng tạm thời trong session sau khi đã merge
                 req.session.cart = [];
 
-                console.log('Cart has been merged into the user\'s database.');
+                console.log('Dữ liệu giỏ hàng tạm được thêm vào database');
             }
 
-            res.json({ accessToken });
+             return res.status(200).json({ accessToken });
         } else {
             // Mã 401: Lỗi xác thực
-            res.sendStatus(401);
+            return res.status(401).json({ 'message': 'Mật khẩu không chính xác' });
         }
     } catch (err) {
         console.error(err);
         // Mã 500: Lỗi server
-        res.status(500).json({ 'message': 'Internal Server Error' });
+        res.status(500).json({ 'message': 'Lỗi server' });
     }
 };
 
