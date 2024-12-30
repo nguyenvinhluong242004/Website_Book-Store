@@ -9,6 +9,13 @@ const cors = require('cors');
 const corsOptions = require('../config/corsOptions');
 const credentials = require('../middlewares/auth/credentials');
 
+const https = require('https');
+const fs = require('fs');
+
+const privateKey = fs.readFileSync(path.join(__dirname, '../sslkeys/key.pem'), 'utf8');
+const certificate = fs.readFileSync(path.join(__dirname, '../sslkeys/cert.pem'), 'utf8');
+const options = { key: privateKey, cert: certificate };
+
 const app = express();
 
 // Load biến môi trường từ file .env
@@ -25,6 +32,9 @@ console.log('DBPORT: ', process.env.DTB_PORT)
 // Middle cors
 app.use(credentials);
 app.use(cors(corsOptions));
+
+// Cài đặt cookie
+app.use(cookieParser());
 
 // Middleware session
 app.use(session({
@@ -49,8 +59,6 @@ app.use(morgan('combined'));
 app.use(express.json()); 
 app.use(express.urlencoded({extended: true}));
 
-// Cài đặt cookie
-app.use(cookieParser());
 
 // Kiểm tra kết nối với PostgreSQL
 pool.connect((err, client, release) => {
@@ -65,4 +73,4 @@ pool.connect((err, client, release) => {
 route(app);
 
 // Lắng nghe trên localhost
-app.listen(port, () => console.log(`Example at: http://localhost:${port}`));
+https.createServer(options, app).listen(port, () => console.log(`Example at: https://localhost:${port}`));

@@ -32,17 +32,25 @@ const handleLogin = async (req, res) => {
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '15s' } // Hạn 1 tiếng
+                { expiresIn: '30s' } // Hạn 1 tiếng
             );
             const refreshToken = jwt.sign(
                 { "email": foundUser.email },
                 process.env.REFRESH_TOKEN_SECRET,
-                { expiresIn: '5m' } // Hạn 1 ngày
+                { expiresIn: '1m' } // Hạn 1 ngày
             );
 
             await userModel.updateRefreshToken(foundUser.email, refreshToken);
 
-            res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+            // res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+
+            res.cookie('jwt', refreshToken, {
+                httpOnly: true,
+                secure: true, // Chỉ sử dụng secure cookie trong môi trường production
+                sameSite: 'None', // Cho phép cookie được gửi trong các yêu cầu cross-origin
+                maxAge: 24 * 60 * 60 * 1000 // Thời gian sống của cookie (1 ngày)
+            });
+            console.log('Set-Cookie Header:', res.getHeaders()['set-cookie']); // Log thông tin cookie trong header
 
             // Kiểm tra giỏ hàng tạm thời trong session
             if (req.session.cart && req.session.cart.length > 0) {
