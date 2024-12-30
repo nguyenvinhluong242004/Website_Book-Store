@@ -13,6 +13,7 @@
         name="myInput"
         placeholder="Bạn muốn đọc sách gì..."
         v-model="searchQuery"
+        @keyup.enter="search"
       />
       <div class="glass" @click="search"><i class="fas fa-search"></i></div>
     </div>
@@ -96,7 +97,6 @@
 import "../css-component/header-app.css";
 import axiosInstance from "../../services/axiosInstance.js";
 
-
 export default {
   name: "HeaderApp",
   data() {
@@ -119,23 +119,23 @@ export default {
       }
     },
 
-  async created() {
-    console.log("hi");
-    try {
-      // Gửi yêu cầu để lấy xem người dùng có đang đăng nhập không
-      const response = await axiosInstance.get("/account/profile");
+    async created() {
       console.log("hi");
-      if (response.status === 200) {
-        console.log("hi2");
-        const user = response.data.user;
-        this.name = user.name;
-        console.log(user);
+      try {
+        // Gửi yêu cầu để lấy xem người dùng có đang đăng nhập không
+        const response = await axiosInstance.get("/account/profile");
+        console.log("hi");
+        if (response.status === 200) {
+          console.log("hi2");
+          const user = response.data.user;
+          this.name = user.name;
+          console.log(user);
+        }
+      } catch (error) {
+        console.log(error);
+        return;
       }
-    } catch (error) {
-      console.log(error);
-      return;
-    }
+    },
   },
-}
 };
 </script>
