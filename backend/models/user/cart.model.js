@@ -45,6 +45,14 @@ class CartModel {
         );
         return result;
     }
+
+    // 6. Get all product
+    async getAllProductInCart(email){
+        const result = await this.pool.query('SELECT * FROM cart WHERE email = $1',
+            [email]
+        );
+        return result.rows;
+    }
 }
 
 module.exports = new CartModel(); 

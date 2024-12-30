@@ -27,9 +27,9 @@ class CartController {
                 req.session.cart.push({ id_book, quantity: quantity });
             }
 
-            return res.json({
+            return res.status(200).json({
                 success: true,
-                message: "Sản phẩm được thêm vào giỏ hàng tạm thành công",
+                message: "Sản phẩm được thêm vào giỏ hàng thành công",
                 cart: req.session.cart,
             });
         }
@@ -51,11 +51,11 @@ class CartController {
                 // Nếu sản phẩm đã có trong giỏ hàng thì chỉ cập nhật số lượng
                 addedBook = await cartModel.updateQuantity(email, id_book, quantity);
             }
-
-            return res.json({
+            const cart = await cartModel.getAllProductInCart(email);
+            return res.status(200).json({
                 success: true,
-                message: "Sản phẩm được thêm vào giỏ hàng trong database thành công",
-                addedBook: addedBook
+                message: "Sản phẩm được thêm vào giỏ hàng thành công",
+                cart: cart
             });
 
         } catch (err) {
@@ -77,6 +77,69 @@ class CartController {
     }
 
     // XỬ LÝ TRONG GIỎ HÀNG
+    // [GET]: cart
+    async getCart(req, res) {
+        const authHeader = req.headers.authorization || req.headers.Authorization;
+
+        // Nếu không có Authorization header, lấy giỏ hàng từ session
+        if (!authHeader?.startsWith('Bearer ')) {
+            if (!req.session.cart || req.session.cart.length === 0) {
+                return res.status(200).json({
+                    success: true,
+                    message: "Giỏ hàng trống",
+                    cart: [],
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: "Lấy sản phẩm trong giỏ hàng thành công",
+                cart: req.session.cart,
+            });
+        }
+
+        // Nếu có Authorization header, xác minh JWT và lấy giỏ hàng từ database
+        const token = authHeader.split(' ')[1];
+
+        try {
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+            const email = decoded.UserInfo.email;
+
+            // Lấy giỏ hàng từ database
+            const cart = await cartModel.getAllProductInCart(email);
+
+            if (!cart || cart.length === 0) {
+                return res.status(200).json({
+                    success: true,
+                    message: "Giỏ hàng trống",
+                    cart: [],
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: "Lấy sản phẩm trong giỏ hàng thành công",
+                cart: cart,
+            });
+        } catch (err) {
+            console.error(err);
+
+            // Kiểm tra lỗi token không hợp lệ
+            if (err.name === "JsonWebTokenError") {
+                return res.status(403).json({
+                    success: false,
+                    message: "Sai token, từ chối truy cập giỏ hàng",
+                });
+            }
+
+            // Các lỗi khác
+            return res.status(500).json({
+                success: false,
+                message: "Đã xảy ra lỗi trong quá trình lấy sản phẩm trong giỏ hàng",
+            });
+        }
+    }
+
     // [PATCH]: cart/update
     async updateQuantityOfProduct(req, res) {
         const { id_book, quantity } = req.body;
@@ -88,7 +151,7 @@ class CartController {
             if (!req.session.cart) {
                 return res.status(400).json({
                     success: false,
-                    message: "Cart is empty. Please add a product first.",
+                    message: "Giỏ hàng trống, hãy thêm sản phẩm vào giỏ hàng",
                 });
             }
 
@@ -100,16 +163,16 @@ class CartController {
             if (!existingProduct) {
                 return res.status(404).json({
                     success: false,
-                    message: "Product not found in cart.",
+                    message: "Không tìm thấy sản phẩm trong giỏ hàng",
                 });
             }
 
             // Cập nhật số lượng
             existingProduct.quantity = quantity;
 
-            return res.json({
+            return res.status(200).json({
                 success: true,
-                message: "Product quantity updated in session.",
+                message: "Số lượng được cập nhật thành công",
                 cart: req.session.cart,
             });
         }
@@ -124,16 +187,17 @@ class CartController {
             if (!foundedBook) {
                 return res.status(404).json({
                     success: false,
-                    message: "Product not found in database cart.",
+                    message: "Sản phẩm không tìm thấy trong giỏ hàng",
                 });
             }
 
             const updatedBook = await cartModel.updateNewQuantity(email, id_book, quantity);
+            const cart = await cartModel.getAllProductInCart(email);
 
-            return res.json({
+            return res.status(200).json({
                 success: true,
-                message: "Product quantity updated in database successfully.",
-                updatedBook: updatedBook,
+                message: "Số lượng được cập nhật thành công",
+                cart: cart,
             });
 
         } catch (err) {
@@ -141,35 +205,36 @@ class CartController {
             if (err.name === "JsonWebTokenError") {
                 return res.status(403).json({
                     success: false,
-                    message: "Invalid token. Access denied.",
+                    message: "Không tìm thấy token, từ chối cập nhật",
                 });
             }
 
             return res.status(500).json({
                 success: false,
-                message: "Error while updating product quantity.",
+                message: "Đã xảy ra lỗi khi cập nhật giỏ hàng",
             });
         }
     }
 
+    // [PATCH]: cart/delete
     async deleteProduct(req, res) {
         const { id_book } = req.body;
         const authHeader = req.headers.authorization || req.headers.Authorization;
-        console.log('AUTH HEADER:', authHeader);
+        // console.log('AUTH HEADER:', authHeader);
 
         if (!authHeader?.startsWith('Bearer ')) {
             if (!req.session.cart) {
                 return res.status(404).json({
                     success: false,
-                    message: "Cart is empty.",
+                    message: "Giỏ hàng trống",
                 });
             }
 
             req.session.cart = req.session.cart.filter((item) => item.id_book !== id_book);
 
-            return res.json({
+            return res.status(200).json({
                 success: true,
-                message: "Product removed from session cart successfully.",
+                message: "Sản phẩm được xóa thành công",
                 cart: req.session.cart,
             });
         }
@@ -180,17 +245,19 @@ class CartController {
             const email = decoded.UserInfo.email;
 
             const deletedProduct = await cartModel.deleteProductFromCart(email, id_book);
+            const cart = await cartModel.getAllProductInCart(email);
 
             if (!deletedProduct.rowCount) {
                 return res.status(404).json({
                     success: false,
-                    message: "Product not found in cart.",
+                    message: "Không tìm thấy sản phẩm trong giỏ hàng",
                 });
             }
 
             return res.json({
                 success: true,
-                message: "Product removed from database cart successfully.",
+                message: "Sản phẩm được xóa thành công",
+                cart: cart
             });
 
         } catch (err) {
@@ -198,13 +265,13 @@ class CartController {
             if (err.name === "JsonWebTokenError") {
                 return res.status(403).json({
                     success: false,
-                    message: "Invalid token. Access denied.",
+                    message: "Không tìm thấy token, từ chối xóa",
                 });
             }
 
             return res.status(500).json({
                 success: false,
-                message: "Error while deleting product.",
+                message: "Đã xảy ra lỗi trong khi xóa sản phẩm",
             });
         }
     }
