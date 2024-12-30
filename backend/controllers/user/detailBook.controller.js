@@ -1,4 +1,5 @@
 const BookModel = require('../../models/User/book.model');
+const HomeModel = require('../../models/User/home.model');
 
 class DetailBookController {
 
@@ -16,10 +17,12 @@ class DetailBookController {
             );
 
             const relatedBooks = await BookModel.getRandomBooksByGenre(result.data.genre, result.data.id_book);
+            const genres = await HomeModel.getCategories();
 
             return res.json({
                 success: true,
                 message: 'Lấy thông tin sách thành công',
+                genres : genres.data,                   // categories
                 data: result.data,
                 reviews: result.review,              
                 relatedBooks: relatedBooks.data      // 4 book liên quan

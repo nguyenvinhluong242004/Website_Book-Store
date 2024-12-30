@@ -11,10 +11,12 @@ class HomeController {
             const psychologyBooks = await HomeModel.getRandomBooksByGenre(4);
             const literaryBooks = await HomeModel.getRandomBooksByGenre(6);
             const novelBooks = await HomeModel.getRandomBooksByGenre(7);
+            const genres = await HomeModel.getCategories();
 
             return res.json({
                 success: true,
                 message: 'Lấy thông tin sách thành công',
+                genres : genres.data,                   // categories
                 posters: posters.data,                  // poster
                 topBooks: topBooks.data,                // Top 4 sách bán chạy
                 economyBooks: economyBooks.data,        // 4 sách thuộc Kinh tế
