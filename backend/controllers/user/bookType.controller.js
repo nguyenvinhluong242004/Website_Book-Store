@@ -1,5 +1,4 @@
 const BookModel = require('../../models/User/book.model');
-const HomeModel = require('../../models/User/home.model');
 
 class BookTypeController {
 
@@ -16,7 +15,6 @@ class BookTypeController {
                 parseInt(page, 10),
                 per_page
             );
-            const genres = await HomeModel.getCategories();
 
             return res.json({
                 success: true,
@@ -25,7 +23,6 @@ class BookTypeController {
                 total_pages: result.total_pages,
                 current_page: result.current_page,
                 total_records: result.total_records,
-                genres : genres.data,                   // categories
                 data: result.data,
             });
         } catch (err) {
@@ -65,7 +62,6 @@ class BookTypeController {
                 sold_quantity,         // Sắp xếp theo số lượng bán (nếu có)
                 rating_count           // Sắp xếp theo đánh giá (nếu có)
             });
-            const genres = await HomeModel.getCategories();
 
             // Trả về kết quả tìm kiếm
             return res.json({
@@ -75,7 +71,6 @@ class BookTypeController {
                 total_pages: result.total_pages,
                 current_page: result.current_page,
                 total_records: result.total_records,
-                genres : genres.data,                   // categories
                 data: result.data,
             });
         } catch (err) {

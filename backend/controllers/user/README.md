@@ -42,6 +42,7 @@ http://localhost:8888/search/filter?keyword=&page=1&genre=1&age=adult&startPrice
                         total_pages: result.total_pages,
                         current_page: result.current_page,
                         total_records: result.total_records,
+                        genres : genres.data,                   // categories
                         message: 'Tìm kiếm thành công',
                         data: result.data,
                     });
@@ -92,6 +93,15 @@ http://localhost:8888
                         literaryBooks: literaryBooks.data,      // 4 sách thuộc Văn học
                         novelBooks: novelBooks.data,            // 4 sách thuộc Tiểu thuyết
                     });
+
+# api danh mục
+http://localhost:8888/genres
+
+ - Dữ liệu trả về:  return res.json({
+                    success: true,
+                    message: 'Lấy thông tin danh mục thành công',
+                    genres : genres.data,                   // categories
+                });
 
 
 
