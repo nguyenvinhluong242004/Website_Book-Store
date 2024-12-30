@@ -27,6 +27,22 @@ class HomeController {
             return res.status(500).json({ error: 'Có lỗi xảy ra khi load web' });
         }
     }
+
+    // [GET] /genres
+    async getCategories(req, res) {
+        try {
+            const genres = await HomeModel.getCategories();
+
+            return res.json({
+                success: true,
+                message: 'Lấy thông tin danh mục thành công',
+                genres : genres.data,                   // categories
+            });
+        } catch (err) {
+            console.error('Lỗi truy vấn!', err);
+            return res.status(500).json({ error: 'Có lỗi xảy ra khi lấy thông tin danh mục thành công' });
+        }
+    }
 }
 
 module.exports = new HomeController;
