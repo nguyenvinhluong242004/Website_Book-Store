@@ -262,7 +262,7 @@ export default {
 
       //Nếu không có lỗi thì submit form như thường
       try {
-        const response = await fetch("http://localhost:8888/register", {
+        const response = await fetch("https://localhost:8888/register", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

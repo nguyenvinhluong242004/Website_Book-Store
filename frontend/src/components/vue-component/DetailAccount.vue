@@ -70,7 +70,7 @@
 
 <script>
 import "../css-component/login-account.css";
-import axios from '../../services/axiosInstance.js';
+import axiosInstance from '../../services/axiosInstance.js';
 
 export default {
   name: "LoginPage",
@@ -121,22 +121,22 @@ export default {
       //Nếu không có lỗi thì submit form như thường
       try {
         // Gửi yêu cầu đăng nhập
-        const response = await axios.post('/login', {
+        const response = await axiosInstance.post('/login', {
           email: this.email,
           password: this.password,
         });
 
         // Kiểm tra token từ phản hồi và lưu vào localStorage
         const token = response.data.accessToken; // Giả sử bạn trả về accessToken trong body response
-        console.log(token);
+        // console.log(token);
 
         // Lưu token vào LocalStorage
         localStorage.setItem('accessToken', token);
+        console.log('Access token saved to localStorage:', localStorage.getItem('accessToken'));
         alert('Đăng nhập thành công!');
         // Sau khi đăng nhập thành công, điều hướng tới một trang khác nếu cần
         
         this.$router.push('/search');
-
       } catch (error) {
         // Xử lý lỗi khi đăng nhập
         if (error.response) {

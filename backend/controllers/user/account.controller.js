@@ -10,6 +10,7 @@ class AccountController {
         try {
             const email = req.email;
             const userProfile = await userModel.getProfileByEmail(email);
+            console.log('USER PROFILE', userProfile);
             if (!userProfile) {
                 return res.status(404).json({ message: 'User not found.' });
             }
