@@ -12,7 +12,7 @@ class CartModel {
         );
         return result.rows[0];
     }
-    
+
     // 2. Add product into cart 
     async addBookIntoCart(email, id_book, quantity) {
         const result = await this.pool.query(
@@ -21,12 +21,29 @@ class CartModel {
         return result.rows[0];
     }
 
-    // 3. Update quantity 
-    async updateQuantity(email, id_book, quantity){
+    // 3. Update quantity - Này là cộng thêm số lượng vào (Ở ngoài trang chi tiết)
+    async updateQuantity(email, id_book, quantity) {
         const result = await this.pool.query(
             'UPDATE cart SET quantity = quantity + $1 WHERE email = $2 AND id_book = $3', [quantity, email, id_book]
         );
         return result.rows[0];
+    }
+
+    // 4. Update new quantity - Này là thay thế số lượng hiện tại bằng số lượng mới (Ở trong giỏ hàng)
+    async updateNewQuantity(email, id_book, newQuantity) {
+        const result = await this.pool.query(
+            'UPDATE cart SET quantity = newQuantity WHERE email = $2 AND id_book = $3', [newQuantity, email, id_book]
+        );
+        return result.rows[0];
+    }
+
+    // 5. Delete product
+    async deleteProductFromCart(email, id_book) {
+        const result = await this.pool.query(
+            'DELETE FROM cart WHERE email = $1 AND id_book = $2 RETURNING *',
+            [email, id_book]
+        );
+        return result;
     }
 }
 
