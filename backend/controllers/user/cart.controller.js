@@ -27,7 +27,7 @@ class CartController {
 
             return res.json({
                 success: true,
-                message: "Product added to session successfully.",
+                message: "Sản phẩm được thêm vào giỏ hàng tạm thành công",
                 cart: req.session.cart,
             });
         }
@@ -52,7 +52,7 @@ class CartController {
 
             return res.json({
                 success: true,
-                message: "Product added to database successfully.",
+                message: "Sản phẩm được thêm vào giỏ hàng trong database thành công",
                 addedBook: addedBook
             });
 
@@ -63,14 +63,14 @@ class CartController {
             if (err.name === "JsonWebTokenError") {
                 return res.status(403).json({
                     success: false,
-                    message: "Invalid token. Access denied.",
+                    message: "Sai token, từ chối thêm",
                 });
             }
 
             // Các lỗi khác
             return res.status(500).json({
                 success: false,
-                message: "Error while adding product.",
+                message: "Đã xảy ra lỗi trong quá trình thêm sản phẩm",
             });
         }
     }
