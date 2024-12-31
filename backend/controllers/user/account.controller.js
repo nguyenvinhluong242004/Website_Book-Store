@@ -167,19 +167,19 @@ class AccountController {
             }
 
             if (newPassword !== newPasswordAgain) {
-                return res.status(400).json({ error: "Mật khẩu không khớp" });
+                return res.status(400).json({ message: "Mật khẩu không khớp" });
             }
 
             const user = await userModel.getUserByEmail(email);
             if (!user) {
                 return res.status(404).json({
-                    error: "Không tìm thấy người dùng"
+                    message: "Không tìm thấy người dùng"
                 });
             }
             const match = await bcrypt.compare(password, user.passwordorgoogleid);
             if (!match) {
                 return res.status(401).json({
-                    error: "Mật khẩu cũ không đúng"
+                    message: "Mật khẩu cũ không đúng"
                 });
             }
             const hashedPassword = await bcrypt.hash(newPassword, 10);
