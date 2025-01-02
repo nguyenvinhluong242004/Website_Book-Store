@@ -24,7 +24,6 @@ axiosInstance.interceptors.request.use((config) => {
 // Thêm Interceptor cho response (xử lý lỗi)
 axiosInstance.interceptors.response.use((response) => {
     // Thành công thì trả về respond
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     return response;
 }, async (error) => {
     
@@ -51,10 +50,9 @@ axiosInstance.interceptors.response.use((response) => {
             return axiosInstance(error.config); // Gửi lại request ban đầu
         } catch (refreshError) {
             console.error('Error refreshing access token', refreshError);
-            console.log('bb');
             // Nếu refresh token cũng hết hạn hoặc gặp lỗi, yêu cầu người dùng đăng nhập lại
             localStorage.removeItem('accessToken');
-            window.location.href = '/login';
+            return Promise.reject(refreshError);
         }
     }
     // Nếu không phải lỗi 403, trả về lỗi ban đầu
