@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="grid-item-logo">
-      <router-link to="/"> <i class="fas fa-book"></i></router-link>
+      <a href="/"><i class="fas fa-book"></i></a>
 
       <div class="header-logo">BÁCH KHOA SÁCH</div>
     </div>
@@ -66,25 +66,67 @@
         <router-link to="/login"><i class="fas fa-user"></i> </router-link>
         <div v-if="userVisible" class="userBox">
           <div class="userBoxLogined" v-if="name">
-            <div class="userBoxHeader">
+            <div
+              class="userBoxHeader"
+              :class="{ 'text-primary': userHoverOption === 'info' }"
+              @mouseenter="userHoverOption = 'info'"
+              @mouseleave="userHoverOption = null"
+              @click="goToProfileInfo"
+            >
               <div class="userInfor">
-                <div class="userAvatar"></div>
+                <div class="userAvatar">
+                  <img src="/IMG/default_avatar.png" alt="default avatar" />
+                </div>
 
-                <div class="userName">Chitiet</div>
+                <div
+                  class="userName"
+                  :class="{
+                    'text-primary': userHoverOption === 'info',
+                    'text-body-secondary': userHoverOption !== 'info',
+                  }"
+                >
+                  {{ name }}
+                </div>
               </div>
-              <i class="fa-solid fa-angle-right"></i>
+              <i class="fa-solid fa-angle-right ms-3"></i>
             </div>
-            <div class="userItem" id="myOrder">
+            <div
+              class="userItem"
+              :class="{ 'text-primary': userHoverOption === 'order' }"
+              id="myOrder"
+              @mouseenter="userHoverOption = 'order'"
+              @mouseleave="userHoverOption = null"
+              @click="goToProfileOrder"
+            >
               <i class="fa-solid fa-file-invoice-dollar"></i>Đơn hàng của tôi
             </div>
-            <div class="userItem" id="favoriteProduct">
-              <i class="fa-regular fa-heart"></i>Sản phẩm yêu thích
-            </div>
-            <div class="userItem" id="logOut">
+            <div
+              class="userItem"
+              :class="{ 'text-primary': userHoverOption === 'logout' }"
+              id="logOut"
+              @click="handleLogOut"
+              @mouseenter="userHoverOption = 'logout'"
+              @mouseleave="userHoverOption = null"
+            >
               <i class="fa-solid fa-arrow-right-from-bracket"></i>Đăng xuất
             </div>
           </div>
-          <div class="userBoxLogined" v-else>aaa</div>
+          <div class="userBoxNotLogined p-3" v-else>
+            <div class="mb-3">
+              <a href="/login"
+                ><button type="button" class="btn btn-primary w-100">
+                  Đăng nhập
+                </button></a
+              >
+            </div>
+            <div>
+              <a href="/register"
+                ><button type="button" class="btn btn-danger w-100">
+                  Đăng ký
+                </button></a
+              >
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -102,24 +144,43 @@ export default {
       notiVisible: false,
       userVisible: false,
       name: null,
+      userHoverOption: null,
     };
   },
   async created() {
-    console.log("hi");
     try {
       // Gửi yêu cầu để lấy xem người dùng có đang đăng nhập không
       const response = await axiosInstance.get("/account/profile");
-      console.log("hi");
       if (response.status === 200) {
-        console.log("hi2");
         const user = response.data.user;
         this.name = user.name;
         console.log(user);
       }
     } catch (error) {
-      console.log(error);
-      return;
+      // Nếu lỗi là ko có người dùng hoặc không hợp lệ thì không gán name, header sẽ không hiện người dùng
     }
+  },
+  methods: {
+    async handleLogOut() {
+      try {
+        const response = await axiosInstance.post("/logout");
+        if (response.status === 204) {
+          this.name = null;
+          localStorage.removeItem("accessToken");
+          window.location.href = "/login";
+        }
+      } catch (error) {
+        // Nếu lỗi là ko có người dùng hoặc không hợp lệ thì không gán name, header sẽ không hiện người dùng
+        alert(error);
+        return;
+      }
+    },
+    goToProfileInfo() {
+      window.location.href = "/profile/info";
+    },
+    goToProfileOrder() {
+      window.location.href = "/profile/order";
+    },
   },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="login-body">
-    <form class="login-container">
+    <form class="login-container" @submit="validateAndSubmit">
       <h3 class="text-primary mb-4">ĐĂNG NHẬP</h3>
 
       <div class="form-outline mb-4">
@@ -37,14 +37,13 @@
         </div>
       </div>
 
-      <div class="text-danger ms-1 mb-2">{{errMsg}}</div>
+      <div class="text-danger ms-1 mb-2">{{ errMsg }}</div>
 
       <div class="text-center mb-3 pt-2">
         <button
           id="btn-login"
-          type="button"
+          type="submit"
           class="btn btn-primary btn-block w-100 mb-2 py-2"
-          @click="validateAndSubmit"
         >
           ĐĂNG NHẬP
         </button>
@@ -70,7 +69,7 @@
 
 <script>
 import "../css-component/login-account.css";
-import axiosInstance from '../../services/axiosInstance.js';
+import axiosInstance from "../../services/axiosInstance.js";
 
 export default {
   name: "LoginPage",
@@ -84,7 +83,9 @@ export default {
     };
   },
   methods: {
-    async validateAndSubmit() {
+    async validateAndSubmit(event) {
+      event.preventDefault();
+
       // Validate
       const emailRegex =
         /^(?=.{1,256}$)(?=.{1,64}@)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -113,15 +114,15 @@ export default {
         this.passwordErr = "";
       }
 
-      
+
+      //Nếu không có lỗi thì submit form
       if (!formValid) {
         return;
       }
 
-      //Nếu không có lỗi thì submit form như thường
       try {
         // Gửi yêu cầu đăng nhập
-        const response = await axiosInstance.post('/login', {
+        const response = await axiosInstance.post("/login", {
           email: this.email,
           password: this.password,
         });
@@ -131,12 +132,14 @@ export default {
         // console.log(token);
 
         // Lưu token vào LocalStorage
-        localStorage.setItem('accessToken', token);
-        console.log('Access token saved to localStorage:', localStorage.getItem('accessToken'));
-        alert('Đăng nhập thành công!');
+        localStorage.setItem("accessToken", token);
+        console.log(
+          "Access token saved to localStorage:",
+          localStorage.getItem("accessToken")
+        );
         // Sau khi đăng nhập thành công, điều hướng tới một trang khác nếu cần
-        
-        this.$router.push('/search');
+
+        window.location.href = "/";
       } catch (error) {
         // Xử lý lỗi khi đăng nhập
         if (error.response) {
@@ -151,10 +154,10 @@ export default {
           } else if (status === 500) {
             this.errMsg = message;
           }
-        } //else {
-        //   // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
-        //   alert('Lỗi mạng: Không thể kết nối đến server.');
-        // }
+        } else {
+          // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
+          alert('Lỗi mạng: Không thể kết nối đến server.');
+        }
       }
     },
   },

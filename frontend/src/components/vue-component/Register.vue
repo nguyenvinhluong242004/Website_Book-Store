@@ -1,6 +1,6 @@
 <template>
   <div class="register-body">
-    <form class="register-container">
+    <form class="register-container" @submit="validateAndSubmit">
       <h3 class="text-primary mb-4">ĐĂNG KÝ</h3>
 
       <div class="form-outline mb-4">
@@ -55,56 +55,6 @@
         </div>
       </div>
 
-      <!-- <div class="form-outline mb-4">
-        <label class="form-label ps-1 mb-1">Giới tính</label>
-        <div class="d-flex justify-content-start">
-          <input
-            name="gender"
-            type="radio"
-            class="btn-check"
-            id="register-radio-male"
-            autocomplete="off"
-            value="male"
-            checked
-          />
-          <label
-            class="btn btn-outline-secondary me-4"
-            for="register-radio-male"
-            >Nam <i class="fa-solid fa-mars"></i
-          ></label>
-
-          <input
-            name="gender"
-            type="radio"
-            class="btn-check"
-            id="register-radio-female"
-            value="female"
-            autocomplete="off"
-          />
-          <label class="btn btn-outline-secondary" for="register-radio-female"
-            >Nữ <i class="fa-solid fa-venus"></i
-          ></label>
-        </div>
-      </div>
-
-
-      <div class="form-outline mb-4">
-        <label class="form-label ps-1 mb-1" for="register-birthdate"
-          >Ngày sinh</label
-        >
-        <input
-          name="birthdate"
-          type="date"
-          id="register-birthdate"
-          class="form-control"
-          :class="{ 'is-invalid': birthdateErr !== '' }"
-          v-model="birthdate"
-        />
-        <div class="invalid-feedback ps-1">
-          {{ birthdateErr }}
-        </div>
-      </div> -->
-
       <div class="form-outline mb-4">
         <label class="form-label ps-1 mb-1" for="register-password"
           >Mật khẩu</label
@@ -141,13 +91,12 @@
         </div>
       </div>
 
-      <div class="text-danger ms-1 mb-2">{{errMsg}}</div>
+      <div class="text-danger ms-1 mb-2">{{ errMsg }}</div>
 
       <button
         id="btn-regist"
-        type="button"
+        type="submit"
         class="btn btn-primary btn-block w-100 mb-4 mt-2"
-        @click="validateAndSubmit"
       >
         ĐĂNG KÝ
       </button>
@@ -171,6 +120,7 @@
 
 <script>
 import "../css-component/register.css";
+
 export default {
   name: "RegisterPage",
   data() {
@@ -192,7 +142,9 @@ export default {
     };
   },
   methods: {
-    async validateAndSubmit() {
+    async validateAndSubmit(event) {
+      event.preventDefault();
+
       // Validate
       const emailRegex =
         /^(?=.{1,256}$)(?=.{1,64}@)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -228,13 +180,6 @@ export default {
         this.phoneErr = "";
       }
 
-      // if (!this.birthdate) {
-      //   this.birthdateErr = "Hãy nhập ngày sinh";
-      //   formValid=false;
-      // } else {
-      //   this.birthdateErr = "";
-      // }
-
       if (!this.password) {
         this.passwordErr = "Hãy nhập mật khẩu";
         formValid = false;
@@ -256,11 +201,11 @@ export default {
         this.confirmPasswordErr = "";
       }
 
+      //Nếu không có lỗi thì submit form
       if (!formValid) {
         return;
       }
 
-      //Nếu không có lỗi thì submit form như thường
       try {
         const response = await fetch("https://localhost:8888/register", {
           method: "POST",
@@ -280,8 +225,7 @@ export default {
 
         if (response.status === 201) {
           // Nếu thành công, chuyển hướng về trang login
-          alert(`${data.success}`);
-          this.$router.push("/login"); // Điều hướng đến trang login
+          window.location.href = "/login"; // Điều hướng đến trang login
         } else if (response.status === 400) {
           // Nếu thiếu dữ liệu
           this.errMsg = data.message;
@@ -295,8 +239,7 @@ export default {
       } catch (error) {
         // Xử lý lỗi bất đồng bộ hoặc kết nối mạng
         console.error("Error:", error);
-        this.errMsg = "Lỗi kết nối mạng hoặc lỗi không xác định!";
-        alert(this.errMsg);
+        alert('Lỗi mạng: Không thể kết nối đến server.');
       }
     },
   },
