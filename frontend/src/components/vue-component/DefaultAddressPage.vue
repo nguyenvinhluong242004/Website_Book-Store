@@ -1,6 +1,11 @@
 <template>
   <div class="address-default-tab-body">
-    <div v-if="totalPages === 0" class="text-body-tertiary fs-1 p-4 text-center">Chưa lưu địa chỉ nào</div>
+    <div
+      v-if="totalPages === 0"
+      class="text-body-tertiary fs-1 p-4 text-center"
+    >
+      Chưa lưu địa chỉ nào
+    </div>
     <div v-else>
       <div
         class="address-single-row"
@@ -27,6 +32,7 @@
         <div class="d-flex text-secondary">
           <span
             class="text-primary pe-2 text-opacity-75 border-end border-2 border-secondary-subtle"
+            @click="editAddress(address)"
             >Sửa</span
           ><span class="ps-2"><i class="fa-solid fa-trash-can"></i></span>
         </div>
@@ -136,28 +142,42 @@ export default {
         this.currentPage = page;
       }
     },
+    editAddress(address) {
+      this.$router.push({
+        path: "/profile/address/edit",
+        query: { ...address },
+      });
+    },
+    async handleRouteChange() {
+      try {
+        const response = await axiosInstance.get("/account/address");
+        if (response.status === 200) {
+          this.allAddress = response.data.allAddress;
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response.status === 401 || error.response.status === 403) {
+          // Không có accesstoken hoặc refreshtoken hết hạn
+          this.$router.push("/login");
+        }
+        if (error.response.status === 404) {
+          // Chưa có địa chỉ
+          this.allAddress = [];
+        }
+        if (error.response.status === 500) {
+          // Lỗi server
+          this.$router.push("/login");
+        }
+      }
+    },
   },
-  async created() {
-    try {
-      const response = await axiosInstance.get("/account/address");
-      if (response.status === 200) {
-        this.allAddress = response.data.allAddress;
-      }
-    } catch (error) {
-      console.log(error);
-      if (error.response.status === 401 || error.response.status === 403) {
-        // Không có accesstoken hoặc refreshtoken hết hạn
-        window.location.href = "/login";
-      }
-      if (error.response.status === 404) {
-        // Chưa có địa chỉ
-        this.allAddress = [];
-      }
-      if (error.response.status === 500) {
-        // Lỗi server
-        window.location.href = "/login";
-      }
-    }
+  mounted() {
+    this.handleRouteChange(); // Thực hiện xử lý khi component được mount
+  },
+  watch: {
+    $route() {
+        this.handleRouteChange();
+    },
   },
 };
 </script>

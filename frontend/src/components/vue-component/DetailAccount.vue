@@ -51,7 +51,7 @@
       </div>
 
       <div class="text-center mb-1">
-        Bạn chưa có tài khoản? <a href="/register">Đăng ký</a>
+        Bạn chưa có tài khoản? <router-link to="/register">Đăng ký</router-link>
       </div>
 
       <div class="d-flex align-items-center justify-content-center">
@@ -114,7 +114,6 @@ export default {
         this.passwordErr = "";
       }
 
-
       //Nếu không có lỗi thì submit form
       if (!formValid) {
         return;
@@ -137,9 +136,9 @@ export default {
           "Access token saved to localStorage:",
           localStorage.getItem("accessToken")
         );
-        // Sau khi đăng nhập thành công, điều hướng tới một trang khác nếu cần
 
-        window.location.href = "/";
+        // Sau khi đăng nhập thành công, điều hướng tới một trang khác nếu cần
+        this.$router.push("/");
       } catch (error) {
         // Xử lý lỗi khi đăng nhập
         if (error.response) {
@@ -156,7 +155,7 @@ export default {
           }
         } else {
           // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
-          alert('Lỗi mạng: Không thể kết nối đến server.');
+          alert("Lỗi mạng: Không thể kết nối đến server.");
         }
       }
     },

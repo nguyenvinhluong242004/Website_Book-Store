@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="grid-item-logo">
-      <a href="/"><i class="fas fa-book"></i></a>
+      <router-link to="/"><i class="fas fa-book"></i></router-link>
 
       <div class="header-logo">BÁCH KHOA SÁCH</div>
     </div>
@@ -63,7 +63,9 @@
         @mouseenter="userVisible = true"
         @mouseleave="userVisible = false"
       >
-        <router-link to="/login"><i class="fas fa-user"></i> </router-link>
+        <router-link to="/profile/info"
+          ><i class="fas fa-user"></i>
+        </router-link>
         <div v-if="userVisible" class="userBox">
           <div class="userBoxLogined" v-if="name">
             <div
@@ -90,20 +92,40 @@
               </div>
               <i class="fa-solid fa-angle-right ms-3"></i>
             </div>
+
             <div
               class="userItem"
               :class="{ 'text-primary': userHoverOption === 'order' }"
-              id="myOrder"
               @mouseenter="userHoverOption = 'order'"
               @mouseleave="userHoverOption = null"
               @click="goToProfileOrder"
             >
-              <i class="fa-solid fa-file-invoice-dollar"></i>Đơn hàng của tôi
+              <i class="fa-solid fa-receipt"></i>Đơn hàng của tôi
             </div>
+
+            <div
+              class="userItem"
+              :class="{ 'text-primary': userHoverOption === 'address' }"
+              @mouseenter="userHoverOption = 'address'"
+              @mouseleave="userHoverOption = null"
+              @click="goToProfileAddress"
+            >
+              <i class="fa-solid fa-location-dot"></i>Sổ địa chỉ
+            </div>
+
+            <div
+              class="userItem"
+              :class="{ 'text-primary': userHoverOption === 'changePW' }"
+              @mouseenter="userHoverOption = 'changePW'"
+              @mouseleave="userHoverOption = null"
+              @click="goToProfileChangepw"
+            >
+              <i class="fa-solid fa-lock"></i>Thay đổi mật khẩu
+            </div>
+
             <div
               class="userItem"
               :class="{ 'text-primary': userHoverOption === 'logout' }"
-              id="logOut"
               @click="handleLogOut"
               @mouseenter="userHoverOption = 'logout'"
               @mouseleave="userHoverOption = null"
@@ -113,17 +135,17 @@
           </div>
           <div class="userBoxNotLogined p-3" v-else>
             <div class="mb-3">
-              <a href="/login"
+              <router-link to="/login"
                 ><button type="button" class="btn btn-primary w-100">
                   Đăng nhập
-                </button></a
+                </button></router-link
               >
             </div>
             <div>
-              <a href="/register"
+              <router-link to="/register"
                 ><button type="button" class="btn btn-danger w-100">
                   Đăng ký
-                </button></a
+                </button></router-link
               >
             </div>
           </div>
@@ -147,18 +169,13 @@ export default {
       userHoverOption: null,
     };
   },
-  async created() {
-    try {
-      // Gửi yêu cầu để lấy xem người dùng có đang đăng nhập không
-      const response = await axiosInstance.get("/account/profile");
-      if (response.status === 200) {
-        const user = response.data.user;
-        this.name = user.name;
-        console.log(user);
-      }
-    } catch (error) {
-      // Nếu lỗi là ko có người dùng hoặc không hợp lệ thì không gán name, header sẽ không hiện người dùng
-    }
+  mounted() {
+    this.handleRouteChange(); // Thực hiện xử lý khi component được mount
+  },
+  watch: {
+    $route() {
+      this.handleRouteChange();
+    },
   },
   methods: {
     async handleLogOut() {
@@ -167,7 +184,7 @@ export default {
         if (response.status === 204) {
           this.name = null;
           localStorage.removeItem("accessToken");
-          window.location.href = "/login";
+          this.$router.push("/login");
         }
       } catch (error) {
         // Nếu lỗi là ko có người dùng hoặc không hợp lệ thì không gán name, header sẽ không hiện người dùng
@@ -175,11 +192,31 @@ export default {
         return;
       }
     },
+    async handleRouteChange() {
+      try {
+        // Gửi yêu cầu để lấy xem người dùng có đang đăng nhập không
+        const response = await axiosInstance.get("/account/profile");
+        if (response.status === 200) {
+          const user = response.data.user;
+          this.name = user.name;
+          console.log(user);
+        }
+      } catch (error) {
+        // Nếu lỗi là ko có người dùng hoặc không hợp lệ thì không gán name, header sẽ không hiện người dùng
+        this.name = null;
+      }
+    },
     goToProfileInfo() {
-      window.location.href = "/profile/info";
+      this.$router.push("/profile/info");
     },
     goToProfileOrder() {
-      window.location.href = "/profile/order";
+      this.$router.push("/profile/order");
+    },
+    goToProfileAddress() {
+      this.$router.push("/profile/address");
+    },
+    goToProfileChangepw() {
+      this.$router.push("/profile/changePW");
     },
   },
 };
