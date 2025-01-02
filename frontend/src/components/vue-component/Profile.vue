@@ -80,7 +80,14 @@
           <span v-if="activeTab === 'order'">Đơn Hàng Của Tôi</span>
           <span v-if="activeTab === 'changePW'">Đổi Mật Khẩu</span>
         </div>
-        <a href="/profile/address/add"><div class="btn btn-outline-primary" v-if="!action && activeTab === 'address'">+ Thêm địa chỉ mới</div></a>
+        <router-link to="/profile/address/add">
+          <div
+            class="btn btn-outline-primary"
+            v-if="!action && activeTab === 'address'"
+          >
+            + Thêm địa chỉ mới
+          </div></router-link
+        >
       </div>
 
       <router-view />
@@ -104,40 +111,48 @@ export default {
       savedName: null,
     };
   },
-  methods: {
-    switchTab(tab) {
-      window.location.href = `/profile/${tab}`;
+  mounted() {
+    this.handleRouteChange(); // Thực hiện xử lý khi component được mount
+  },
+  watch: {
+    $route() {
+      this.handleRouteChange();
     },
   },
-  async created() {
-    const paths = this.$route.path.split("/"); // Lấy tab từ URL
-    const basePathIndex = paths.findIndex((path) => path === "profile"); // Xác định vị trí "profile"
+  methods: {
+    switchTab(tab) {
+      this.$router.push(`/profile/${tab}`);
+    },
+    async handleRouteChange() {
+      const paths = this.$route.path.split("/"); // Lấy tab từ URL
+      const basePathIndex = paths.findIndex((path) => path === "profile"); // Xác định vị trí "profile"
 
-    this.activeTab = paths[basePathIndex + 1] || "info"; // Tab
-    this.action = paths[basePathIndex + 2] || null; // Action là phần con sau tab
+      this.activeTab = paths[basePathIndex + 1] || "info"; // Tab
+      this.action = paths[basePathIndex + 2] || null;
 
-    try {
-      // Gửi yêu cầu để lấy thông tin người dùng
-      const response = await axiosInstance.get("/account/profile");
-      if (response.status === 200) {
-        const user = response.data.user;
-        this.savedName = user.name;
+      try {
+        // Gửi yêu cầu để lấy thông tin người dùng
+        const response = await axiosInstance.get("/account/profile");
+        if (response.status === 200) {
+          const user = response.data.user;
+          this.savedName = user.name;
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response.status === 401 || error.response.status === 403) {
+          // Không có accesstoken hoặc refreshtoken hết hạn
+          this.$router.push("/login");
+        }
+        if (error.response.status === 404) {
+          // Không tìm thấy người dùng
+          this.$router.push("/login");
+        }
+        if (error.response.status === 500) {
+          // Có lỗi trong quá trình lấy thông tin người dùng
+          alert(error.response.data.message);
+        }
       }
-    } catch (error) {
-      console.log(error);
-      if (error.response.status === 401 || error.response.status === 403) {
-        // Không có accesstoken hoặc refreshtoken hết hạn
-        window.location.href = "/login";
-      }
-      if (error.response.status === 404) {
-        // Không tìm thấy người dùng
-        window.location.href = "/login";
-      }
-      if (error.response.status === 500) {
-        // Có lỗi trong quá trình lấy thông tin người dùng
-        alert(error.response.data.message);
-      }
-    }
+    },
   },
 };
 </script>

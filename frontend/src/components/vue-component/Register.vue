@@ -102,7 +102,7 @@
       </button>
 
       <div class="text-center mb-1">
-        Bạn đã có tài khoản? <a href="/login">Đăng nhập</a>
+        Bạn đã có tài khoản? <router-link to="/login">Đăng nhập</router-link>
       </div>
 
       <div class="d-flex align-items-center justify-content-center">
@@ -225,7 +225,7 @@ export default {
 
         if (response.status === 201) {
           // Nếu thành công, chuyển hướng về trang login
-          window.location.href = "/login"; // Điều hướng đến trang login
+          this.$router.push("/login");
         } else if (response.status === 400) {
           // Nếu thiếu dữ liệu
           this.errMsg = data.message;

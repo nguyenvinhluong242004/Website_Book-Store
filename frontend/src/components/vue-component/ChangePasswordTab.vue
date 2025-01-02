@@ -153,7 +153,7 @@ export default {
 
         if (response.status === 200) {
           alert(response.data.message);
-          window.location.href = "/profile/info";
+          this.$router.push("/profile/info");
         }
       } catch (error) {
         if (error.response) {
@@ -167,7 +167,7 @@ export default {
             this.errMsg = message;
           } else if (status === 403) {
             alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-            window.location.href = "/login";
+            this.$router.push("/login");
           } else if (status === 404) {
             alert(message);
           } else if (status === 500) {

@@ -184,8 +184,9 @@ export default {
         });
 
         if (response.status === 200) {
-          alert(response.data.message);
-          window.location.href = "/profile/info";
+          this.$router.push("/").then(() => {
+            this.$router.replace("/profile/info");
+          });
         }
       } catch (error) {
         if (error.response) {
@@ -197,7 +198,7 @@ export default {
             this.errMsg = message;
           } else if (status === 403) {
             alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-            window.location.href = "/login";
+            this.$router.push("/login");
           } else if (status === 404) {
             alert(message);
           } else if (status === 500) {
@@ -209,34 +210,45 @@ export default {
         }
       }
     },
+    async handleRouteChange() {
+      try {
+        // Gửi yêu cầu để lấy thông tin người dùng
+        const response = await axiosInstance.get("/account/profile");
+        if (response.status === 200) {
+          const user = response.data.user;
+          this.name = user.name;
+          this.email = user.email;
+          this.phone = user.phone;
+          this.gender = user.gender;
+          this.birthday = user.birth_date
+            ? user.birth_date.split("T")[0]
+            : null;
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response.status === 401 || error.response.status === 403) {
+          // Không có accesstoken hoặc refreshtoken hết hạn
+          alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          this.$router.push("/login");
+        }
+        if (error.response.status === 404) {
+          // Không tìm thấy người dùng
+          this.$router.push("/login");
+        }
+        if (error.response.status === 500) {
+          // Lỗi server
+          this.$router.push("/login");
+        }
+      }
+    },
   },
-  async created() {
-    try {
-      // Gửi yêu cầu để lấy thông tin người dùng
-      const response = await axiosInstance.get("/account/profile");
-      if (response.status === 200) {
-        const user = response.data.user;
-        this.name = user.name;
-        this.email = user.email;
-        this.phone = user.phone;
-        this.gender = user.gender;
-        this.birthday = user.birth_date ? user.birth_date.split("T")[0] : null;
-      }
-    } catch (error) {
-      console.log(error);
-      if (error.response.status === 401 || error.response.status === 403) {
-        // Không có accesstoken hoặc refreshtoken hết hạn
-        window.location.href = "/login";
-      }
-      if (error.response.status === 404) {
-        // Không tìm thấy người dùng
-        window.location.href = "/login";
-      }
-      if (error.response.status === 500) {
-        // Lỗi server
-        window.location.href = "/login";
-      }
-    }
+  mounted() {
+    this.handleRouteChange(); // Thực hiện xử lý khi component được mount
+  },
+  watch: {
+    $route() {
+      this.handleRouteChange();
+    },
   },
 };
 </script>
