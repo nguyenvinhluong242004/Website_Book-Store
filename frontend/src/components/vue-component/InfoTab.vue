@@ -226,8 +226,12 @@ export default {
         }
       } catch (error) {
         console.log(error);
-        if (error.response.status === 401 || error.response.status === 403) {
-          // Không có accesstoken hoặc refreshtoken hết hạn
+        if (error.response.status === 401) {
+          // Không có accesstoken
+          this.$router.push("/login");
+        }
+        if (error.response.status === 403) {
+          // refreshtoken hết hạn
           alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
           this.$router.push("/login");
         }

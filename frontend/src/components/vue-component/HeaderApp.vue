@@ -56,16 +56,15 @@
         </div>
       </div>
       <div class="iconCart">
-        <i class="fas fa-shopping-cart"></i>
+        <i class="fas fa-shopping-cart" @click="goToCart"></i
+        >
       </div>
       <div
         class="iconUser"
         @mouseenter="userVisible = true"
         @mouseleave="userVisible = false"
       >
-        <router-link to="/profile/info"
-          ><i class="fas fa-user"></i>
-        </router-link>
+        <i class="fas fa-user" @click="goToProfileInfo"></i>
         <div v-if="userVisible" class="userBox">
           <div class="userBoxLogined" v-if="name">
             <div
@@ -217,6 +216,9 @@ export default {
     },
     goToProfileChangepw() {
       this.$router.push("/profile/changePW");
+    },
+    goToCart(){
+      this.$router.push("/cart");
     },
   },
 };
