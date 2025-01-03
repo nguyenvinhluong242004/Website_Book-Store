@@ -34,7 +34,9 @@
             class="text-primary pe-2 text-opacity-75 border-end border-2 border-secondary-subtle"
             @click="editAddress(address)"
             >Sửa</span
-          ><span class="ps-2"><i class="fa-solid fa-trash-can"></i></span>
+          ><span class="ps-2" @click="deleteAddress(address.id_address)"
+            ><i class="fa-solid fa-trash-can"></i
+          ></span>
         </div>
       </div>
 
@@ -148,6 +150,41 @@ export default {
         query: { ...address },
       });
     },
+    async deleteAddress(id) {
+      try {
+        const response = await axiosInstance.delete("/account/delete-address", {
+          data: {
+            id_address: id,
+          },
+        });
+
+        if (response.status === 200) {
+          this.$router.push("/").then(() => {
+            this.$router.push("/profile/address");
+          });
+        }
+      } catch (error) {
+        if (error.response) {
+          const status = error.response.status;
+          const message = error.response.data.message;
+
+          // Xử lý các mã lỗi cụ thể
+          if (status === 400) {
+            alert(message);
+          } else if (status === 403) {
+            alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+            this.$router.push("/login");
+          } else if (status === 404) {
+            alert(message);
+          } else if (status === 500) {
+            alert(message);
+          }
+        } else {
+          // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
+          alert("Lỗi mạng: Không thể kết nối đến server.");
+        }
+      }
+    },
     async handleRouteChange() {
       try {
         const response = await axiosInstance.get("/account/address");
@@ -176,7 +213,7 @@ export default {
   },
   watch: {
     $route() {
-        this.handleRouteChange();
+      this.handleRouteChange();
     },
   },
 };

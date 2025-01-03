@@ -164,8 +164,6 @@
         </button>
       </div>
     </div>
-
-    <input type="hidden" name="hiddenEmail" value="" />
   </form>
 </template>
 
