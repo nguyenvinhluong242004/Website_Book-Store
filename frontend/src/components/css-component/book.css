@@ -16,7 +16,7 @@
   display: flex;
   justify-content: center;
   gap: 10px;
-  
+
   width: 1300px;
 
   border-radius: 10px;
@@ -28,7 +28,7 @@
 .book-col-slide {
   padding: 10px;
   width: 50%;
-  height:800px;
+  height: 800px;
   border-radius: 5px;
   background-color: rgb(255, 255, 255);
 }
@@ -80,17 +80,17 @@
   gap: 10px;
   transition: transform 0.5s ease;
 }
-.book-img-big{
-  width:300px;
+.book-img-big {
+  width: 300px;
   height: 100%;
 }
-.book-img-small{
+.book-img-small {
   width: 100%;
   height: 100%;
   border-radius: 5px;
 }
-.book-img-small:hover{
-scale: 1.1;
+.book-img-small:hover {
+  scale: 1.1;
 }
 
 .book-view-frame {
@@ -98,8 +98,8 @@ scale: 1.1;
   height: 100%;
   overflow: hidden;
 }
-.book-img{
-  height:70%;
+.book-img {
+  height: 70%;
   width: 100%;
 }
 .book-body-slide {
@@ -162,47 +162,50 @@ scale: 1.1;
   background-color: rgb(36, 36, 36);
 }
 
-.book-add-cart{
+.book-add-cart {
   border-radius: 5px;
   border: 2px solid #1670ac;
-  width: 45%;
-  height:100%;
+  width: 48%;
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  font-weight:bold;
+  justify-content: center;
+  gap: 1%;
+  font-weight: bold;
 }
-.book-buy-now{
+.book-buy-now {
   border-radius: 5px;
   border: 2px solid #1670ac;
-  width: 45%;
-  height:100%;
+  width: 48%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  font-weight:bold;
-  color:white;
+  font-weight: bold;
+  color: white;
   background-color: #1670ac;
 }
-.book-buy-now:hover{
-  scale:1.1;
+.book-buy-now:hover {
+  scale: 1.1;
 }
-.book-cart-buy{
+.book-cart-buy {
   display: flex;
   justify-content: space-between;
   height: 6%;
-  color:#1670ac;
+  color: #1670ac;
   margin-top: 20px;
 }
-.fa-shipping-fast,.fa-box-open,.fa-store{
+.fa-shipping-fast,
+.fa-box-open,
+.fa-store {
   color: rgb(26, 116, 181);
 }
-.book-thoigiangiao{
+.book-thoigiangiao {
   display: flex;
   justify-content: space-between;
 }
 
-body.modal{
+body.modal {
   filter: blur(5px); /* Làm mờ toàn bộ body */
   transition: filter 0.3s; /* Hiệu ứng chuyển đổi mờ */
 }
@@ -228,11 +231,9 @@ body.modal{
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  text-align: center;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
   max-width: 800px;
   position: absolute;
-  
 }
 
 .modal-content .close {
@@ -248,112 +249,127 @@ body.modal{
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  color:#adadad;
+  color: #adadad;
 }
-.book-name{
+.book-name {
   background-color: #ffffff;
   border-radius: 5px;
 }
 
-.book-ten-sach{
+.book-ten-sach {
   font-size: 30px;
   font-weight: bold;
 }
-.book-price{
-  color:red;
+.book-price {
+  color: red;
   font-size: 30px;
   font-weight: bold;
 }
-.book-sale{
+.giamgia {
   background-color: rgb(193, 52, 52);
   border-radius: 5px;
   width: 20px;
   height: 7px;
-  color:white;
-  font-style:bold;
+  color: white;
+  font-style: bold;
 }
-.book-name-sach{
+.book-name-sach {
   background-color: white;
   border-radius: 5px;
   padding: 20px;
 }
-.book-da-ban{
+.book-da-ban {
   font-size: 13px;
+  margin-top: 20px;
 }
-.book-ship{
+.book-ship {
   background-color: #ffffff;
   border-radius: 5px;
-  padding:20px;
+  padding: 20px;
 }
-.book-quantity{
+.book-quantity {
   width: 10%;
   border-radius: 5px;
-  padding:5px;
+  padding: 5px;
 }
-.book-col-right{
+.book-col-right {
   width: 50%;
   display: flex;
   flex-direction: column;
   height: 100%;
   align-items: center;
-  max-height: 800px; 
+  max-height: 800px;
   overflow-y: auto;
 }
 
-.book-detail-infor{
+.book-detail-infor {
   position: relative;
   background-color: #ffffff;
   border-radius: 5px;
   width: 100%;
   padding: 20px;
 }
-.book-row-ma-hang{
+.book-row-ma-hang {
   position: relative;
   width: 100%;
 }
-.book-ma-giao-hang{
+.book-ma-giao-hang {
   position: absolute;
   left: 30%;
 }
-.book-spec{
+.book-spec {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-radius: 5px;
   background-color: #ffffff;
   width: 100%;
-
 }
 
 .book-spec span {
+  position: relative;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;
-  max-height: 300px;
+  max-height: 100px;
+}
+
+.book-spec span::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px; /* Độ mờ 20px từ đáy */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 1)
+  ); /* Hiệu ứng mờ dần */
 }
 
 .book-spec .expanded {
   max-height: none; /* Xóa giới hạn chiều cao khi mở rộng */
   white-space: normal; /* Cho phép nội dung xuống dòng */
+
 }
 
-.book-btn-see-more-des{
-  border:1px solid rgb(134, 134, 134);
-  border-radius: 5px;
+.book-spec .expanded::after {
+  display: none; /* Ẩn hiệu ứng mờ khi mở rộng */
+}
+
+.book-btn-see-more-des {
   width: 15%;
   height: 5%;
-  background-color: white;
-  color:blue;
+  color: rgb(56, 116, 221);
+  cursor: pointer;
 }
-
 
 .book-detail-infor {
   margin-top: 20px;
   transition: max-height 0.3s ease; /* Thêm hiệu ứng cho max-height */
-  overflow: hidden; /* Giới hạn nội dung khi thu gọn */
-  max-height: 200px; /* Giới hạn chiều cao ban đầu là 500px */
 }
 
 .book-detail-infor.expanded {
@@ -361,12 +377,12 @@ body.modal{
   overflow: visible; /* Hiển thị nội dung đầy đủ khi mở rộng */
 }
 
-.book-btn-infor{
+.book-btn-infor {
   margin-top: 5px;
   width: 15%;
   border: 1px solid rgb(149, 149, 149);
   border-radius: 5px;
-  color:blue;
+  color: blue;
 }
 
 /* Review */
@@ -494,7 +510,7 @@ body.modal{
   gap: 5px;
 }
 
-.review-image{
+.review-image {
   width: 150px;
   height: 150px;
 
@@ -509,14 +525,23 @@ body.modal{
   font-size: 45px;
 }
 
-.reviews{
+.reviews {
+  position: relative;
   width: 100%;
   border-top: 1px solid rgb(199, 199, 199);
   margin-top: 15px;
   padding: 15px 20px;
 }
 
-.review{
+.book-btn-review{
+  position: absolute;
+  border-radius: 5px;
+  border: none;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.review {
   width: 100%;
 
   padding: 10px 0px;
@@ -526,14 +551,14 @@ body.modal{
   border-bottom: 1px solid rgb(199, 199, 199);
 }
 
-.review-avatar-ctn{
+.review-avatar-ctn {
   width: 80px;
   padding: 10px;
   display: flex;
   justify-content: center;
 }
 
-.review-avatar{
+.review-avatar {
   width: 50px;
   height: 50px;
 
@@ -542,32 +567,32 @@ body.modal{
   overflow: hidden;
 }
 
-.review-content-ctn{
+.review-content-ctn {
   width: 100%;
   padding: 10px;
 }
 
-.review-rate-star{
+.review-rate-star {
   width: 200px;
   height: 20px;
 
   display: flex;
   align-items: center;
   gap: 3px;
-  
+
   font-size: 10px;
 }
 
-.review-date{
+.review-date {
   font-size: 10px;
   color: rgb(199, 199, 199);
 }
 
-.review-content-text{
+.review-content-text {
   margin: 10px 0px;
 }
 
-.review-content-images{
+.review-content-images {
   display: flex;
   flex-flow: row wrap;
 
@@ -576,21 +601,85 @@ body.modal{
   margin-bottom: 20px;
 }
 
-.image-ctn{
+.image-ctn {
   width: 150px;
   height: 150px;
 }
 
-.image-ctn img{
+.image-ctn img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.review-respond{
+.review-respond {
   background: rgb(236, 236, 236);
 
   padding: 10px 15px;
 
   border-radius: 10px;
+}
+.nhacungcap {
+  position: absolute;
+}
+.nhaxuatban {
+  position: absolute;
+  top: 50%;
+}
+.tacgia {
+  position: absolute;
+  left: 50%;
+}
+.hinhthuc {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+.gia {
+  margin-top: 20px;
+  width: 60%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.phantram {
+  width: 15%;
+  background-color: #dd2626;
+  color: white;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+}
+.book-old-price {
+  font-size: 10px;
+  color: #999999;
+  text-decoration: line-through;
+}
+.book-SL {
+  margin-top: 20px;
+  display: flex;
+  gap: 1.2%;
+}
+.book-quantity-container {
+  border: 2px solid rgb(142, 142, 142);
+  width: 15%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.book-quantity-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  width: 30%;
+}
+.book-laout-top {
+  position: relative;
+  margin-top: 20px;
+  width: 100%;
+  height: 100px;
 }

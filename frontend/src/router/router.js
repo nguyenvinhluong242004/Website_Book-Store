@@ -9,6 +9,7 @@ import ProfilePage from "../components/vue-component/Profile.vue";
 import BookPage from "../components/vue-component/Book.vue";
 import SearchPage from "../components/vue-component/Search.vue"
 import CartPage from "../components/vue-component/Cart.vue"
+import GenrePage from "../components/vue-component/GenreBook.vue"
 
 import InfoTab from "../components/vue-component/InfoTab.vue"
 import AddressTab from "../components/vue-component/AddressTab.vue"
@@ -27,6 +28,7 @@ const routes = [
       { path: "", component: HomePage, name: "HomePage" },
       { path: "login", component: LoginPage, name: "LoginPage" },
       { path: "register", component: RegisterPage, name: "RegisterPage" },
+      { path: "/genre", component: GenrePage, name:"GenrePage"},
       {
         path: "profile", component: ProfilePage, name: "ProfilePage", children: [
           { path: "info", component: InfoTab, name: "InfoTab" },

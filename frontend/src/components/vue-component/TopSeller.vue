@@ -5,22 +5,27 @@
       <div>SÁCH BÁN CHẠY</div>
     </div>
 
-    <div class="top-seller-book-list-container">
-      <ProductCard
-        v-for="(product, index) in products_top"
-        :key="index"
-        :img="product.img"
-        :name="product.name"
-        :old_price="product.old_price"
-        :new_price="product.new_price"
-        :type_money="product.type_money"
-      />
+    <div v-if="loading" class="spinner"></div>
+    <div v-else>
+      <div class="top-seller-book-list-container">
+        <ProductCard
+          v-for="(product, index) in arrayBook"
+          :key="index"
+          :img="product.images"
+          :name="product.book_name"
+          :old_price="product.list_price"
+          :new_price="product.discounted_price"
+          :type_money="type_money"
+          @click="goDetail(product.id_book)"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import '../css-component/top-seller.css';
+import "../css-component/top-seller.css";
+import axios from "axios";
 
 import ProductCard from "./ProductCard.vue";
 
@@ -30,5 +35,38 @@ export default {
     ProductCard,
   },
   props: ["products_top"],
+  data() {
+    return {
+      loading: false,
+      type_money: "đ",
+      arrayBook: [],
+    };
+  },
+  methods: {
+    async getApi() {
+      //this.loading = true;
+      try {
+        const response = await axios.get(`/api`); // Lấy API qua proxy
+
+        if (response.data.success) {
+          this.arrayBook = response.data.topBooks;
+        }
+      } catch (error) {
+        this.error = "Không thể lấy thông tin sách!";
+        console.error(error);
+      } finally {
+        //this.loading = false;
+      }
+    },
+    goDetail(id) {
+      this.$router.push({
+        path: `/book`,
+        query: { id_book: id },
+      });
+    },
+  },
+  mounted() {
+    this.getApi();
+  },
 };
 </script>
