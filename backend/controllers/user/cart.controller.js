@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const cartModel = require('../../models/user/cart.model');
+const bookModel = require('../../models/user/book.model');
 
 class CartController {
     // XỬ LÝ NGOÀI GIỎ HÀNG
@@ -26,11 +27,13 @@ class CartController {
             } else {
                 req.session.cart.push({ id_book, quantity: quantity });
             }
+            const cart = req.session.cart;
+            const detailedCart = await getDetailedCart(cart);
 
             return res.status(200).json({
                 success: true,
                 message: "Sản phẩm được thêm vào giỏ hàng thành công",
-                cart: req.session.cart,
+                cart: detailedCart,
             });
         }
 
@@ -52,10 +55,11 @@ class CartController {
                 addedBook = await cartModel.updateQuantity(email, id_book, quantity);
             }
             const cart = await cartModel.getAllProductInCart(email);
+            const detailedCart = await getDetailedCart(cart);
             return res.status(200).json({
                 success: true,
                 message: "Sản phẩm được thêm vào giỏ hàng thành công",
-                cart: cart
+                cart: detailedCart
             });
 
         } catch (err) {
@@ -91,10 +95,12 @@ class CartController {
                 });
             }
 
+            const cart = req.session.cart;
+            const detailedCart = await getDetailedCart(cart);
             return res.status(200).json({
                 success: true,
                 message: "Lấy sản phẩm trong giỏ hàng thành công",
-                cart: req.session.cart,
+                cart: detailedCart,
             });
         }
 
@@ -107,7 +113,7 @@ class CartController {
 
             // Lấy giỏ hàng từ database
             const cart = await cartModel.getAllProductInCart(email);
-
+            const detailedCart = await getDetailedCart(cart);
             if (!cart || cart.length === 0) {
                 return res.status(200).json({
                     success: true,
@@ -119,7 +125,7 @@ class CartController {
             return res.status(200).json({
                 success: true,
                 message: "Lấy sản phẩm trong giỏ hàng thành công",
-                cart: cart,
+                cart: detailedCart,
             });
         } catch (err) {
             console.error(err);
@@ -169,11 +175,14 @@ class CartController {
 
             // Cập nhật số lượng
             existingProduct.quantity = quantity;
+            
+            const cart = req.session.cart;
+            const detailedCart = await getDetailedCart(cart);
 
             return res.status(200).json({
                 success: true,
                 message: "Số lượng được cập nhật thành công",
-                cart: req.session.cart,
+                cart: detailedCart,
             });
         }
 
@@ -192,12 +201,14 @@ class CartController {
             }
 
             const updatedBook = await cartModel.updateNewQuantity(email, id_book, quantity);
+
             const cart = await cartModel.getAllProductInCart(email);
+            const detailedCart = await getDetailedCart(cart);
 
             return res.status(200).json({
                 success: true,
                 message: "Số lượng được cập nhật thành công",
-                cart: cart,
+                cart: detailedCart,
             });
 
         } catch (err) {
@@ -216,7 +227,7 @@ class CartController {
         }
     }
 
-    // [PATCH]: cart/delete
+    // [DELETE]: cart/delete
     async deleteProduct(req, res) {
         const { id_book } = req.body;
         const authHeader = req.headers.authorization || req.headers.Authorization;
@@ -232,10 +243,13 @@ class CartController {
 
             req.session.cart = req.session.cart.filter((item) => item.id_book !== id_book);
 
+            const cart = req.session.cart;
+            const detailedCart = await getDetailedCart(cart);
+
             return res.status(200).json({
                 success: true,
                 message: "Sản phẩm được xóa thành công",
-                cart: req.session.cart,
+                cart: detailedCart
             });
         }
 
@@ -245,7 +259,9 @@ class CartController {
             const email = decoded.UserInfo.email;
 
             const deletedProduct = await cartModel.deleteProductFromCart(email, id_book);
+            
             const cart = await cartModel.getAllProductInCart(email);
+            const detailedCart = await getDetailedCart(cart);
 
             if (!deletedProduct.rowCount) {
                 return res.status(404).json({
@@ -257,7 +273,7 @@ class CartController {
             return res.json({
                 success: true,
                 message: "Sản phẩm được xóa thành công",
-                cart: cart
+                cart: detailedCart
             });
 
         } catch (err) {
@@ -275,6 +291,22 @@ class CartController {
             });
         }
     }
+}
+
+async function getDetailedCart(cart) {
+    // console.log('CART IN FUNCTION: ', cart);
+    const detailedCart = [];
+    for (const item of cart) {
+        const bookDetails = await bookModel.getBookByID(item.id_book);
+        if (bookDetails) {
+            detailedCart.push({
+                ...item,
+                ...bookDetails, 
+            });
+        }
+    }
+    // console.log('DETAIL CART: ', detailedCart);
+    return detailedCart;
 }
 
 module.exports = new CartController();
