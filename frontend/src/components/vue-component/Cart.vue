@@ -124,14 +124,15 @@ export default {
       if (newQuantity > 0 && newQuantity <= available_quantity) {
         try {
           const response = await axiosInstance.patch("/cart/update", {
-            id_book: id_book,
+            id_book: String(id_book),
             quantity: newQuantity,
           });
 
           if (response.status === 200) {
-            this.$router.push("/").then(() => {
-              this.$router.push("/cart");
-            });
+            this.listProduct=response.data.cart;
+            // this.$router.push("/").then(() => {
+            //   this.$router.push("/cart");
+            // });
           }
         } catch (error) {
           alert(error);
@@ -160,14 +161,15 @@ export default {
       try {
         const response = await axiosInstance.delete("/cart/delete", {
           data: {
-            id_book: id_book,
+            id_book: String(id_book),
           },
         });
 
         if (response.status === 200) {
-          this.$router.push("/").then(() => {
-            this.$router.push("/cart");
-          });
+          this.listProduct=response.data.cart;
+          // this.$router.push("/").then(() => {
+          //   this.$router.push("/cart");
+          // });
         }
       } catch (error) {
         if (error.response) {
