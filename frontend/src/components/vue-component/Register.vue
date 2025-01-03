@@ -219,6 +219,7 @@ export default {
             password: this.password,
             confirmedPassword: this.confirmPassword,
           }),
+          credentials: "include",
         });
 
         const data = await response.json();
@@ -237,7 +238,6 @@ export default {
           this.errMsg = data.message;
         }
       } catch (error) {
-        // Xử lý lỗi bất đồng bộ hoặc kết nối mạng
         console.error("Error:", error);
         alert('Lỗi mạng: Không thể kết nối đến server.');
       }

@@ -64,7 +64,7 @@
         </div>
 
         <div class="book-cart-buy">
-          <div class="book-add-cart">
+          <div class="book-add-cart" @click="addToCart">
             <i class="fas fa-cart-plus"></i>
             Thêm vào giỏ hàng
           </div>
@@ -433,6 +433,7 @@
 
 <script>
 import "../css-component/book.css";
+import axiosInstance from "../../services/axiosInstance.js";
 
 export default {
   name: "BookPage",
@@ -485,6 +486,35 @@ export default {
       if (this.activeImg < this.images.length - 1) {
         this.activeImg += 1;
         this.x -= 310;
+      }
+    },
+
+    async addToCart(){
+      try {
+        const response = await axiosInstance.post("/cart/add", {
+          id_book: '1',
+          quantity: this.quantity,
+        });
+        
+        if (response.status === 200) {
+          alert(response.data.message);
+        }
+      } catch (error) {
+        if (error.response) {
+          const status = error.response.status;
+          const message = error.response.data.message;
+
+          // Xử lý các mã lỗi cụ thể
+          if (status === 403) {
+            alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+            this.$router.push("/login");
+          } else if (status === 500) {
+            alert(message);
+          }
+        } else {
+          // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
+          alert("Lỗi mạng: Không thể kết nối đến server.");
+        }
       }
     },
 
