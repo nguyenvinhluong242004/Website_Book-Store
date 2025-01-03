@@ -158,8 +158,27 @@
           :old_price="book.list_price"
           :new_price="book.discounted_price"
           :type_money="type_money"
+          @click="goDetail(book.id_book)"
         />
       </div>
+
+      <div class="pagination">
+      <button @click="goToPage(page - 1)" :disabled="page === 1">Previous</button>
+      
+      <!-- Hiển thị các trang -->
+      <button
+        v-for="n in totalPage"
+        :key="n"
+        @click="goToPage(n)"
+        :class="{ active: n === page }"
+      >
+        {{ n }}
+      </button>
+      
+      <button @click="goToPage(page + 1)" :disabled="page === totalPage">Next</button>
+
+      <div>{{curentRecord}}/{{ totalRecord }}</div>
+    </div>
 
      
     </div>
@@ -211,6 +230,10 @@ export default {
       type_money:'đ',
       page: 1,
       arrayBook: [],
+      totalPage:0,
+      perPage:0,
+      totalRecord:0,
+      curentRecord:0,
       
       products_skill: [],
       searchQuery: "", // Thêm biến này để lưu giá trị tìm kiếm từ URL
@@ -224,6 +247,8 @@ export default {
 
     // Gọi API với giá trị query lấy từ URL
     this.fetchProducts();
+
+    
   },
 
   watch: {
@@ -232,6 +257,12 @@ export default {
   },
 
   methods: {
+    goDetail(id) {
+      this.$router.push({
+        path: `/book`,
+        query: { id_book: id },
+      });
+    },
     handleFillter(){
       this.handleCheckboxChange();
       this.handlePriceChange();
@@ -303,6 +334,12 @@ export default {
       axios.get(url).then(response => {
       
         this.arrayBook = response.data.data
+        this.curentRecord += this.arrayBook.length;
+
+        this.totalPage= response.data.total_pages;
+        this.perPage= response.data.per_page;
+        this.totalRecord= response.data.total_records;
+        this.page= response.data.current_page;
 
       })
       .catch(error => {
@@ -331,28 +368,48 @@ export default {
     },
 
     async fetchProducts() {
-      this.isLoading = true;
+      //this.isLoading = true;
       try {
         const response = await axios.get(
           `/api/search?keyword=${this.searchQuery}&page=${this.page}`
         ); // Lấy API qua proxy
         if (response.data.success) {
           this.arrayBook = response.data.data;
+          this.curentRecord += this.arrayBook.length;
+
+          this.totalPage= response.data.total_pages;
+          this.perPage= response.data.per_page;
+          this.totalRecord= response.data.total_records;
+          this.page= response.data.current_page;
+      
+          console.log('tong so trang:',this.totalPage);
+          console.log('tong so sach:',this.totalRecord);
+          console.log('so sach moi trang:',this.perPage);
+          console.log('trang hien tai:',this.page);
         }
       } catch (error) {
         this.error = "Không thể lấy thông tin sách!";
         console.error(error);
       }
       finally{
-        this.isLoading = false;
+        //this.isLoading = false;
       }
     },
-
+    allCurrentBook(){
+      this.curentRecord += this.arrayBook.length;
+    },
+    goToPage(pageNumber) {
+      if (pageNumber < 1 || pageNumber > this.totalPage) return;  // Kiểm tra trang hợp lệ
+      this.page = pageNumber;
+      this.fetchData();  // Gọi lại API với trang mới
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
     handleQueryChange() {
       // Gọi API mỗi khi query trong URL thay đổi
       const query = this.$route.query.query;
       this.searchQuery = query || ""; // Cập nhật giá trị tìm kiếm
       this.fetchProducts();
+      this.allCurrentBook();
     },
   },
 };

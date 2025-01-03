@@ -218,7 +218,7 @@ export default {
 
   watch: {
     // Theo dõi sự thay đổi của query trong URL
-    "$route.query.query": "handleQueryChange",
+    "$route.query.id_genre": "handleQueryChange",
   },
 
   methods: {
@@ -340,7 +340,7 @@ export default {
 
     handleQueryChange() {
       // Gọi API mỗi khi query trong URL thay đổi
-      const query = this.$route.query.query;
+      const query = this.$route.query.id_genre;
       this.searchQuery = query || ""; // Cập nhật giá trị tìm kiếm
       this.noFillter();
       this.fetchProducts();

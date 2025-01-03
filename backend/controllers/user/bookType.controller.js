@@ -5,14 +5,14 @@ class BookTypeController {
     // [GET] /get-list
     async index(req, res) {
         const { genre = '', page = 1 } = req.query;
-        const per_page = 10;
+        const per_page = 8;
 
         console.log('Query params:', req.query);
 
         try {
             const result = await BookModel.findBookTypesByGenre(
                 parseInt(genre),
-                parseInt(page, 10),
+                parseInt(page, 8),
                 per_page
             );
 
@@ -44,7 +44,7 @@ class BookTypeController {
             rating_count = null       // Sắp xếp theo đánh giá nếu có
         } = req.query;
 
-        const per_page = 10;
+        const per_page = 8;
 
         // Kiểm tra thông tin truy vấn
         console.log(`Genre: ${genre}, Page: ${page}, Age: ${age}`);
@@ -53,7 +53,7 @@ class BookTypeController {
             // Gọi hàm tìm kiếm với các tham số
             const result = await BookModel.findBookTypesByFilters({
                 genreId: parseInt(genre),
-                page: parseInt(page, 10),
+                page: parseInt(page, 8),
                 perPage: per_page,
                 startPrice: startPrice ? parseFloat(startPrice) : undefined,
                 endPrice: endPrice ? parseFloat(endPrice) : undefined,

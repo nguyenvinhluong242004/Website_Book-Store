@@ -51,7 +51,7 @@ http://localhost:8888/search/filter?keyword=&page=1&genre=1&age=adult&startPrice
 # api thể loại book
 Filter sẽ bao gồm: startPrice - endPrice, age, có 3 mục sort (chỉ chọn 1 trong 3 để sort): discounted_price, sold_quantity, rating_count: tăng dần thì 'asc', giảm dần thì 'desc'
 # 1. Khi chọn thể loại lần đầu tiên (Không chọn các mục filter):
-http://localhost:8888/get-list?genre=1&page=1
+https://localhost:8888/get-list?genre=1&page=1
 
 # 2. Khi chọn filter:
 Với mục filter nào không chọn thì để trống, và sort để trống hoặc chọn 1 trong 3 ( Không đồng thời nhiều cái)
