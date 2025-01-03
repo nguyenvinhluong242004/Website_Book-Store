@@ -5,26 +5,83 @@
         <span class="close" @click="closeModal">&times;</span>
         <!-- Nội dung tùy chỉnh -->
         <slot name="modal-content">
-          <h3>Thời gian giao hàng</h3>
+          <div style="text-align: center">
+            <h3>THỜI GIAN GIAO HÀNG</h3>
+          </div>
           <p>
-            THÔNG TIN ĐÓNG GÓI, VẬN CHUYỂN HÀNG Với đa phần đơn hàng, Fahasa.com
-            cần vài giờ làm việc để kiểm tra thông tin và đóng gói hàng. Nếu các
-            sản phẩm đều có sẵn hàng, Fahasa.com sẽ nhanh chóng bàn giao cho đối
-            tác vận chuyển. Nếu đơn hàng có sản phẩm sắp phát hành, Fahasa.com
-            sẽ ưu tiên giao những sản phẩm có hàng trước cho Quý khách hàng.
+            <b>THÔNG TIN ĐÓNG GÓI, VẬN CHUYỂN HÀNG</b> <br /><br />
+            Với đa phần đơn hàng, BKS cần vài giờ làm việc để kiểm tra thông tin
+            và đóng gói hàng. Nếu các sản phẩm đều có sẵn hàng, BKS sẽ nhanh
+            chóng bàn giao cho đối tác vận chuyển. Nếu đơn hàng có sản phẩm sắp
+            phát hành, BKS sẽ ưu tiên giao những sản phẩm có hàng trước cho Quý
+            khách hàng.<br /><br />
             Trong một số trường hợp, hàng nằm không có sẵn tại kho gần nhất,
             thời gian giao hàng có thể chậm hơn so với dự kiến do điều hàng. Các
-            phí vận chuyển phát sinh, Fahasa.com sẽ hỗ trợ hoàn toàn. Thời gian
-            giao hàng không tính thứ 7, Chủ nhật, các ngày Lễ, Tết và không bao
-            gồm tuyến huyện đảo xa. THỜI GIAN VÀ CHI PHÍ GIAO HÀNG TẠI TỪNG KHU
-            VỰC TRONG LÃNH THỔ VIỆT NAM: 1. Nội thành TP.HCM và Hà Nội Thời
-            gian: 1-2 ngày Chi phí: 20.000 đồng cho 2 kg đầu tiên. Phụ thu 2.000
-            đồng cho mỗi ký tiếp theo 2. Các tỉnh thành khác Thời gian: 2-3 ngày
-            Chi phí: 32.000 đồng cho 2 kg đầu tiên. Phụ thu 3.000 đồng cho mỗi
-            ký tiếp theo Lưu ý: Từ ngày 20/06/2022, Fahsa.com sẽ phụ thu thêm
-            7.000đ cho đơn hàng chứa sản phẩm Tập học sinh (số lượng từ 5 cuốn
-            trở lên) hoặc Sách Giáo Khoa, cộng trực tiếp vào chi phí giao hàng
-            thông thường.
+            phí vận chuyển phát sinh, BKS sẽ hỗ trợ hoàn toàn.<br /><br />
+            Thời gian giao hàng không tính thứ 7, Chủ nhật, các ngày Lễ, Tết và
+            không bao gồm tuyến huyện đảo xa.<br /><br />
+            <b
+              >THỜI GIAN VÀ CHI PHÍ GIAO HÀNG TẠI TỪNG KHU VỰC TRONG LÃNH THỔ
+              VIỆT NAM:</b
+            >
+            <br />
+            1. Nội thành TP.HCM và Hà Nội Thời gian: 1-2 ngày Chi phí: 20.000
+            đồng cho 2 kg đầu tiên. Phụ thu 2.000 đồng cho mỗi ký tiếp theo<br /><br />
+            2. Các tỉnh thành khác Thời gian: 2-3 ngày Chi phí: 32.000 đồng cho
+            2 kg đầu tiên. Phụ thu 3.000 đồng cho mỗi ký tiếp theo<br /><br />
+            Lưu ý: Từ ngày 20/06/2022, BKS sẽ phụ thu thêm 7.000đ cho đơn hàng
+            chứa sản phẩm Tập học sinh (số lượng từ 5 cuốn trở lên) hoặc Sách
+            Giáo Khoa, cộng trực tiếp vào chi phí giao hàng thông thường.
+          </p>
+        </slot>
+      </div>
+    </div>
+
+    <div v-if="isModalVisible_1" class="modal" @click.self="closeModal">
+      <div class="modal-content">
+        <span class="close" @click="closeModal">&times;</span>
+        <!-- Nội dung tùy chỉnh -->
+        <slot name="modal-content">
+          <h3 style="text-align: center">CHÍNH SÁCH ĐỔI - TRẢ - HOÀN TIỀN</h3>
+          <p>
+            BKS lun tiếp nhận yêu cầu đổi trả hoàn tiên của quý khách vui lòng
+            liên hệ qua số hotline của BKS: 190010005.<br />
+            Để nhân viên tiếp nhận yêu cầu của khách hàng và làm theo hướng dẫn
+            để được đổi trả hàng miễn phí từ BKS.
+          </p>
+        </slot>
+      </div>
+    </div>
+
+    <div v-if="isModalVisible_2" class="modal" @click.self="closeModal">
+      <div class="modal-content">
+        <span class="close" @click="closeModal">&times;</span>
+        <!-- Nội dung tùy chỉnh -->
+        <slot name="modal-content">
+          <h3 style="text-align: center">CHÍNH SÁCH KHÁCH SỈ</h3>
+          <p>
+            Hiện nay, do mức chiết khấu trên BKS rất cao, đặc biệt vào các thời
+            điểm chạy chương trình. Do đó đối với mỗi chương trình số lượng sản
+            phẩm giảm sốc có giới hạn nhất định, vì vậy để đảm bảo quyền lợi của
+            từng khách hàng, chúng tôi xin thông báo chính sách "Đơn Hàng Sỉ"
+            như sau:<br /><br />
+            Chính sách giá (% chiết khấu giảm giá). Đây là chính sách chung chỉ
+            mang tính tương đối. Đối với khách hàng có nhu cầu đặt sỉ, xin Quý
+            khách vui lòng liên lạc với BKS để có chính sách giá chính xác
+            nhất:<br /><br />
+            - Đối với Nhóm hàng sách <b>Kinh tế, Văn học</b>:<br />
+            áp dụng mức giảm giá trên web tối đa không vượt quá 30%.<br />
+            - Đối với Nhóm hàng sách <b>Thiếu nhi, Tâm lý kỹ năng</b> : <br />
+            áp dụng mức giảm giá trên web tối đa không vượt quá 20%.<br />
+            - Đối với Nhóm hàng Văn phòng phẩm, Đồ chơi, Dụng cụ học sinh: áp
+            dụng mức giảm giá trên web tối đa không vượt quá 15%. <br />
+            - Đối với Nhóm hàng sách <b>Từ điển, Ngoại văn</b> : áp dụng mức
+            giảm giá trên web tối đa không vượt quá 10%. <br />
+            - Đối với Nhóm hàng
+            <b>Giấy photo, Sản phẩm điện tử, Văn hóa phẩm</b> : áp dụng mức giảm
+            giá trên web tối đa không vượt quá 5%.<br /><br />
+            Vui lòng liên hệ phòng kinh doanh BKS: 1900 63 64 67 hoặc Email:
+            sales@bks.com.vn để được tư vấn.
           </p>
         </slot>
       </div>
@@ -85,7 +142,7 @@
             miễn phí toàn quốc
           </div>
 
-          <i class="fas fa-angle-right" @click="showModal"></i>
+          <i class="fas fa-angle-right" @click="showModal_1"></i>
         </div>
 
         <div class="book-thoigiangiao mt-2">
@@ -93,7 +150,7 @@
             <i class="fas fa-store"></i>
             <b> Chính sách khách sỉ</b>: Ưu đãi khi mua số lượng lớn
           </div>
-          <i class="fas fa-angle-right" @click="showModal"></i>
+          <i class="fas fa-angle-right" @click="showModal_2"></i>
         </div>
       </div>
 
@@ -101,20 +158,57 @@
         <div class="book-col-price">
           <div class="book-name-sach">
             <div class="book-ten-sach">
-              Trump - Đừng Bao Giờ Bỏ Cuộc (Tái Bản 2022)
+              {{ book.book_name }}
             </div>
-            <div>Nhà cung cấp: NXB Trẻ</div>
-            <div>Nhà xuất cấp: <b>NXB Trẻ</b></div>
-            <div>Tác giả: <b>NXB Trẻ</b></div>
-            <div>Hình thức bìa: <b>Bìa mềm</b></div>
-            <div>
-              <b class="book-price">69.600 đ</b> <span>80.000 đ</span>
-              <span class="book-sale">-13%</span>
+
+            <div class="book-laout-top">
+              <div class="nhacungcap">Nhà cung cấp: {{ book.supplier }}</div>
+              <div class="nhaxuatban">
+                Nhà xuất bản: <b>{{ book.supplier }}</b>
+              </div>
+
+              <div class="tacgia">
+                Tác giả: <b>{{ book.author }}</b>
+              </div>
+              <div class="hinhthuc">
+                Hình thức bìa: <b>{{ book.cover_type }}</b>
+              </div>
             </div>
-            <div class="book-da-ban">Đã bán 2.1k</div>
+
+            <div class="gia">
+              <div class="book-price">
+                {{ formatPrice(book.discounted_price) }}đ
+              </div>
+              <div class="book-old-price">
+                {{ formatPrice(book.list_price) }}đ
+              </div>
+              <div class="phantram">-{{ discounted }} %</div>
+            </div>
+            <div class="book-da-ban">Đã bán {{ book.sold_quantity }}</div>
+
+            <div class="book-SL">
+              <div for="book-quantity">Số lượng:</div>
+              <div class="book-quantity-container">
+                <div
+                  type="button"
+                  class="book-quantity-btn"
+                  @click="decreaseQuantity"
+                >
+                  -
+                </div>
+                <div>{{ this.quantityOfBook }}</div>
+                <div
+                  type="button"
+                  class="book-quantity-btn"
+                  @click="increaseQuantity"
+                >
+                  +
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="book-ship mt-3">
+          <!-- <div class="book-ship mt-3">
             <div>Thông tin vận chuyển</div>
             <div>
               Giao hàn đến <b>Phường Bến Nghé, Quận 1, Hồ Chí Minh</b>
@@ -122,129 +216,107 @@
             </div>
             <div><i class="fas fa-shipping-fast"></i> Giao hàng tiêu chuẩn</div>
             <div>Dự kiến giao <b>Thứ năm - 26/12</b></div>
-            <div>Số lượng <input class="book-quantity" type="number" v-model="quantity" /></div>
-          </div>
+           
+          </div> -->
         </div>
 
-        <div :class="['book-detail-infor', { expanded: status }]" >
+        <div :class="['book-detail-infor', { expanded: status }]">
           <div><b>Thông tin chi tiết</b></div>
           <div class="book-row-ma-hang mt-4">
             <span>Mã hàng </span>
-            <span class="book-ma-giao-hang">5748573948572309485723</span>
+            <span class="book-ma-giao-hang">{{ book.id_book }}</span>
           </div>
           <hr />
           <div>
             Tên nhà cung cấp
-            <span class="book-ma-giao-hang">Công ty TNHH Sách Hà Giang</span>
+            <span class="book-ma-giao-hang">{{ book.supplier }}</span>
           </div>
           <hr />
           <div>
             Tac giả
-            <span class="book-ma-giao-hang">Antoine de Saint-Exupéry</span>
+            <span class="book-ma-giao-hang">{{ book.author }}</span>
           </div>
           <hr />
           <div>
-            Người dịch <span class="book-ma-giao-hang">Huỳnh Công Minh</span>
-          </div>
-          <hr />
-          <div>NXB <span class="book-ma-giao-hang">Văn Học</span></div>
-          <hr />
-          <div>Năm XB <span class="book-ma-giao-hang">2025</span></div>
-          <hr />
-          <div>Ngôn ngữ <span class="book-ma-giao-hang">200</span></div>
-          <hr />
-          <div>
-            Trọng lượng (gr)
-            <span class="book-ma-giao-hang">Antoine de Saint-Exupéry</span>
+            Người dịch
+            <span class="book-ma-giao-hang">{{ book.translator }}</span>
           </div>
           <hr />
           <div>
-            Kích thước bao bì
-            <span class="book-ma-giao-hang">20.5 x 14 x 1 cm</span>
+            NXB <span class="book-ma-giao-hang">{{ book.publisher }}</span>
           </div>
           <hr />
-          <div>Số trang <span class="book-ma-giao-hang">200</span></div>
+          <div>
+            Năm XB
+            <span class="book-ma-giao-hang">{{ book.publication_year }}</span>
+          </div>
           <hr />
-          <div>Hình thức <span class="book-ma-giao-hang">Bìa mềm</span></div>
-        </div>
-        <button class="book-btn-infor" @click="toggle">{{ status ? 'Thu gọn' : 'Xem thêm' }}</button>
-        
-        <div class="book-spec mt-3">
-          <span  v-bind:class="{ expanded: isExpanded }"
-            >
-            Mô tả sản phẩm
-            Hoàng Tử Bé (Song Ngữ Việt-Anh) Hoàng tử bé được
-            xuất bản lần đầu năm 1943 của nhà văn, phi công người Pháp Antoine
-            de Saint-exupéry là một trong những cuốn tiểu thuyết kinh điển nổi
-            tiếng nhất mọi thời đại. Câu chuyện ngắn gọn về cuộc gặp gỡ diệu kỳ
-            giữa viên phi công bị rơi máy bay và Hoàng tử bé giữa sa mạc
-            Sa-ha-ra hoang vu. Hành tinh quê hương và các mối quan hệ của hoàng
-            tử bé dần hé lộ: Tình bạn, tình yêu thương của Hoàng tử bé dành cho
-            bông hồng duy nhất, tình cảm sâu sắc dành cho chú cáo. Không những
-            vậy, thông qua các cuộc gặp gỡ trong chuyến du ngoạn tới các hành
-            tinh khác nhau của hoàng tử bé cũng chứa đựng triết lý nhân sinh sâu
-            sắc về các kiểu người trong xã hội hiện đại. Thật không ngoa khi
-            khẳng định, mỗi câu chữ trong cuốn sách này đều đầy triết lý và mỗi
-            người, mỗi lứa tuổi và mỗi hoàn cảnh khi đọc sẽ có những cảm nhận
-            riêng. Thành tích Tính đến nay, tác phẩm Hoàng tử bé (Le Petit
-            Prince) đã được dịch sang 300 ngôn ngữ, trở thành cuốn sách được
-            chuyển thể ra nhiều ngôn ngữ nhất trên thế giới chỉ sau Kinh Thánh.
-            Với hàng trăm triệu bản in trên toàn thế giới, Hoàng tử bé được coi
-            là một trong những tác phẩm bán chạy nhất của nhân loại và vẫn tiếp
-            tục được xuất bản hằng năm với rất nhiều phiên bản khác nhau. Cuốn
-            sách thiếu nhi có kèm truyện tranh độc đáo với phiên bản truyện song
-            ngữ Anh Việt giúp các em nhỏ học tiếng Anh, giải trí, tăng vốn từ
-            vựng, rèn luyện EQ, IQ. Có thể coi đây là cuốn sách vượt xa các cuốn
-            sách đương thời như: Harry Potter, Nhóc Nicolas, Kính vạn hoa, Lũ
-            trẻ hư nhất quả đất, Chuyện con mèo dạy hải âu bay... Cuốn sách được
-            xếp vào top 100 cuốn sách hay nhất thế kỷ XX. Điểm khác biệt của
-            phiên bản song ngữ Việt-Anh này so với các phiên bản khác có trên
-            thị trường: Phần tiếng Anh là bản dịch của Katherine Wood – một bản
-            dịch vô cùng được yêu thích bởi những người nói tiếng Anh trên khắp
-            thế giới. Đây là phiên bản Hoàng tử bé song ngữ Anh-Việt duy nhất có
-            kết hợp chọn từ vựng tiếng Anh giúp các em nhỏ học tiếng Anh, giải
-            trí, tăng vốn từ vựng với những đoạn hội thoại đậm chất văn học,
-            nuôi dưỡng và rèn luyện trí thông mình cảm xúc (EQ) và cảm nhận tác
-            phẩm kinh điển này bằng cả hai thứ tiếng. Trình bày song song hai
-            ngôn ngữ giúp học tiếng Anh (hoặc người nước ngoài học tiếng Việt)
-            một cách dễ dàng cùng phần ghi chú từ vựng vô cùng sáng tạo, độc
-            đáo. Sách song ngữ nhưng giá bìa không hề cao hơn sách tiếng Việt,
-            còn được tặng kèm link download phiên bản audio cho các độc giả muốn
-            nghe truyện bằng tiếng Anh.</span
-          >
-          <button class="book-btn-see-more-des" @click="toggleDescription">{{ isExpanded ? 'Thu gọn' : 'Xem thêm' }}</button>
+          <div>
+            Ngôn ngữ <span class="book-ma-giao-hang">{{ book.language }}</span>
+          </div>
+          <hr />
+          <div>
+            Thể loại
+            <span class="book-ma-giao-hang">{{ book.genre_name }}</span>
+          </div>
+          <hr />
+          <div>
+            Dành cho
+            <span class="book-ma-giao-hang">{{ book.age_group }}</span>
+          </div>
+          <hr />
+          <div>
+            Số trang <span class="book-ma-giao-hang">{{ book.pages }}</span>
+          </div>
+          <hr />
+          <div>
+            Hình thức
+            <span class="book-ma-giao-hang">{{ book.cover_type }}</span>
+          </div>
         </div>
 
+        <div class="book-spec mt-3">
+          <span v-bind:class="{ expanded: isExpanded }">
+            {{ book.description }}
+          </span>
+          <div class="book-btn-see-more-des" @click="toggleDescription">
+            {{ isExpanded ? "Thu gọn" : "Xem thêm" }}
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Phần đánh giá của sách -->
     <div class="book-review mt-5">
-
       <div class="book-review-title">Đánh giá sản phẩm</div>
 
-     
       <div class="book-review-rate">
         <div class="book-review-rate-overall">
-          <div class="rate-digit">4.2</div>
+          <div class="rate-digit">{{ averageRating }}</div>
           <div class="rate-star">
             <i
-              :class="i <= 4 ? 'fa-solid fa-star' : 'fa-regular fa-star'"
+              :class="
+                i <= averageRating ? 'fa-solid fa-star' : 'fa-regular fa-star'
+              "
               v-for="i in 5"
               :key="i"
             ></i>
           </div>
-          <div class="rate-based-on">143 đánh giá</div>
+          <div class="rate-based-on">{{ reviews.length }}</div>
         </div>
 
         <div class="book-review-rate-detail">
           <div class="rate-each">
             <i class="fa-solid fa-star" v-for="i in 5" :key="i"></i>
             <div class="rating-bar">
-              <div class="rating-bar-fill" :style="{ width: 80 + '%' }"></div>
+              <div
+                class="rating-bar-fill"
+                :style="{ width: calculateStarPercentage(5) + '%' }"
+              ></div>
             </div>
-            <div class="rate-num">120</div>
+            <div class="rate-num">{{ countStarReviews(5) }}</div>
           </div>
+          
           <div class="rate-each">
             <i
               :class="i <= 4 ? 'fa-solid fa-star' : 'fa-regular fa-star'"
@@ -252,9 +324,12 @@
               :key="i"
             ></i>
             <div class="rating-bar">
-              <div class="rating-bar-fill" :style="{ width: 8 + '%' }"></div>
+              <div
+                class="rating-bar-fill"
+                :style="{ width: calculateStarPercentage(4) + '%' }"
+              ></div>
             </div>
-            <div class="rate-num">13</div>
+            <div class="rate-num">{{ countStarReviews(4) }}</div>
           </div>
           <div class="rate-each">
             <i
@@ -263,9 +338,12 @@
               :key="i"
             ></i>
             <div class="rating-bar">
-              <div class="rating-bar-fill" :style="{ width: 5 + '%' }"></div>
+              <div
+                class="rating-bar-fill"
+                :style="{ width: calculateStarPercentage(3) + '%' }"
+              ></div>
             </div>
-            <div class="rate-num">8</div>
+            <div class="rate-num">{{ countStarReviews(3) }}</div>
           </div>
           <div class="rate-each">
             <i
@@ -274,9 +352,12 @@
               :key="i"
             ></i>
             <div class="rating-bar">
-              <div class="rating-bar-fill" :style="{ width: 0 + '%' }"></div>
+              <div
+                class="rating-bar-fill"
+                :style="{ width: calculateStarPercentage(2) + '%' }"
+              ></div>
             </div>
-            <div class="rate-num">0</div>
+            <div class="rate-num">{{ countStarReviews(2) }}</div>
           </div>
           <div class="rate-each">
             <i
@@ -285,9 +366,12 @@
               :key="i"
             ></i>
             <div class="rating-bar">
-              <div class="rating-bar-fill" :style="{ width: 10 + '%' }"></div>
+              <div
+                class="rating-bar-fill"
+                :style="{ width: calculateStarPercentage(1) + '%' }"
+              ></div>
             </div>
-            <div class="rate-num">23</div>
+            <div class="rate-num">{{ countStarReviews(1) }}</div>
           </div>
         </div>
       </div>
@@ -352,30 +436,42 @@
 
       <!-- Các đánh giá -->
       <div class="reviews">
-        <div class="review">
+        <div
+          v-for="review in reviews.slice(0, visibleReviews)"
+          :key="review.id_review"
+          class="review"
+        >
           <!-- avatar -->
           <div class="review-avatar-ctn">
             <div class="review-avatar">
-              <img :src="images[1]" class="w-100 h-100" alt="avatar" />
+              <img
+                src="{{review.image_link}}"
+                class="w-100 h-100"
+                alt="avatar"
+              />
             </div>
           </div>
 
           <!-- phần review bên trái + phản hồi -->
           <div class="review-content-ctn">
-            <div class="review-name">Phan Phúc Bảo</div>
+            <div class="review-name">{{ review.user_name }}</div>
             <div class="review-rate-star">
               <i
-                :class="i <= 5 ? 'fa-solid fa-star' : 'fa-regular fa-star'"
+                :class="
+                  i <= review.rating ? 'fa-solid fa-star' : 'fa-regular fa-star'
+                "
                 v-for="i in 5"
                 :key="i"
               ></i>
             </div>
-            <div class="review-date">31/11/2024</div>
+            <div class="review-date">{{ formatDate(review.date) }}</div>
             <div class="review-content-text">
-              Sản phẩm như cứt <br />
-              đọc rất dính
+              <br />
+              {{ review.content }}
             </div>
-            <div class="review-content-images">
+
+            <!-- <div class="review-content-images">
+
               <div class="image-ctn">
                 <img :src="images[1]" alt="review image" />
               </div>
@@ -385,47 +481,22 @@
               <div class="image-ctn">
                 <img :src="images[1]" alt="review image" />
               </div>
-            </div>
+            </div> -->
 
             <div class="review-respond">
               <div class="fw-bold mb-2">Phản hồi của cửa hàng</div>
-              Shop rất vui vì nhận được đánh giá tốt nhưng bạn có thể xóa câu
-              đầu được không ạ 😓 <br />
-              Bạn liên hệ với shop qua sđt 0375686817 để shop hoàn tiền cho mình
-              nha 🥹
+              Shop rất vui vì nhận được đánh giá.
             </div>
           </div>
         </div>
 
-        <div class="review">
-          <div class="review-avatar-ctn">
-            <div class="review-avatar">
-              <img :src="images[2]" class="w-100 h-100" alt="avatar" />
-            </div>
-          </div>
-          <div class="review-content-ctn">
-            <div class="review-name">Trần Thiên Lộc</div>
-            <div class="review-rate-star">
-              <i
-                :class="i <= 4 ? 'fa-solid fa-star' : 'fa-regular fa-star'"
-                v-for="i in 5"
-                :key="i"
-              ></i>
-            </div>
-            <div class="review-date">33/11/2024</div>
-            <div class="review-content-text">
-              Shop làm ăn ngộ hen :v giao cho t cuốn bị rách
-            </div>
-            <div class="review-content-images">
-              <div class="image-ctn">
-                <img :src="images[3]" alt="review image" />
-              </div>
-              <div class="image-ctn">
-                <img :src="images[4]" alt="review image" />
-              </div>
-            </div>
-          </div>
-        </div>
+        <button
+          v-if="reviews.length > visibleReviews"
+          @click="showMore"
+          class="book-btn-review"
+        >
+          Xem thêm
+        </button>
       </div>
     </div>
   </div>
@@ -439,38 +510,134 @@ export default {
   name: "BookPage",
   data() {
     return {
-      quantity:1,
-      status: true,
+      visibleReviews: 3,
+      discount: 0,
+      quantityOfBook: 1,
+      book: [],
+      id: null,
+      quantity: 1,
+      status: false,
       isExpanded: false,
       isModalVisible: false,
-      images: [
-        "/IMG/caigia.jpg",
-        "/IMG/cam.jpg",
-        "/IMG/do.jpg",
-        "/IMG/gioi.jpg",
-        "/IMG/philytri.jpg",
-      ],
+      isModalVisible_1: false,
+      isModalVisible_2: false,
+
+      images: [],
+      reviews: [],
       x: 0,
       activeImg: 0,
-
       isToggleForm: false,
-
       rating: 0, // Lưu đánh giá cuối cùng
       hoverRating: 0, // Giá trị khi hover lên cái sao
     };
   },
+  created() {
+    const id_book = this.$route.query.id_book;
+    this.fetchBookDetails(id_book);
+  },
+  computed: {
+    discounted() {
+      const listPrice = parseFloat(this.book.list_price); // Chuyển chuỗi thành số
+      const discountedPrice = parseFloat(this.book.discounted_price); // Chuyển chuỗi thành số
+
+      if (isNaN(listPrice) || isNaN(discountedPrice)) {
+        return 0; // Nếu giá trị không phải là số, trả về 0
+      }
+
+      let discount = 100 * ((listPrice - discountedPrice) / listPrice);
+
+      // Làm tròn đến 2 chữ số thập phân
+      return discount.toFixed(0);
+    },
+    formatPrice() {
+      return (price) => {
+        const priceNum = parseFloat(price); // Chuyển chuỗi thành số
+        if (isNaN(priceNum)) return price; // Trả về giá trị ban đầu nếu không phải là số
+
+        // Định dạng số theo quy tắc hàng nghìn và trả về chuỗi với dấu phân cách
+        return priceNum.toLocaleString("vi-VN"); // Sử dụng định dạng Việt Nam
+      };
+    },
+    averageRating() {
+      if (this.reviews.length === 0) return 0; // Kiểm tra nếu không có reviews
+      const totalRating = this.reviews.reduce(
+        (sum, review) => sum + parseFloat(review.rating),
+        0
+      );
+      return (totalRating / this.reviews.length).toFixed(2); // Lấy 2 chữ số thập phân
+    },
+  },
+
   methods: {
+    showMore() {
+      if (this.visibleReviews < this.reviews.length) {
+        this.visibleReviews += 3;
+        if (this.visibleReviews > this.reviews.length) {
+          this.visibleReviews = this.reviews.length;
+        }
+      } else {
+        this.visibleReviews = this.reviews.length;
+      }
+    },
+    calculateStarPercentage(n) {
+      const totalReviews = this.reviews.length; // Tổng số review
+      const starReviews = this.reviews.filter(
+        (review) => parseInt(review.rating) === n
+      ).length; // Lọc số review có rating = n
+      return totalReviews > 0 ? (starReviews / totalReviews) * 100 : 0; // Tính tỷ lệ phần trăm
+    },
+    countStarReviews(star) {
+      return this.reviews.filter((review) => parseInt(review.rating) === star)
+        .length;
+    },
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("vi-VN"); // Hiển thị định dạng ngày tháng của Việt Nam
+    },
+    decreaseQuantity() {
+      if (this.quantityOfBook > 1) {
+        this.quantityOfBook--;
+      }
+    },
+    increaseQuantity() {
+      if (this.quantityOfBook > 0) {
+        this.quantityOfBook++;
+      }
+    },
+    async fetchBookDetails(id) {
+      console.log("call api");
+      try {
+        const response = await axios.get(`/api/detail-book?id=${id}`); // Lấy API qua proxy
+        if (response.data.success) {
+          this.book = response.data.data;
+          this.images = this.book.images;
+          this.reviews = response.data.reviews;
+        }
+        console.log("book tra ve:", this.book);
+      } catch (error) {
+        this.error = "Không thể lấy thông tin sách!";
+        console.error(error);
+      }
+    },
     toggle() {
-      this.status = !this.status;  // Chuyển đổi giữa thu gọn và mở rộng
+      this.status = !this.status; // Chuyển đổi giữa thu gọn và mở rộng
     },
     toggleDescription() {
-      this.isExpanded = !this.isExpanded;  // Chuyển đổi giữa thu gọn và mở rộng
+      this.isExpanded = !this.isExpanded; // Chuyển đổi giữa thu gọn và mở rộng
     },
     showModal() {
       this.isModalVisible = true;
     },
+    showModal_1() {
+      this.isModalVisible_1 = true;
+    },
+    showModal_2() {
+      this.isModalVisible_2 = true;
+    },
     closeModal() {
       this.isModalVisible = false;
+      this.isModalVisible_1 = false;
+      this.isModalVisible_2 = false;
     },
     move_img(index) {
       this.activeImg = index;
@@ -521,7 +688,6 @@ export default {
     toggleForm() {
       this.isToggleForm = !this.isToggleForm;
     },
-
     hoverStar(index) {
       this.hoverRating = index; // Cập nhật hover
     },

@@ -12,8 +12,10 @@
         id="myInput"
         name="myInput"
         placeholder="Bạn muốn đọc sách gì..."
+        v-model="searchQuery"
+        @keyup.enter="search"
       />
-      <div class="glass"><i class="fas fa-search"></i></div>
+      <div class="glass" @click="search"><i class="fas fa-search"></i></div>
     </div>
     <div class="grid-item-icon">
       <div
@@ -162,6 +164,7 @@ export default {
   name: "HeaderApp",
   data() {
     return {
+      searchQuery: "", // Lưu trữ giá trị tìm kiếm
       notiVisible: false,
       userVisible: false,
       name: null,
@@ -177,6 +180,33 @@ export default {
     },
   },
   methods: {
+    search() {
+      if (this.searchQuery.trim()) {
+        // Chuyển đến route /search với query parameter là giá trị nhập vào
+        this.$router.push({
+          path: "/search",
+          query: { query: this.searchQuery },
+        });
+      }
+    },
+
+    async created() {
+      console.log("hi");
+      try {
+        // Gửi yêu cầu để lấy xem người dùng có đang đăng nhập không
+        const response = await axiosInstance.get("/account/profile");
+        console.log("hi");
+        if (response.status === 200) {
+          console.log("hi2");
+          const user = response.data.user;
+          this.name = user.name;
+          console.log(user);
+        }
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+    },
     async handleLogOut() {
       try {
         const response = await axiosInstance.post("/logout");

@@ -66,9 +66,29 @@
 .search-result-list{
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
-  row-gap: 40px;
-
+  justify-content:flex-start;
+  gap:27px;
   padding: 20px 0px;
 }
+.search-loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+.pagination button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+}
 
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination button.active {
+  font-weight: bold;
+  background-color: #3498db;
+  color: white;
+}

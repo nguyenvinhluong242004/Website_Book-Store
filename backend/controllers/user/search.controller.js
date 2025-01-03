@@ -6,14 +6,14 @@ class SearchController {
     // [GET] /
     async index(req, res) {
         const { keyword = '', page = 1 } = req.query;
-        const per_page = 10;
+        const per_page = 8;
 
         console.log('Query params:', req.query);
 
         try {
             const result = await SearchModel.findBookByKeyword(
                 keyword,
-                parseInt(page, 10),
+                parseInt(page, 8),
                 per_page
             );
             const genres = await HomeModel.getCategories();
@@ -48,7 +48,7 @@ class SearchController {
             rating_count = null       // Sắp xếp theo đánh giá nếu có
         } = req.query;
 
-        const per_page = 10;
+        const per_page = 8;
 
         // Kiểm tra thông tin truy vấn
         console.log(`Keyword: ${keyword}, Page: ${page}, Genre: ${genre}, Age: ${age}`);
@@ -57,7 +57,7 @@ class SearchController {
             // Gọi hàm tìm kiếm với các tham số
             const result = await SearchModel.findBooksByFilters({
                 keyword,
-                page: parseInt(page, 10),
+                page: parseInt(page, 8),
                 perPage: per_page,
                 genre: parseInt(genre),
                 startPrice: startPrice ? parseFloat(startPrice) : undefined,
