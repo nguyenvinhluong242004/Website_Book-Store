@@ -195,7 +195,13 @@ class BookModel {
         };
     }
 
-
+    static async getBookByID(id_book) {
+        const result = await pool.query(
+            'SELECT * FROM book WHERE id_book = $1',
+            [id_book]
+        );
+        return result.rows[0];
+    }
 }
 
 module.exports = BookModel;
