@@ -1,0 +1,18 @@
+#user-app-root {
+    width: 100%;
+
+    background-color: white;
+}
+
+.notification {
+    width: 100%;
+    padding: 3px;
+    background-color: rgb(1, 137, 255);
+
+    display: flex;
+    justify-content: center;
+
+    font-weight: bold;
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+}
