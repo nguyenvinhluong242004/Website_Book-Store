@@ -32,7 +32,7 @@ class CartModel {
     // 4. Update new quantity - Này là thay thế số lượng hiện tại bằng số lượng mới (Ở trong giỏ hàng)
     async updateNewQuantity(email, id_book, newQuantity) {
         const result = await this.pool.query(
-            'UPDATE cart SET quantity = newQuantity WHERE email = $2 AND id_book = $3', [newQuantity, email, id_book]
+            'UPDATE cart SET quantity = $1 WHERE email = $2 AND id_book = $3', [newQuantity, email, id_book]
         );
         return result.rows[0];
     }
