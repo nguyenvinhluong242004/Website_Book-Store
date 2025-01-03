@@ -40,23 +40,17 @@
                 class="cart-item-name-price h-100 d-flex flex-column justify-content-between"
               >
                 <div class="cart-item-name">
-                  {{ product.name }}
+                  {{ product.book_name }}
                 </div>
                 <div class="cart-item-price">
-                  <div v-if="product.curPrice != product.oldPrice">
-                    <span class="text-danger me-2">{{
-                      formatPrice(product.curPrice)
-                    }}</span>
-                    <span
-                      class="text-muted text-decoration-line-through oldPrice"
-                      >{{ formatPrice(product.oldPrice) }}</span
-                    >
-                  </div>
-                  <div v-if="product.curPrice == product.oldPrice">
-                    <span class="text-danger me-2">{{
-                      formatPrice(product.curPrice)
-                    }}</span>
-                  </div>
+                  <span class="text-danger me-2">{{
+                    formatPrice(product.discounted_price)
+                  }}</span>
+                  <span
+                    class="text-muted text-decoration-line-through oldPrice"
+                    v-if="product.discounted_price != product.list_price"
+                    >{{ formatPrice(product.list_price) }}</span
+                  >
                 </div>
               </div>
             </div>
@@ -64,19 +58,19 @@
               <div class="cart-item-quantity-box text-muted">
                 <i
                   class="fa-solid fa-minus"
-                  @click="updateQuantity(index, -1)"
+                  @click="updateQuantity(product.id_book, product.quantity - 1, product.available_quantity)"
                 ></i>
                 <div class="fs-5 mx-3">{{ product.quantity }}</div>
                 <i
                   class="fa-solid fa-plus"
-                  @click="updateQuantity(index, 1)"
+                  @click="updateQuantity(product.id_book, product.quantity + 1, product.available_quantity)"
                 ></i>
               </div>
             </div>
             <div
               class="col-2 d-flex justify-content-center align-items-center text-danger"
             >
-              {{ formatPrice(product.curPrice * product.quantity) }}
+              {{ formatPrice(product.discounted_price * product.quantity) }}
             </div>
             <div class="col-1 d-flex justify-content-center align-items-center">
               <i
@@ -114,57 +108,7 @@ export default {
   name: "CartPage",
   data() {
     return {
-      // 1 product gồm id, name, quantity, curPrice, oldPrice, image
-      listProduct: [
-        // {
-        //   id: "s1",
-        //   name: "Còn chút gì để nhớ có hai con mèo ngồi bên cửa sổ một con ngồi im một con đổi chỗ qua bàn có 5 chỗ ngồi",
-        //   quantity: 3,
-        //   curPrice: 12500,
-        //   oldPrice: 15000,
-        //   image: "/IMG/cam.jpg",
-        // },
-        // {
-        //   id: "s2",
-        //   name: "chưa biết đặt tên sách là gì",
-        //   quantity: 4,
-        //   curPrice: 20500,
-        //   oldPrice: 20500,
-        //   image: "/IMG/tannhan.jpg",
-        // },
-        // {
-        //   id: "s2",
-        //   name: "chưa biết đặt tên sách là gì",
-        //   quantity: 4,
-        //   curPrice: 20500,
-        //   oldPrice: 20500,
-        //   image: "/IMG/tannhan.jpg",
-        // },
-        // {
-        //   id: "s2",
-        //   name: "chưa biết đặt tên sách là gì",
-        //   quantity: 4,
-        //   curPrice: 20500,
-        //   oldPrice: 20500,
-        //   image: "/IMG/tannhan.jpg",
-        // },
-        // {
-        //   id: "s2",
-        //   name: "chưa biết đặt tên sách là gì",
-        //   quantity: 4,
-        //   curPrice: 20500,
-        //   oldPrice: 20500,
-        //   image: "/IMG/tannhan.jpg",
-        // },
-        // {
-        //   id: "s2",
-        //   name: "chưa biết đặt tên sách là gì",
-        //   quantity: 4,
-        //   curPrice: 20500,
-        //   oldPrice: 20500,
-        //   image: "/IMG/tannhan.jpg",
-        // },
-      ],
+      listProduct: [],
     };
   },
   mounted() {
@@ -176,11 +120,37 @@ export default {
     },
   },
   methods: {
-    updateQuantity(index, x) {
-      const product = this.listProduct[index];
-      const newQuantity = product.quantity + x;
-      if (newQuantity > 0) {
-        product.quantity = newQuantity;
+    async updateQuantity(id_book, newQuantity, available_quantity) {
+      if (newQuantity > 0 && newQuantity <= available_quantity) {
+        try {
+          const response = await axiosInstance.patch("/cart/update", {
+            id_book: id_book,
+            quantity: newQuantity,
+          });
+
+          if (response.status === 200) {
+            this.$router.push("/").then(() => {
+              this.$router.push("/cart");
+            });
+          }
+        } catch (error) {
+          alert(error);
+          if (error.response) {
+            const status = error.response.status;
+            const message = error.response.data.message;
+
+            // Xử lý các mã lỗi cụ thể
+            if (status === 403) {
+              alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+              this.$router.push("/login");
+            } else if (status === 500) {
+              alert(message);
+            }
+          } else {
+            // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
+            alert("Lỗi mạng: Không thể kết nối đến server.");
+          }
+        }
       }
     },
     formatPrice(price) {
@@ -220,9 +190,10 @@ export default {
     async handleRouteChange() {
       try {
         const response = await axiosInstance.get("/cart");
-        
+
         if (response.status === 200) {
           this.listProduct = response.data.cart;
+          console.log(this.listProduct);
         }
       } catch (error) {
         if (error.response) {
@@ -247,7 +218,7 @@ export default {
     totalPrice() {
       let total = 0;
       for (const product of this.listProduct) {
-        total += product.curPrice * product.quantity;
+        total += product.discounted_price * product.quantity;
       }
       return total;
     },
