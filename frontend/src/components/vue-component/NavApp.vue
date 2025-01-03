@@ -69,7 +69,6 @@ export default {
       try {
         const response = await axios.get('/api/genres'); // Thực hiện GET request
         this.genres = response.data.genres; // Gán dữ liệu trả về cho `genres`
-        console.log('theloai:',this.genres);
       } catch (error) {
         console.error('Error fetching genres:', error);
       }

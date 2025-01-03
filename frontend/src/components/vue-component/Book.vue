@@ -316,6 +316,7 @@
             </div>
             <div class="rate-num">{{ countStarReviews(5) }}</div>
           </div>
+          
           <div class="rate-each">
             <i
               :class="i <= 4 ? 'fa-solid fa-star' : 'fa-regular fa-star'"
@@ -435,7 +436,11 @@
 
       <!-- Các đánh giá -->
       <div class="reviews">
-        <div v-for="(review) in reviews.slice(0, visibleReviews)" :key="review.id_review" class="review">
+        <div
+          v-for="review in reviews.slice(0, visibleReviews)"
+          :key="review.id_review"
+          class="review"
+        >
           <!-- avatar -->
           <div class="review-avatar-ctn">
             <div class="review-avatar">
@@ -527,10 +532,10 @@ export default {
     };
   },
   created() {
-    this.fetchBookDetails(this.$route.query.id);
+    const id_book = this.$route.query.id_book;
+    this.fetchBookDetails(id_book);
   },
   computed: {
-   
     discounted() {
       const listPrice = parseFloat(this.book.list_price); // Chuyển chuỗi thành số
       const discountedPrice = parseFloat(this.book.discounted_price); // Chuyển chuỗi thành số
@@ -565,15 +570,14 @@ export default {
 
   methods: {
     showMore() {
-      if (this.visibleReviews < this.reviews.length){
+      if (this.visibleReviews < this.reviews.length) {
         this.visibleReviews += 3;
-        if(this.visibleReviews > this.reviews.length){
-          this.visibleReviews= this.reviews.length;
+        if (this.visibleReviews > this.reviews.length) {
+          this.visibleReviews = this.reviews.length;
         }
-      }else{
+      } else {
         this.visibleReviews = this.reviews.length;
       }
-      
     },
     calculateStarPercentage(n) {
       const totalReviews = this.reviews.length; // Tổng số review
@@ -601,6 +605,7 @@ export default {
       }
     },
     async fetchBookDetails(id) {
+      console.log("call api");
       try {
         const response = await axios.get(`/api/detail-book?id=${id}`); // Lấy API qua proxy
         if (response.data.success) {

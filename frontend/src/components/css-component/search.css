@@ -76,4 +76,19 @@
   align-items: center;
   height: 100px;
 }
+.pagination button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+}
 
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination button.active {
+  font-weight: bold;
+  background-color: #3498db;
+  color: white;
+}
