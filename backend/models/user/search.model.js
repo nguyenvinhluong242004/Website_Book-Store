@@ -8,12 +8,13 @@ class SearchModel {
         const searchKeyword = `%${keyword}%`;
         const offset = (page - 1) * perPage;
 
-        // Đếm tổng số bản ghi phù hợp
+        // Đếm tổng số bản ghi phù hợp (chỉ lấy sách có Status = 1)
         const countResult = await pool.query(
             `SELECT COUNT(*) AS total 
              FROM Book b 
              LEFT JOIN Categories c ON b.Genre = c.ID_Category 
-             WHERE b.Book_Name ILIKE $1 OR b.Author ILIKE $1 OR c.Name ILIKE $1`,
+             WHERE (b.Book_Name ILIKE $1 OR b.Author ILIKE $1 OR c.Name ILIKE $1) 
+               AND b.Status = 1`,
             [searchKeyword]
         );
         const totalRecords = parseInt(countResult.rows[0].total, 10);
@@ -23,7 +24,8 @@ class SearchModel {
             `SELECT b.*, c.Name AS Genre_Name 
              FROM Book b 
              LEFT JOIN Categories c ON b.Genre = c.ID_Category 
-             WHERE b.Book_Name ILIKE $1 OR b.Author ILIKE $1 OR c.Name ILIKE $1
+             WHERE (b.Book_Name ILIKE $1 OR b.Author ILIKE $1 OR c.Name ILIKE $1) 
+               AND b.Status = 1
              LIMIT $2 OFFSET $3`,
             [searchKeyword, perPage, offset]
         );
@@ -36,13 +38,14 @@ class SearchModel {
         }
 
         return {
-            data: result.rows,          // Dữ liệu sách
-            total_records: totalRecords, // Tổng số bản ghi
-            total_pages: Math.ceil(totalRecords / perPage), // Tổng số trang
-            per_page: perPage,          // Số bản ghi mỗi trang
-            current_page: page,         // Trang hiện tại
+            data: result.rows,
+            total_records: totalRecords,
+            total_pages: Math.ceil(totalRecords / perPage),
+            per_page: perPage,
+            current_page: page,
         };
     }
+
 
     /**
      * Tìm kiếm sách dựa trên từ khóa tìm kiếm + filter theo hạng mục
@@ -63,7 +66,7 @@ class SearchModel {
         const searchAge = `%${age}%`;
         const offset = (page - 1) * perPage;
 
-        const conditions = [];
+        const conditions = ['b.Status = 1']; // Luôn lọc các sách có Status = 1
         const values = [];
 
         // Xây dựng các điều kiện lọc
@@ -137,6 +140,7 @@ class SearchModel {
             current_page: page,
         };
     }
+
 }
 
 module.exports = SearchModel;

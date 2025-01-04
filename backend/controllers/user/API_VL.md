@@ -105,5 +105,39 @@ http://localhost:8888/genres
 
 
 
+---------------------------------------------------------------------------------------
+# api review [POST]
+
+https://localhost:8888/detail-book/review
+
+    Đặt tên (name) bắt buộc cho các thẻ input khi gửi formData():
+        images, id_book, email, content, date, rating, like_count(mặc định là 0)
+
+# api thống kế
+
+[GET] https://localhost:8888/admin
+
+# api categories
+
+[GET] https://localhost:8888/admin/categories
+
+[POST] https://localhost:8888/admin/categories/add
+
+[PUT] https://localhost:8888/admin/categories/change
+
+[DELETE] https://localhost:8888/admin/categories/delete
+
+# api book
+
+[GET] https://localhost:8888/admin/books
+
+[POST] https://localhost:8888/admin/books/add
+
+[PUT] https://localhost:8888/admin/books/change
+
+[DELETE] https://localhost:8888/admin/books/delete
+
+
+
 
 

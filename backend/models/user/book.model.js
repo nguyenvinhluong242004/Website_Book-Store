@@ -10,7 +10,7 @@ class BookModel {
             `SELECT b.*, c.Name AS genre_name 
              FROM Book b
              LEFT JOIN Categories c ON b.Genre = c.ID_Category
-             WHERE b.ID_Book = $1`,
+             WHERE b.ID_Book = $1 AND b.Status = 1`,
             [id]
         );
 
@@ -44,13 +44,13 @@ class BookModel {
      * Tìm kiếm loại sách dựa trên từ khóa tìm kiếm
      */
     static async findBookTypesByGenre(genreId, page = 1, perPage = 10) {
-        const offset = (page - 1) * perPage; // Bản ghi bắt đầu cho phân trang
+        const offset = (page - 1) * perPage;
 
         // Đếm tổng số bản ghi phù hợp
         const countResult = await pool.query(
             `SELECT COUNT(*) AS total 
              FROM Book 
-             WHERE Genre = $1`,
+             WHERE Genre = $1 AND Status = 1`,
             [genreId]
         );
         const totalRecords = parseInt(countResult.rows[0].total, 10);
@@ -60,7 +60,7 @@ class BookModel {
             `SELECT b.*, c.Name AS genre_name
              FROM Book b
              LEFT JOIN Categories c ON b.Genre = c.ID_Category
-             WHERE b.Genre = $1
+             WHERE b.Genre = $1 AND b.Status = 1
              LIMIT $2 OFFSET $3`,
             [genreId, perPage, offset]
         );
@@ -69,17 +69,18 @@ class BookModel {
         for (let book of result.rows) {
             const imgQuery = `SELECT Image_Link FROM Img_Book WHERE ID_Book = $1`;
             const imgResult = await pool.query(imgQuery, [book.id_book]);
-            book.images = imgResult.rows.map(img => img.image_link); // Gán ảnh vào sách
+            book.images = imgResult.rows.map(img => img.image_link);
         }
 
         return {
-            data: result.rows,          // Dữ liệu loại sách
-            total_records: totalRecords, // Tổng số bản ghi
-            total_pages: Math.ceil(totalRecords / perPage), // Tổng số trang
-            per_page: perPage,          // Số bản ghi mỗi trang
-            current_page: page,         // Trang hiện tại
+            data: result.rows,
+            total_records: totalRecords,
+            total_pages: Math.ceil(totalRecords / perPage),
+            per_page: perPage,
+            current_page: page,
         };
     }
+
 
     /**
      * Tìm kiếm loại sách dựa trên các bộ lọc
@@ -91,17 +92,15 @@ class BookModel {
         startPrice,
         endPrice,
         age,
-        discounted_price = null,  // Mặc định sắp xếp giá từ thấp đến cao
-        sold_quantity = null,      // Bỏ qua nếu không muốn sắp xếp theo số lượng bán
-        rating_count = null        // Bỏ qua nếu không muốn sắp xếp theo đánh giá
+        discounted_price = null,
+        sold_quantity = null,
+        rating_count = null,
     }) {
         const offset = (page - 1) * perPage;
         const searchAge = `%${age}%`;
 
-        const conditions = [];
+        const conditions = ['b.Status = 1']; // Luôn lọc các sách có Status = 1
         const values = [];
-
-        console.log(genreId)
 
         // Xây dựng các điều kiện lọc
         if (genreId) {
@@ -121,7 +120,7 @@ class BookModel {
             values.push(searchAge);
         }
 
-        const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+        const whereClause = `WHERE ${conditions.join(' AND ')}`;
 
         // Đếm tổng số bản ghi
         const countQuery = `SELECT COUNT(*) AS total FROM Book b ${whereClause}`;
@@ -130,7 +129,6 @@ class BookModel {
 
         // Kiểm tra điều kiện sắp xếp
         let orderConditions = [];
-
         if (discounted_price !== null) {
             orderConditions.push(`b.Discounted_Price ${discounted_price}`);
         } else if (sold_quantity !== null) {
@@ -146,7 +144,7 @@ class BookModel {
             SELECT b.*, c.Name AS genre_name
             FROM Book b
             LEFT JOIN Categories c ON b.Genre = c.ID_Category
-            ${whereClause} 
+            ${whereClause}
             ${orderBy}
             LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
         values.push(perPage, offset);
@@ -157,7 +155,7 @@ class BookModel {
         for (let book of result.rows) {
             const imgQuery = `SELECT Image_Link FROM Img_Book WHERE ID_Book = $1`;
             const imgResult = await pool.query(imgQuery, [book.id_book]);
-            book.images = imgResult.rows.map(img => img.image_link); // Gán ảnh vào sách
+            book.images = imgResult.rows.map(img => img.image_link);
         }
 
         return {
@@ -169,15 +167,16 @@ class BookModel {
         };
     }
 
+
     /**
- * Lấy 4 sách ngẫu nhiên từ một thể loại, khác với sách có ID được chỉ định
- */
+     * Lấy 4 sách ngẫu nhiên từ một thể loại, khác với sách có ID được chỉ định
+     */
     static async getRandomBooksByGenre(genreId, id_book) {
         const result = await pool.query(
             `SELECT b.*, c.Name AS Genre_Name 
          FROM Book b
          LEFT JOIN Categories c ON b.Genre = c.ID_Category
-         WHERE b.Genre = $1 AND b.ID_Book != $2
+         WHERE b.Genre = $1 AND b.ID_Book != $2 AND b.Status = 1
          ORDER BY RANDOM() 
          LIMIT 4`,
             [genreId, id_book]
