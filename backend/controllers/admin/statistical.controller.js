@@ -3,9 +3,10 @@ const StatisticalModel = require('../../models/admin/statistical.model');
 class StatisticalController {
 
     async index(req, res) {
+        const { year } = req.query;
         try {
             const stats = await StatisticalModel.getDashboardStats();
-            const { revenueLabels, revenueData } = await StatisticalModel.getRevenueGrowth(2024);
+            const { revenueLabels, revenueData } = await StatisticalModel.getRevenueGrowth(parseInt(year));
             const productsSold = await StatisticalModel.getProductsSold();
 
             // Trả về dữ liệu JSON bao gồm cả danh mục và số lượng bán
@@ -14,7 +15,6 @@ class StatisticalController {
                 revenueLabels,
                 revenueData,
                 productsSold, // Bao gồm danh sách danh mục và số lượng bán
-                admin: req.session.admin, // Bao gồm thông tin admin nếu cần
             });
         } catch (error) {
             console.error(error);

@@ -92,9 +92,13 @@ class BookController {
             };
 
             // Gọi phương thức addBook từ model
-            const bookId = await BookModel.addBook(bookDetails, fileUrls);
+            const result = await BookModel.addBook(bookDetails, fileUrls);
 
-            res.status(200).json({ message: 'Sách đã được thêm thành công', bookId });
+            res.json({
+                success: true,
+                message: 'Thành công',
+                result
+            });
         } catch (error) {
             console.error('Error in add book:', error);
             res.status(500).json({ message: 'Có lỗi xảy ra khi thêm sách.' });
@@ -168,11 +172,11 @@ class BookController {
                 parsedImagesToDelete   // Danh sách URL ảnh cần xóa
             );
 
-            if (result) {
-                res.status(200).json({ message: 'Cập nhật sách thành công!' });
-            } else {
-                res.status(400).json({ message: 'Cập nhật sách thất bại.' });
-            }
+            res.json({
+                success: true,
+                message: 'Thành công',
+                result
+            });
         } catch (error) {
             console.error('Error in add book:', error);
             res.status(500).json({ message: 'Có lỗi xảy ra khi thêm sách.' });
