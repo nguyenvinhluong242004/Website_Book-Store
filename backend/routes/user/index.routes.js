@@ -1,3 +1,4 @@
+const path = require('path'); // Xử lý đường dẫn tệp
 const express = require('express');
 const router = express.Router();
 const searchRoutes = require('./search.routes');
