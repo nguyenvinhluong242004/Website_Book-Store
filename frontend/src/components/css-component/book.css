@@ -550,7 +550,7 @@ body.modal {
 
   border-bottom: 1px solid rgb(199, 199, 199);
 }
-
+/* 
 .review-avatar-ctn {
   width: 80px;
   padding: 10px;
@@ -565,11 +565,14 @@ body.modal {
   border-radius: 100px;
 
   overflow: hidden;
-}
+} */
 
 .review-content-ctn {
   width: 100%;
   padding: 10px;
+}
+.image-review{
+  border-radius: 3px;
 }
 
 .review-rate-star {
@@ -587,7 +590,9 @@ body.modal {
   font-size: 10px;
   color: rgb(199, 199, 199);
 }
-
+.a{
+  background-color: #a0a0a0;
+}
 .review-content-text {
   margin: 10px 0px;
 }
@@ -619,6 +624,7 @@ body.modal {
 
   border-radius: 10px;
 }
+
 .nhacungcap {
   position: absolute;
 }

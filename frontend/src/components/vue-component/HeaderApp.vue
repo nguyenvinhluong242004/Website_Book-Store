@@ -181,30 +181,14 @@ export default {
   },
   methods: {
     search() {
-      if (this.searchQuery.trim()) {
+      const stringSearch = this.searchQuery.trim();
+      this.searchQuery = '';
+      if (stringSearch) {
         // Chuyển đến route /search với query parameter là giá trị nhập vào
         this.$router.push({
           path: "/search",
-          query: { query: this.searchQuery },
+          query: { query: stringSearch },
         });
-      }
-    },
-
-    async created() {
-      console.log("hi");
-      try {
-        // Gửi yêu cầu để lấy xem người dùng có đang đăng nhập không
-        const response = await axiosInstance.get("/account/profile");
-        console.log("hi");
-        if (response.status === 200) {
-          console.log("hi2");
-          const user = response.data.user;
-          this.name = user.name;
-          console.log(user);
-        }
-      } catch (error) {
-        console.log(error);
-        return;
       }
     },
     async handleLogOut() {

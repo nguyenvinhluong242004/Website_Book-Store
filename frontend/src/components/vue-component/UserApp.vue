@@ -36,17 +36,5 @@ export default {
       subcategories: [],
     };
   },
-  mounted() {
- 
-    fetch("/DATABASE/data.json")
-      .then((response) => response.json()) 
-      .then((data) => {
-        this.notification = data.notification;
-        
-        this.categories = data.categories;
-        this.subcategories = data.subcategories;
-      })
-      .catch((error) => console.error("Có lỗi xảy ra:", error));
-  },
 };
 </script>

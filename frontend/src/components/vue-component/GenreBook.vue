@@ -144,8 +144,41 @@
           :old_price="book.list_price"
           :new_price="book.discounted_price"
           :type_money="type_money"
+          @click="goDetail(book.id_book)"
         />
       </div>
+
+      <div class="pagination d-flex justify-content-center align-items-center">
+        <!-- Nút Previous -->
+        <button 
+          class="btn btn-secondary me-2" 
+          @click="goToPage(page - 1)" 
+          :disabled="page === 1">
+          Previous
+        </button>
+        
+        <!-- Hiển thị các trang -->
+        <div class="btn-group" role="group" aria-label="Pagination Buttons">
+          <button
+            v-for="n in totalPage"
+            :key="n"
+            class="btn"
+            :class="n === page ? 'btn-primary' : 'btn-outline-primary'"
+            @click="goToPage(n)"
+          >
+            {{ n }}
+          </button>
+        </div>
+        
+        <!-- Nút Next -->
+        <button 
+          class="btn btn-secondary ms-2" 
+          @click="goToPage(page + 1)" 
+          :disabled="page === totalPage">
+          Next
+        </button>
+      </div>
+
     </div>
   </div>
 </template>
@@ -162,6 +195,7 @@ export default {
   },
   data() {
     return {
+      totalPage: 0, // phân trang
       sortBy: "",
       typeSort: "asc",
       selectedRadio: "",
@@ -222,6 +256,19 @@ export default {
   },
 
   methods: {
+    goDetail(id) {
+      this.$router.push({
+        path: `/book`,
+        query: { id_book: id },
+      });
+    },
+    isFillter(){
+      if (this.selectAge === null &&  this.startPrice === null && this.endPrice === null && this.sortBy === null) {
+        return false;
+      }else {
+        return true;
+      }
+    },
     handleFillter() {
       this.handleCheckboxChange();
       this.handlePriceChange();
@@ -292,6 +339,9 @@ export default {
         .get(url)
         .then((response) => {
           this.arrayBook = response.data.data;
+          this.totalPage = response.data.total_pages;
+          console.log('tong so trang khi fillter:',this.totalPage);
+          
         })
         .catch((error) => {
           console.error("Có lỗi xảy ra khi gọi API:", error);
@@ -324,8 +374,9 @@ export default {
           `/api/get-list?genre=${this.searchQuery}&page=${this.page}`
         ); // Lấy API qua proxy
         if (response.data.success) {
-            console.log('lay api thanh cong', this.searchQuery);
           this.arrayBook = response.data.data;
+          this.totalPage = response.data.total_pages;
+          console.log('tong so trang khi fillter:',this.totalPage);
         }
       } catch (error) {
         this.error = "Không thể lấy thông tin sách!";
@@ -337,7 +388,16 @@ export default {
     noFillter(){
         this.selectedRadio = null;
     },
-
+    goToPage(pageNumber) {
+      if (pageNumber < 1 || pageNumber > this.totalPage) return;
+      this.page = pageNumber;
+      if(this.isFillter){
+        this.fetchData();
+      }else{
+        this.fetchProducts();
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
     handleQueryChange() {
       // Gọi API mỗi khi query trong URL thay đổi
       const query = this.$route.query.id_genre;

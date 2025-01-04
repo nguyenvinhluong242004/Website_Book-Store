@@ -13,15 +13,6 @@
           @click = "genre(item.id_category, item.name)"
         >
           {{ item.name }}
-          <!-- <div v-if="activeCategory === index" class="submenu">
-            <div class="submenuCaption">{{ item.name }}</div>
-            <p
-              v-for="(subItem, subIndex) in subcategories[index].items"
-              :key="subIndex"
-            >
-              {{ subItem.name }}
-            </p>
-          </div> -->
         </div>
       </div>
     </div>

@@ -207,17 +207,6 @@
               </div>
             </div>
           </div>
-
-          <!-- <div class="book-ship mt-3">
-            <div>Thông tin vận chuyển</div>
-            <div>
-              Giao hàn đến <b>Phường Bến Nghé, Quận 1, Hồ Chí Minh</b>
-              <span>Thay đổi</span>
-            </div>
-            <div><i class="fas fa-shipping-fast"></i> Giao hàng tiêu chuẩn</div>
-            <div>Dự kiến giao <b>Thứ năm - 26/12</b></div>
-           
-          </div> -->
         </div>
 
         <div :class="['book-detail-infor', { expanded: status }]">
@@ -316,7 +305,7 @@
             </div>
             <div class="rate-num">{{ countStarReviews(5) }}</div>
           </div>
-          
+
           <div class="rate-each">
             <i
               :class="i <= 4 ? 'fa-solid fa-star' : 'fa-regular fa-star'"
@@ -427,7 +416,45 @@
 
           <div class="mb-4">
             <label for="Images" class="form-label fw-bold">Hình ảnh</label>
-            <div class="review-image"><i class="fa-solid fa-plus"></i></div>
+            <!-- Biểu tượng + để kích hoạt input file -->
+            <div
+              class="review-image"
+              v-if="!imagePreview"
+              @click="triggerFileInput"
+            >
+              <i class="fa-solid fa-plus"></i>
+            </div>
+            <div
+              v-if="imagePreview"
+              class="review-image mt-3 position-relative"
+            >
+              <img :src="imagePreview" alt="Image Preview" class="img-fluid" />
+
+              <!-- Dấu X để xóa ảnh -->
+              <button
+                type="button"
+                class="btn btn-danger position-absolute top-0 end-0"
+                @click="removeImage"
+                style="
+                  font-size: 20px;
+                  background-color: transparent;
+                  color:#a0a0a0;
+                  border: none;
+                "
+              >
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <!-- Input file ẩn đi, sẽ hiển thị khi người dùng nhấp vào biểu tượng + -->
+            <input
+              ref="fileInput"
+              type="file"
+              id="Images"
+              class="d-none"
+              @change="handleImageChange"
+              accept="image/*"
+            />
           </div>
 
           <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
@@ -442,14 +469,11 @@
           class="review"
         >
           <!-- avatar -->
-          <div class="review-avatar-ctn">
-            <div class="review-avatar">
-              <img
-                src="{{review.image_link}}"
-                class="w-100 h-100"
-                alt="avatar"
-              />
-            </div>
+          <div
+            class="d-flex justify-content-center align-items-center rounded-circle bg-primary text-white"
+            style="width: 3vw; height: 3vw; overflow: hidden"
+          >
+            <span class="text-truncate w-100 text-center">U</span>
           </div>
 
           <!-- phần review bên trái + phản hồi -->
@@ -470,22 +494,14 @@
               {{ review.content }}
             </div>
 
-            <!-- <div class="review-content-images">
-
+            <div class="review-content-images">
               <div class="image-ctn">
-                <img :src="images[1]" alt="review image" />
+                <img
+                  :src="review.image_link"
+                  class="image-review"
+                  alt="image review"
+                />
               </div>
-              <div class="image-ctn">
-                <img :src="images[1]" alt="review image" />
-              </div>
-              <div class="image-ctn">
-                <img :src="images[1]" alt="review image" />
-              </div>
-            </div> -->
-
-            <div class="review-respond">
-              <div class="fw-bold mb-2">Phản hồi của cửa hàng</div>
-              Shop rất vui vì nhận được đánh giá.
             </div>
           </div>
         </div>
@@ -505,11 +521,13 @@
 <script>
 import "../css-component/book.css";
 import axiosInstance from "../../services/axiosInstance.js";
+import axios from "axios";
 
 export default {
   name: "BookPage",
   data() {
     return {
+      imagePreview: null, // Biến lưu trữ đường dẫn ảnh preview
       visibleReviews: 3,
       discount: 0,
       quantityOfBook: 1,
@@ -569,6 +587,21 @@ export default {
   },
 
   methods: {
+     // Hàm xóa ảnh khi người dùng nhấn dấu X
+  removeImage() {
+    this.imagePreview = null; // Đặt lại imagePreview thành null để xóa ảnh
+  },
+    triggerFileInput() {
+      this.$refs.fileInput.click(); // Kích hoạt input file để người dùng chọn ảnh
+    },
+
+    // Hàm xử lý khi người dùng chọn ảnh
+    handleImageChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.imagePreview = URL.createObjectURL(file);
+      }
+    },
     showMore() {
       if (this.visibleReviews < this.reviews.length) {
         this.visibleReviews += 3;
@@ -656,13 +689,13 @@ export default {
       }
     },
 
-    async addToCart(){
+    async addToCart() {
       try {
         const response = await axiosInstance.post("/cart/add", {
-          id_book: '1',
+          id_book: "1",
           quantity: this.quantity,
         });
-        
+
         if (response.status === 200) {
           alert(response.data.message);
         }
