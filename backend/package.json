@@ -20,7 +20,7 @@
   "homepage": "https://github.com/nguyenvinhluong242004/Website_Book-Store#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
-    "cloudinary": "^1.21.0",
+    "cloudinary": "^1.41.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
