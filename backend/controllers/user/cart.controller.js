@@ -65,7 +65,7 @@ class CartController {
         } catch (err) {
             console.error(err);
             // Kiểm tra lỗi token không hợp lệ
-            if (err.name === "JsonWebTokenError") {
+            if (err.name === "TokenExpiredError") {
                 return res.status(403).json({
                     success: false,
                     message: "Sai token, từ chối thêm",
@@ -131,7 +131,7 @@ class CartController {
             console.error(err);
 
             // Kiểm tra lỗi token không hợp lệ
-            if (err.name === "JsonWebTokenError") {
+            if (err.name === "TokenExpiredError") {
                 return res.status(403).json({
                     success: false,
                     message: "Sai token, từ chối truy cập giỏ hàng",
@@ -213,7 +213,7 @@ class CartController {
 
         } catch (err) {
             console.error(err);
-            if (err.name === "JsonWebTokenError") {
+            if (err.name === "TokenExpiredError") {
                 return res.status(403).json({
                     success: false,
                     message: "Không tìm thấy token, từ chối cập nhật",
@@ -278,7 +278,7 @@ class CartController {
 
         } catch (err) {
             console.error(err);
-            if (err.name === "JsonWebTokenError") {
+            if (err.name === "TokenExpiredError") {
                 return res.status(403).json({
                     success: false,
                     message: "Không tìm thấy token, từ chối xóa",

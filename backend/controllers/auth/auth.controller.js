@@ -32,7 +32,7 @@ const handleLogin = async (req, res) => {
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '1h' } // Hạn 1 tiếng
+                { expiresIn: '15s' } // Hạn 1 tiếng
             );
             const refreshToken = jwt.sign(
                 { "email": foundUser.email },
