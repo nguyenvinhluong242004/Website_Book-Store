@@ -9,9 +9,6 @@ const detailBookRoutes = require('./detailBook.routes');
 const bookTypeRoutes = require('./bookType.routes');
 const homeRoutes = require('./home.routes');
 
-router.get('/review', (req, res) => {
-    res.sendFile(path.join(__dirname, '/', 'review.html'));
-});
 
 router.use('/account', accountRoutes);
 router.use('/cart', cartRoutes);

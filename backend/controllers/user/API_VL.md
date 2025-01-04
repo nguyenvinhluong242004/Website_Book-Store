@@ -115,11 +115,29 @@ https://localhost:8888/detail-book/review
 
 # api thống kế
 
-[GET] https://localhost:8888/admin
+[GET] https://localhost:8888/admin?year=2024
+
+        // Trả về dữ liệu JSON bao gồm cả danh mục và số lượng bán
+            res.json({
+                stats,         //  tổng số users, tổng doanh thu, tổng đã bán
+                revenueLabels, // 12 tháng của năm
+                revenueData, // doanh thu theo tháng tương ứng
+                productsSold, // Bao gồm danh sách danh mục và số lượng bán
+            });
 
 # api categories
 
 [GET] https://localhost:8888/admin/categories
+
+        res.json({
+                success: true,
+                message: 'Thành công',
+                per_page: result.per_page,
+                total_pages: result.total_pages,
+                current_page: result.current_page,
+                total_records: result.total_records,
+                data: result.data,
+            });
 
 [POST] https://localhost:8888/admin/categories/add
 
@@ -130,6 +148,17 @@ https://localhost:8888/detail-book/review
 # api book
 
 [GET] https://localhost:8888/admin/books
+
+        res.json({
+                success: true,
+                message: 'Thành công',
+                per_page: result.per_page,
+                total_pages: result.total_pages,
+                current_page: result.current_page,
+                total_records: result.total_records,
+                data: result.data,
+                categories: categories
+            });
 
 [POST] https://localhost:8888/admin/books/add
 
