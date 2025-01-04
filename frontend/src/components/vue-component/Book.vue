@@ -92,7 +92,16 @@
         <div class="book-img">
           <div class="book-body-slide">
             <i class="fas fa-angle-left book-btn" @click="move_left()"></i>
+
             <div class="book-view-frame">
+              <div
+                v-if="isLoadingImage"
+                class="d-flex justify-content-center align-items-center book-isloading"
+              >
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
               <div
                 class="book-flex-slide"
                 :style="{ transform: `translateX(${x}px)` }"
@@ -384,7 +393,15 @@
 
       <!-- Form nhận xét của user -->
       <div class="your-review-form" v-if="isToggleForm">
-        <form action="/" method="post" enctype="multipart/form-data">
+        <div
+          v-if="isLoadingSendReview"
+          class="d-flex justify-content-center align-items-center"
+        >
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <form @submit.prevent="checkForm" enctype="multipart/form-data">
           <div class="mb-3">
             <label class="form-label fw-bold">Đánh giá</label>
             <div class="form-star-rating">
@@ -401,16 +418,18 @@
               ></i>
             </div>
             <input type="hidden" v-model="rating" name="Rating" />
+            <input type="hidden" v-model="emailUser" name="Email" />
           </div>
 
           <div class="mb-3">
             <label for="Review" class="form-label fw-bold">Nhận xét</label>
             <textarea
-              name="Review"
+              name="Comment"
               class="form-control"
               id="Review"
               rows="3"
               style="resize: none"
+              v-model="comment"
             ></textarea>
           </div>
 
@@ -438,7 +457,7 @@
                 style="
                   font-size: 20px;
                   background-color: transparent;
-                  color:#a0a0a0;
+                  color: #a0a0a0;
                   border: none;
                 "
               >
@@ -459,10 +478,41 @@
 
           <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
         </form>
+
+        <!-- Toast Notification (Thông báo thành công) -->
+        <div
+          ref="successToast"
+          class="toast align-items-center text-white bg-success border-0"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+          style="
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 9999;
+            display: none;
+            width: auto;
+          "
+        >
+          <div class="d-flex justify-content-center">
+            <div class="toast-body text-center">
+              {{ toastMessage }}
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Các đánh giá -->
       <div class="reviews">
+        <div
+          v-if="isLoadingReview"
+          class="d-flex justify-content-center align-items-center book-isloading mt-2"
+        >
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
         <div
           v-for="review in reviews.slice(0, visibleReviews)"
           :key="review.id_review"
@@ -506,12 +556,8 @@
           </div>
         </div>
 
-        <button
-          v-if="reviews.length > visibleReviews"
-          @click="showMore"
-          class="book-btn-review"
-        >
-          Xem thêm
+        <button @click="toggleReviews" class="book-btn-review" v-if="isSeeMore">
+          {{ visibleReviews === reviews.length ? "Thu gọn" : "Xem thêm" }}
         </button>
       </div>
     </div>
@@ -527,7 +573,6 @@ export default {
   name: "BookPage",
   data() {
     return {
-      imagePreview: null, // Biến lưu trữ đường dẫn ảnh preview
       visibleReviews: 3,
       discount: 0,
       quantityOfBook: 1,
@@ -539,7 +584,9 @@ export default {
       isModalVisible: false,
       isModalVisible_1: false,
       isModalVisible_2: false,
+      isLoadingImage: true,
 
+      //reviews
       images: [],
       reviews: [],
       x: 0,
@@ -547,11 +594,20 @@ export default {
       isToggleForm: false,
       rating: 0, // Lưu đánh giá cuối cùng
       hoverRating: 0, // Giá trị khi hover lên cái sao
+      imageFile: null,
+      imagePreview: null, // Biến lưu trữ đường dẫn ảnh preview
+      conmment: "",
+      emailUser: "minhpqdp02@gmail.com",
+      id_book: 0,
+      isLoadingSendReview: false,
+      isLoadingReview: false,
+      toastMessage: "",
+      isSeeMore: false,
     };
   },
   created() {
-    const id_book = this.$route.query.id_book;
-    this.fetchBookDetails(id_book);
+    this.id_book = this.$route.query.id_book;
+    this.fetchBookDetails(this.id_book);
   },
   computed: {
     discounted() {
@@ -587,10 +643,63 @@ export default {
   },
 
   methods: {
-     // Hàm xóa ảnh khi người dùng nhấn dấu X
-  removeImage() {
-    this.imagePreview = null; // Đặt lại imagePreview thành null để xóa ảnh
-  },
+    checkForm() {
+      if (this.imageFile === null || this.comment === "" || this.rating === 0) {
+        this.toastMessage = "Vui lòng điền đầy đủ thông tin review !";
+        this.showToast("bg-danger"); // Màu đỏ cho thông báo lỗi
+      } else {
+        this.submitReview();
+      }
+    },
+    submitReview() {
+      // Gửi dữ liệu đánh giá
+      const formData = new FormData();
+      formData.append("images", this.imageFile);
+      formData.append("id_book", this.id_book);
+      formData.append("email", this.emailUser);
+      formData.append("content", this.comment);
+
+      const today = new Date();
+      const defaultDate =
+        today.getFullYear() +
+        "-" +
+        String(today.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(today.getDate()).padStart(2, "0"); // YYYY-MM-DD
+
+      formData.append("date", defaultDate);
+
+      formData.append("rating", this.rating);
+      formData.append("like_count", 0);
+
+      this.isLoadingSendReview = true;
+      fetch("/api/detail-book/review", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => {
+          if (response.ok) {
+            this.isLoadingSendReview = false;
+
+            this.toastMessage = "Cảm ơn vì review của bạn ";
+            this.showToast("bg-success"); // Màu đỏ cho thông báo lỗi
+
+            this.resetForm();
+            this.fetchBookDetails(this.id_book);
+          } else {
+            this.isLoadingSendReview = false;
+            throw new Error("Có lỗi xảy ra khi gửi hình ảnh.");
+          }
+        })
+        .catch((error) => {
+          alert("Có lỗi xảy ra. Vui lòng thử lại!");
+          console.error(error);
+        });
+    },
+    // Hàm xóa ảnh khi người dùng nhấn dấu X
+    removeImage() {
+      this.imagePreview = null; // Đặt lại imagePreview thành null để xóa ảnh
+    },
     triggerFileInput() {
       this.$refs.fileInput.click(); // Kích hoạt input file để người dùng chọn ảnh
     },
@@ -598,18 +707,19 @@ export default {
     // Hàm xử lý khi người dùng chọn ảnh
     handleImageChange(event) {
       const file = event.target.files[0];
+      this.imageFile = file;
       if (file) {
         this.imagePreview = URL.createObjectURL(file);
       }
     },
-    showMore() {
+    toggleReviews() {
       if (this.visibleReviews < this.reviews.length) {
         this.visibleReviews += 3;
         if (this.visibleReviews > this.reviews.length) {
           this.visibleReviews = this.reviews.length;
         }
       } else {
-        this.visibleReviews = this.reviews.length;
+        this.visibleReviews = 3;
       }
     },
     calculateStarPercentage(n) {
@@ -638,13 +748,18 @@ export default {
       }
     },
     async fetchBookDetails(id) {
-      console.log("call api");
+      this.isLoadingImage = true;
+      this.isLoadingReview = true;
       try {
         const response = await axios.get(`/api/detail-book?id=${id}`); // Lấy API qua proxy
         if (response.data.success) {
           this.book = response.data.data;
           this.images = this.book.images;
+          console.log(this.book);
           this.reviews = response.data.reviews;
+          this.isLoadingImage = false;
+          this.isLoadingReview = false;
+          this.isSeeMore = true;
         }
         console.log("book tra ve:", this.book);
       } catch (error) {
@@ -717,6 +832,29 @@ export default {
         }
       }
     },
+    showToast(bgClass) {
+      const toastElement = this.$refs.successToast;
+      toastElement.style.display = "block"; // Hiển thị toast
+
+      // Thêm lớp màu (bgClass) vào toast
+      toastElement.classList.add(bgClass);
+      toastElement.classList.add("fadeIn");
+
+      // Tự động ẩn toast sau 3 giây
+      setTimeout(() => {
+        toastElement.classList.remove("fadeIn");
+        toastElement.classList.add("fadeOut"); // Thêm hiệu ứng ẩn
+        setTimeout(() => {
+          toastElement.style.display = "none"; // Ẩn toast sau khi animation kết thúc
+          toastElement.classList.remove("fadeOut");
+        }, 1000); // Thời gian ẩn toast sau khi hoàn thành animation
+      }, 3000); // Thời gian hiển thị toast
+    },
+    // Hàm đóng Toast thủ công
+    closeToast() {
+      const toastElement = this.$refs.successToast;
+      toastElement.style.display = "none";
+    },
 
     toggleForm() {
       this.isToggleForm = !this.isToggleForm;
@@ -726,6 +864,15 @@ export default {
     },
     setRating(index) {
       this.rating = index; // Lưu rating khi click
+    },
+    resetForm() {
+      this.comment = "";
+      this.hoverRating = 0;
+      this.imageFile = null;
+      this.imagePreview = null;
+      this.$refs.fileInput.value = ""; // Đặt lại input file
+      this.hoverRating = 0;
+      this.isToggleForm = false;
     },
   },
 };
