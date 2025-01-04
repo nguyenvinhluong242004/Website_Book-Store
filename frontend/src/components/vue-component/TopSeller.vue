@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     async getApi() {
-      //this.loading = true;
+      this.loading = true;
       try {
         const response = await axios.get(`/api`); // Lấy API qua proxy
 
@@ -55,7 +55,7 @@ export default {
         this.error = "Không thể lấy thông tin sách!";
         console.error(error);
       } finally {
-        //this.loading = false;
+        this.loading = false;
       }
     },
     goDetail(id) {

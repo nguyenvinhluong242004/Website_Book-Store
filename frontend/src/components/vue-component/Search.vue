@@ -3,86 +3,90 @@
     <div class="filter-box">
       <div class="filter-box-title">Bộ lọc tìm kiếm</div>
 
-        <div class="filter-cate">
-          <div class="fw-bold">Thể loại</div>
+      <div class="filter-cate">
+        <div class="fw-bold">Thể loại</div>
 
-          
+        <div
+          v-for="category in categories"
+          :key="category.id"
+          class="form-check"
+        >
+          <input
+            class="form-check-input"
+            type="checkbox"
+            :value="category.id"
+            :id="'cb' + category.id"
+            :data-id="category.id"
+            v-model="selectedCategories"
+            @change="handleFillter"
+          />
+          <label class="form-check-label" :for="'cb' + category.id">
+            {{ category.name }}
+          </label>
+        </div>
+      </div>
 
-          <div v-for="category in categories" :key="category.id" class="form-check">
-            <input 
-              class="form-check-input" 
-              type="checkbox" 
-              :value="category.id" 
-              :id="'cb' + category.id" 
-              :data-id="category.id" 
-              v-model="selectedCategories" 
-              @change="handleFillter"
-            />
-            <label class="form-check-label" :for="'cb' + category.id">
-              {{ category.name }}
-            </label>
-          </div>
+      <div class="filter-cate">
+        <div class="fw-bold">Mức giá</div>
+        <!-- Tất cả mức giá -->
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="filterPrice"
+            id="rb0"
+            value="all"
+            v-model="selectedPrice"
+            @change="handleFillter"
+          />
+          <label class="form-check-label" for="rb0"> Tất cả mức giá</label>
         </div>
 
-
-        <div class="filter-cate">
-          <div class="fw-bold">Mức giá</div>
-          <!-- Tất cả mức giá -->
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="filterPrice"
-              id="rb0"
-              value="all"
-              v-model="selectedPrice" 
-              @change="handleFillter"
-            />
-            <label class="form-check-label" for="rb0"> Tất cả mức giá</label>
-          </div>
-
-          <!-- Các khoảng giá -->
-          <div class="form-check" v-for="(range, index) in priceRanges" :key="index">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="filterPrice"
-              :id="'rb' + (index + 1)"
-              :value="range"
-              v-model="selectedPrice"
-              @change="handleFillter"
-            />
-            <label class="form-check-label" :for="'rb' + (index + 1)">
-              {{ range.label }}
-            </label>
-          </div>
+        <!-- Các khoảng giá -->
+        <div
+          class="form-check"
+          v-for="(range, index) in priceRanges"
+          :key="index"
+        >
+          <input
+            class="form-check-input"
+            type="radio"
+            name="filterPrice"
+            :id="'rb' + (index + 1)"
+            :value="range"
+            v-model="selectedPrice"
+            @change="handleFillter"
+          />
+          <label class="form-check-label" :for="'rb' + (index + 1)">
+            {{ range.label }}
+          </label>
         </div>
-
+      </div>
 
       <div class="filter-cate">
         <div class="fw-bold">Độ tuổi</div>
 
         <div v-for="(age, index) in ages" :key="index" class="form-check">
-          <input 
-            class="form-check-input" 
-            type="checkbox" 
-            :value="age" 
-            :id="'cb' + index" 
-            :data-age="age" 
-            v-model="selectedAge" 
+          <input
+            class="form-check-input"
+            type="checkbox"
+            :value="age"
+            :id="'cb' + index"
+            :data-age="age"
+            v-model="selectedAge"
             @change="handleFillter"
           />
           <label class="form-check-label" :for="'cb' + index">
             {{ age }}
           </label>
         </div>
-
       </div>
     </div>
 
     <div class="search-result-box">
       <div class="search-result-title">
-        Kết quả tìm kiếm <span class="text-primary">{{ this.searchQuery }}</span>
+        Kết quả tìm kiếm
+        <span class="text-primary">{{ this.searchQuery }}</span>
       </div>
 
       <div class="filter-order-box">
@@ -105,7 +109,9 @@
           :checked="selectedRadio === 'sold_quantity'"
           @click="toggleFilter('sold_quantity')"
         />
-        <label class="btn btn-outline-warning" for="rbhot">Số lượng đã bán</label>
+        <label class="btn btn-outline-warning" for="rbhot"
+          >Số lượng đã bán</label
+        >
 
         <input
           type="checkbox"
@@ -115,7 +121,9 @@
           :checked="selectedRadio === 'rating_count'"
           @click="toggleFilter('rating_count')"
         />
-        <label class="btn btn-outline-success" for="rbpricel2h">Điểm rating</label>
+        <label class="btn btn-outline-success" for="rbpricel2h"
+          >Điểm rating</label
+        >
 
         <!-- Radio button for sorting price from low to high (tăng dần) -->
         <input
@@ -126,7 +134,9 @@
           :checked="typeSort === 'asc'"
           @click="toggleTypeSort('asc')"
         />
-        <label class="btn btn-outline-danger" for="rbpriceasc">Thấp đến cao ▲</label>
+        <label class="btn btn-outline-danger" for="rbpriceasc"
+          >Thấp đến cao ▲</label
+        >
 
         <!-- Radio button for sorting price from high to low (giảm dần) -->
         <input
@@ -137,17 +147,17 @@
           :checked="typeSort === 'desc'"
           @click="toggleTypeSort('desc')"
         />
-        <label class="btn btn-outline-danger" for="rbpricedesc">Cao đến thấp ▼</label>
-      
-
+        <label class="btn btn-outline-danger" for="rbpricedesc"
+          >Cao đến thấp ▼</label
+        >
       </div>
 
-        <!-- Vòng tròn quay khi đang tải -->
-        <div v-if="isLoading" class="search-loading-spinner">
-          <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
-          </div>
+      <!-- Vòng tròn quay khi đang tải -->
+      <div v-if="isLoading" class="search-loading-spinner">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
         </div>
+      </div>
 
       <div class="search-result-list">
         <ProductCard
@@ -162,25 +172,38 @@
         />
       </div>
 
-      <div class="pagination">
-      <button @click="goToPage(page - 1)" :disabled="page === 1">Previous</button>
-      
-      <!-- Hiển thị các trang -->
-      <button
-        v-for="n in totalPage"
-        :key="n"
-        @click="goToPage(n)"
-        :class="{ active: n === page }"
-      >
-        {{ n }}
-      </button>
-      
-      <button @click="goToPage(page + 1)" :disabled="page === totalPage">Next</button>
+      <div class="pagination d-flex justify-content-center align-items-center">
+        <!-- Nút Previous -->
+        <button
+          class="btn btn-secondary me-2"
+          @click="goToPage(page - 1)"
+          :disabled="page === 1"
+        >
+          Previous
+        </button>
 
-      <div>{{curentRecord}}/{{ totalRecord }}</div>
-    </div>
+        <!-- Hiển thị các trang -->
+        <div class="btn-group" role="group" aria-label="Pagination Buttons">
+          <button
+            v-for="n in totalPage"
+            :key="n"
+            class="btn"
+            :class="n === page ? 'btn-primary' : 'btn-outline-primary'"
+            @click="goToPage(n)"
+          >
+            {{ n }}
+          </button>
+        </div>
 
-     
+        <!-- Nút Next -->
+        <button
+          class="btn btn-secondary ms-2"
+          @click="goToPage(page + 1)"
+          :disabled="page === totalPage"
+        >
+          Next
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -197,46 +220,53 @@ export default {
   },
   data() {
     return {
-      sortBy:'',
-      typeSort:'asc',
-      selectedRadio:'',
+      sortBy: "",
+      typeSort: "asc",
+      selectedRadio: "",
       selectedPrice: "all", // Mặc định là "Tất cả mức giá"
       priceRanges: [
         { label: "0đ - 50,000đ", startPrice: 0, endPrice: 50000 },
         { label: "50,000đ - 100,000đ", startPrice: 50000, endPrice: 100000 },
         { label: "100,000đ - 250,000đ", startPrice: 100000, endPrice: 250000 },
         { label: "250,000đ - 500,000đ", startPrice: 250000, endPrice: 500000 },
-        { label: "500,000đ trở lên", startPrice: 500000, endPrice: null }
+        { label: "500,000đ trở lên", startPrice: 500000, endPrice: null },
       ],
       isLoading: false,
-      
+
       categories: [
-        { id: 1, name: 'Thiếu nhi' },
-        { id: 2, name: 'Giáo khoa' },
-        { id: 3, name: 'Kinh tế' },
-        { id: 4, name: 'Tâm lý' },
-        { id: 5, name: 'Ngoại ngữ' },
-        { id: 6, name: 'Văn học' },
-        { id: 7, name: 'Tiểu thuyết' }
+        { id: 1, name: "Thiếu nhi" },
+        { id: 2, name: "Giáo khoa" },
+        { id: 3, name: "Kinh tế" },
+        { id: 4, name: "Tâm lý" },
+        { id: 5, name: "Ngoại ngữ" },
+        { id: 6, name: "Văn học" },
+        { id: 7, name: "Tiểu thuyết" },
       ],
-      ages:["Teen, Adult", "Teen", "Adult",  "Child, Teen, Adult",  "Child, Teen"],
-      selectedCategories:[],
-      selectGenre:null,
-      selectAge:null,
-      startPrice:null,
-      endPrice:null,
-      
+      ages: [
+        "Teen, Adult",
+        "Teen",
+        "Adult",
+        "Child, Teen, Adult",
+        "Child, Teen",
+      ],
+      selectedCategories: [],
+      selectGenre: null,
+      selectAge: null,
+      startPrice: null,
+      endPrice: null,
+
       selectedAge: [],
-      type_money:'đ',
+      type_money: "đ",
       page: 1,
       arrayBook: [],
-      totalPage:0,
-      perPage:0,
-      totalRecord:0,
-      curentRecord:0,
-      
+      totalPage: 0,
+      perPage: 0,
+      totalRecord: 0,
+      curentRecord: 0,
+
       products_skill: [],
-      searchQuery: "", // Thêm biến này để lưu giá trị tìm kiếm từ URL
+      searchQuery: "",
+      isfillter:false,
     };
   },
 
@@ -247,8 +277,8 @@ export default {
 
     // Gọi API với giá trị query lấy từ URL
     this.fetchProducts();
-
-    
+    console.log('start price',this.startPrice);
+    console.log('end price',this.endPrice);
   },
 
   watch: {
@@ -257,23 +287,30 @@ export default {
   },
 
   methods: {
+    isFillter(){
+      if (this.selectGenre === null && this.selectAge === null &&  this.startPrice === null && this.endPrice === null && this.sortBy === null) {
+        return false;
+      }else {
+        return true;
+      }
+    },
     goDetail(id) {
       this.$router.push({
         path: `/book`,
         query: { id_book: id },
       });
     },
-    handleFillter(){
+    handleFillter() {
       this.handleCheckboxChange();
       this.handlePriceChange();
       this.fetchData();
     },
     handlePriceChange() {
       if (this.selectedPrice === "all") {
-        this.startPrice ='';
-        this.endPrice ='';
+        this.startPrice = "";
+        this.endPrice = "";
       } else {
-        const { startPrice,endPrice } = this.selectedPrice;
+        const { startPrice, endPrice } = this.selectedPrice;
         this.startPrice = startPrice;
         this.endPrice = endPrice;
       }
@@ -284,19 +321,18 @@ export default {
       if (this.selectedCategories.length >= 1) {
         // Nếu có, chỉ giữ lại category cuối cùng được chọn
         const lastSelected = this.selectedCategories.pop();
-        this.selectedCategories=[lastSelected];
+        this.selectedCategories = [lastSelected];
         this.selectGenre = [lastSelected];
-        console.log('genre' ,this.selectGenre );
-      }else{
+        console.log("genre", this.selectGenre);
+      } else {
         this.selectGenre = null;
       }
-      if ( this.selectedAge.length >=1){
+      if (this.selectedAge.length >= 1) {
         const lastSelectedAge = this.selectedAge.pop();
-        this.selectedAge=[lastSelectedAge];
+        this.selectedAge = [lastSelectedAge];
         this.selectAge = [lastSelectedAge];
-        console.log('age' ,this.selectAge );
-      }
-      else{
+        console.log("age", this.selectAge);
+      } else {
         this.selectAge = null;
       }
     },
@@ -304,71 +340,69 @@ export default {
     fetchData() {
       this.isLoading = true;
 
-      if(this.selectGenre === null){
-        this.selectGenre='';
-      }
-      
-      if(this.selectAge === null){
-        this.selectAge ='';
-      }
-      
-      if(this.startPrice === null){
-        this.startPrice ='';
-      }
-      
-      if(this.endPrice === null){
-        this.endPrice ='';
+      if (this.selectGenre === null) {
+        this.selectGenre = "";
       }
 
-      if(this.sortBy === null){
-        this.sortBy ='';
+      if (this.selectAge === null) {
+        this.selectAge = "";
       }
 
-      if(this.typeSort === null){
-        this.typeSort ='';
+      if (this.startPrice === null) {
+        this.startPrice = "";
       }
-      
+
+      if (this.endPrice === null) {
+        this.endPrice = "";
+      }
+
+      if (this.sortBy === null) {
+        this.sortBy = "";
+      }
+
+      if (this.typeSort === null) {
+        this.typeSort = "";
+      }
 
       const url = `/api/search/filter?keyword=${this.searchQuery}&page=${this.page}&genre=${this.selectGenre}&age=${this.selectAge}&startPrice=${this.startPrice}&endPrice=${this.endPrice}&${this.sortBy}=${this.typeSort}`;
       console.log(url);
-      axios.get(url).then(response => {
-      
-        this.arrayBook = response.data.data
-        this.curentRecord += this.arrayBook.length;
+      axios
+        .get(url)
+        .then((response) => {
+          this.arrayBook = response.data.data;
+          this.curentRecord += this.arrayBook.length;
 
-        this.totalPage= response.data.total_pages;
-        this.perPage= response.data.per_page;
-        this.totalRecord= response.data.total_records;
-        this.page= response.data.current_page;
-
-      })
-      .catch(error => {
-        console.error('Có lỗi xảy ra khi gọi API:', error);
-      })
-      .finally(() => {
+          this.totalPage = response.data.total_pages;
+          this.perPage = response.data.per_page;
+          this.totalRecord = response.data.total_records;
+          this.page = response.data.current_page;
+        })
+        .catch((error) => {
+          console.error("Có lỗi xảy ra khi gọi API:", error);
+        })
+        .finally(() => {
           this.isLoading = false;
-      });
+        });
     },
     toggleFilter(value) {
-      
       // Kiểm tra nếu giá trị đã chọn thì hủy chọn
       this.selectedRadio = this.selectedRadio === value ? null : value;
-      this.sortBy = this.selectedRadio === value ? value :null;
+      this.sortBy = this.selectedRadio === value ? value : null;
       console.log(this.typeSort);
       console.log(this.selectedRadio);
 
       this.handleFillter();
     },
 
-    toggleTypeSort(value){
+    toggleTypeSort(value) {
       this.typeSort = value;
-      if ( this.sortBy ){
+      if (this.sortBy) {
         this.handleFillter();
       }
     },
 
     async fetchProducts() {
-      //this.isLoading = true;
+      this.isLoading = true;
       try {
         const response = await axios.get(
           `/api/search?keyword=${this.searchQuery}&page=${this.page}`
@@ -377,32 +411,35 @@ export default {
           this.arrayBook = response.data.data;
           this.curentRecord += this.arrayBook.length;
 
-          this.totalPage= response.data.total_pages;
-          this.perPage= response.data.per_page;
-          this.totalRecord= response.data.total_records;
-          this.page= response.data.current_page;
-      
-          console.log('tong so trang:',this.totalPage);
-          console.log('tong so sach:',this.totalRecord);
-          console.log('so sach moi trang:',this.perPage);
-          console.log('trang hien tai:',this.page);
+          this.totalPage = response.data.total_pages;
+          this.perPage = response.data.per_page;
+          this.totalRecord = response.data.total_records;
+          this.page = response.data.current_page;
+
+          console.log("tong so trang:", this.totalPage);
+          console.log("tong so sach:", this.totalRecord);
+          console.log("so sach moi trang:", this.perPage);
+          console.log("trang hien tai:", this.page);
         }
       } catch (error) {
         this.error = "Không thể lấy thông tin sách!";
         console.error(error);
-      }
-      finally{
-        //this.isLoading = false;
+      } finally {
+        this.isLoading = false;
       }
     },
-    allCurrentBook(){
+    allCurrentBook() {
       this.curentRecord += this.arrayBook.length;
     },
     goToPage(pageNumber) {
-      if (pageNumber < 1 || pageNumber > this.totalPage) return;  // Kiểm tra trang hợp lệ
+      if (pageNumber < 1 || pageNumber > this.totalPage) return;
       this.page = pageNumber;
-      this.fetchData();  // Gọi lại API với trang mới
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if(this.isFillter){
+        this.fetchData();
+      }else{
+        this.fetchProducts();
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
     handleQueryChange() {
       // Gọi API mỗi khi query trong URL thay đổi
