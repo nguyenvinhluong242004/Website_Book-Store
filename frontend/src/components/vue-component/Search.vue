@@ -182,16 +182,40 @@
           Previous
         </button>
 
-        <!-- Hiển thị các trang -->
+        <!-- Hiển thị các trang với logic -->
         <div class="btn-group" role="group" aria-label="Pagination Buttons">
           <button
-            v-for="n in totalPage"
+            v-if="1 !== pageRange[0]"
+            class="btn btn-outline-primary"
+            @click="goToPage(1)"
+          >
+            1
+          </button>
+
+          <span v-if="pageRange[0] > 2" class="px-2">...</span>
+
+          <button
+            v-for="n in pageRange"
             :key="n"
             class="btn"
             :class="n === page ? 'btn-primary' : 'btn-outline-primary'"
             @click="goToPage(n)"
           >
             {{ n }}
+          </button>
+
+          <span
+            v-if="pageRange[pageRange.length - 1] < totalPage - 1"
+            class="px-2"
+            >...</span
+          >
+
+          <button
+            v-if="totalPage !== pageRange[pageRange.length - 1]"
+            class="btn btn-outline-primary"
+            @click="goToPage(totalPage)"
+          >
+            {{ totalPage }}
           </button>
         </div>
 
@@ -266,7 +290,7 @@ export default {
 
       products_skill: [],
       searchQuery: "",
-      isfillter:false,
+      isfillter: false,
     };
   },
 
@@ -277,8 +301,8 @@ export default {
 
     // Gọi API với giá trị query lấy từ URL
     this.fetchProducts();
-    console.log('start price',this.startPrice);
-    console.log('end price',this.endPrice);
+    console.log("start price", this.startPrice);
+    console.log("end price", this.endPrice);
   },
 
   watch: {
@@ -287,10 +311,16 @@ export default {
   },
 
   methods: {
-    isFillter(){
-      if (this.selectGenre === null && this.selectAge === null &&  this.startPrice === null && this.endPrice === null && this.sortBy === null) {
+    isFillter() {
+      if (
+        this.selectGenre === null &&
+        this.selectAge === null &&
+        this.startPrice === null &&
+        this.endPrice === null &&
+        this.sortBy === null
+      ) {
         return false;
-      }else {
+      } else {
         return true;
       }
     },
@@ -303,6 +333,7 @@ export default {
     handleFillter() {
       this.handleCheckboxChange();
       this.handlePriceChange();
+      this.page = 1;
       this.fetchData();
     },
     handlePriceChange() {
@@ -434,9 +465,9 @@ export default {
     goToPage(pageNumber) {
       if (pageNumber < 1 || pageNumber > this.totalPage) return;
       this.page = pageNumber;
-      if(this.isFillter){
+      if (this.isFillter) {
         this.fetchData();
-      }else{
+      } else {
         this.fetchProducts();
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -449,5 +480,30 @@ export default {
       this.allCurrentBook();
     },
   },
+  computed:{
+    pageRange() {
+    const range = [];
+    const delta = 2; // Số lượng trang hiển thị trước và sau trang hiện tại
+
+    let start = Math.max(this.page - delta, 1);
+    let end = Math.min(this.page + delta, this.totalPage);
+
+    // Điều chỉnh nếu đầu hoặc cuối vượt giới hạn
+    if (start <= 2) {
+      start = 1;
+      end = Math.min(delta * 2 + 1, this.totalPage);
+    }
+
+    if (end >= this.totalPage - 1) {
+      start = Math.max(this.totalPage - delta * 2, 1);
+      end = this.totalPage;
+    }
+
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+    return range;
+  },
+  }
 };
 </script>

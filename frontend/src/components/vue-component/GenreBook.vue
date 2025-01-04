@@ -272,6 +272,7 @@ export default {
     handleFillter() {
       this.handleCheckboxChange();
       this.handlePriceChange();
+      this.page=1;
       this.fetchData();
     },
     handlePriceChange() {
