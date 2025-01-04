@@ -162,9 +162,9 @@ https://localhost:8888/detail-book/review
 
 [POST] https://localhost:8888/admin/books/add
 
-[PUT] https://localhost:8888/admin/books/change
+[PUT] https://localhost:8888/admin/books/change?id=1
 
-[DELETE] https://localhost:8888/admin/books/delete
+[DELETE] https://localhost:8888/admin/books/delete?id=1
 
 
 
