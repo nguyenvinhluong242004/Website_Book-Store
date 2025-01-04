@@ -455,6 +455,9 @@ VALUES
  'Cuốn sách kể về Holden Caulfield, một thiếu niên sống trong thế giới không hoàn hảo và cảm thấy lạc lõng giữa xã hội.', 
  220000, 200000, 120, 170, 7, 'Teen, Adult', 'Little, Brown and Company', 'Bìa mềm');
 
+ALTER TABLE Book
+ADD COLUMN Status INT DEFAULT 1;
+
 -- Insert Img_Book
 INSERT INTO Img_Book (ID_Book, Image_Link) VALUES
 (1, 'https://via.placeholder.com/1792x1024.png?text=D%E1%BA%BF+M%C3%AAn+Phi%C3%AAu+L%C6%B0u+K%C3%BD'),
@@ -536,10 +539,116 @@ INSERT INTO Review (ID_Book, Email, Date, Rating, Content, Image_Link, Like_Coun
 
 
 -- Insert Order
-INSERT INTO Orders (Order_Date, Quantity, ID_Voucher, Address, Email, ID_Book, Amount, Status) VALUES
-('2024-11-01', 1, 1, '123 Main St, City A', 'user1@example.com', 1, 90000.00, 'Shipped'),
-('2024-11-02', 2, 2, '456 Elm St, City B', 'user2@example.com', 2, 280000.00, 'Pending'),
-('2024-11-03', 1, 3, '789 Pine St, City C', 'user3@example.com', 3, 180000.00, 'Delivered');
+
+INSERT INTO Orders (Email, Total_Amount, Status, Created_At) VALUES
+('user1@example.com', 120.00, 'Completed', '2024-01-05 10:00:00'),
+('user2@example.com', 150.00, 'Completed', '2024-01-10 14:00:00'),
+('user3@example.com', 80.00, 'Paid', '2024-01-15 16:00:00'),
+
+('user4@example.com', 90.00, 'Completed', '2024-02-03 10:15:00'),
+('user5@example.com', 110.00, 'Completed', '2024-02-07 11:20:00'),
+('user6@example.com', 140.00, 'Pending', '2024-02-15 12:10:00'),
+
+('user7@example.com', 120.00, 'Delivering', '2024-03-01 09:00:00'),
+('user1@example.com', 130.00, 'Completed', '2024-03-03 14:10:00'),
+('user2@example.com', 150.00, 'Completed', '2024-03-05 16:30:00'),
+
+('user3@example.com', 160.00, 'Refused', '2024-04-02 10:00:00'),
+('user4@example.com', 180.00, 'Completed', '2024-04-05 13:00:00'),
+('user5@example.com', 200.00, 'Paid', '2024-04-07 14:30:00'),
+
+('user6@example.com', 90.00, 'Completed', '2024-05-01 09:00:00'),
+('user7@example.com', 110.00, 'Paid', '2024-05-04 12:20:00'),
+('user1@example.com', 180.00, 'Completed', '2024-05-06 15:40:00'),
+
+('user2@example.com', 130.00, 'Completed', '2024-06-02 11:00:00'),
+('user3@example.com', 150.00, 'Paid', '2024-06-06 14:30:00'),
+('user4@example.com', 100.00, 'Pending', '2024-06-10 16:20:00'),
+
+('user5@example.com', 140.00, 'Delivering', '2024-07-01 09:50:00'),
+('user6@example.com', 160.00, 'Completed', '2024-07-04 13:00:00'),
+('user7@example.com', 130.00, 'Completed', '2024-07-06 14:40:00'),
+
+('user1@example.com', 90.00, 'Paid', '2024-08-02 10:10:00'),
+('user2@example.com', 110.00, 'Completed', '2024-08-05 11:30:00'),
+('user3@example.com', 120.00, 'Completed', '2024-08-08 13:20:00'),
+
+('user4@example.com', 140.00, 'Pending', '2024-09-01 09:00:00'),
+('user5@example.com', 130.00, 'Completed', '2024-09-04 10:40:00'),
+('user6@example.com', 110.00, 'Paid', '2024-09-07 11:50:00'),
+
+('user7@example.com', 120.00, 'Completed', '2024-10-01 10:30:00'),
+('user1@example.com', 150.00, 'Delivering', '2024-10-05 13:10:00'),
+('user2@example.com', 170.00, 'Completed', '2024-10-08 14:30:00'),
+
+('user3@example.com', 200.00, 'Completed', '2024-11-01 15:00:00'),
+('user4@example.com', 180.00, 'Pending', '2024-11-05 11:50:00'),
+('user5@example.com', 140.00, 'Paid', '2024-11-08 13:00:00'),
+
+('user6@example.com', 130.00, 'Refused', '2024-12-02 09:20:00'),
+('user7@example.com', 160.00, 'Completed', '2024-12-06 14:40:00'),
+('user1@example.com', 170.00, 'Completed', '2024-12-10 12:30:00'),
+
+('user1@example.com', 120.00, 'Completed', '2025-01-01 10:00:00'),
+('user2@example.com', 150.00, 'Completed', '2025-01-02 14:00:00'),
+('user3@example.com', 80.00, 'Paid', '2025-01-03 16:00:00');
+
+INSERT INTO Order_Detail (ID_Order, ID_Book, Quantity, Price) VALUES
+(1, 1, 2, 60.00),  -- Order 1: 2 copies of Book 1
+(1, 2, 1, 60.00),  -- Order 1: 1 copy of Book 2
+(2, 3, 3, 50.00),  -- Order 2: 3 copies of Book 3
+(3, 4, 2, 40.00),  -- Order 3: 2 copies of Book 4
+(3, 5, 1, 40.00),  -- Order 3: 1 copy of Book 5
+
+(4, 1, 3, 90.00),  -- Order 4: 3 copies of Book 1
+(4, 3, 1, 40.00),  -- Order 4: 1 copy of Book 3
+(5, 2, 2, 110.00),  -- Order 5: 2 copies of Book 2
+(6, 5, 2, 80.00),  -- Order 6: 2 copies of Book 5
+
+(7, 3, 2, 50.00),  -- Order 7: 2 copies of Book 3
+(8, 4, 1, 40.00),  -- Order 8: 1 copy of Book 4
+(9, 6, 1, 50.00),  -- Order 9: 1 copy of Book 6
+
+(10, 7, 2, 80.00),  -- Order 10: 2 copies of Book 7
+(11, 8, 3, 60.00),  -- Order 11: 3 copies of Book 8
+(12, 2, 4, 40.00),  -- Order 12: 4 copies of Book 2
+
+(13, 1, 5, 150.00),  -- Order 13: 5 copies of Book 1
+(14, 4, 2, 40.00),  -- Order 14: 2 copies of Book 4
+(15, 3, 3, 90.00),  -- Order 15: 3 copies of Book 3
+
+(16, 5, 1, 40.00),  -- Order 16: 1 copy of Book 5
+(17, 6, 2, 60.00),  -- Order 17: 2 copies of Book 6
+(18, 7, 3, 90.00),  -- Order 18: 3 copies of Book 7
+
+(19, 8, 1, 40.00),  -- Order 19: 1 copy of Book 8
+(20, 2, 2, 80.00),  -- Order 20: 2 copies of Book 2
+(21, 4, 3, 120.00),  -- Order 21: 3 copies of Book 4
+
+(22, 3, 2, 60.00),  -- Order 22: 2 copies of Book 3
+(23, 6, 1, 40.00),  -- Order 23: 1 copy of Book 6
+(24, 7, 2, 80.00),  -- Order 24: 2 copies of Book 7
+
+(25, 4, 1, 40.00),  -- Order 25: 1 copy of Book 4
+(26, 1, 3, 90.00),  -- Order 26: 3 copies of Book 1
+(27, 3, 1, 30.00),  -- Order 27: 1 copy of Book 3
+
+(28, 8, 2, 80.00),  -- Order 28: 2 copies of Book 8
+(29, 7, 1, 40.00),  -- Order 29: 1 copy of Book 7
+(30, 2, 2, 60.00),  -- Order 30: 2 copies of Book 2
+
+(31, 5, 1, 40.00),  -- Order 31: 1 copy of Book 5
+(32, 6, 2, 80.00),  -- Order 32: 2 copies of Book 6
+(33, 3, 4, 120.00),  -- Order 33: 4 copies of Book 3
+
+(34, 4, 1, 40.00),  -- Order 34: 1 copy of Book 4
+(35, 1, 3, 90.00),  -- Order 35: 3 copies of Book 1
+(36, 2, 1, 30.00),  -- Order 36: 1 copy of Book 2
+
+(37, 1, 2, 60.00),  -- Order 37: 2 copies of Book 1
+(38, 3, 3, 90.00),  -- Order 38: 3 copies of Book 3
+(39, 5, 1, 40.00);  -- Order 39: 1 copy of Book 5
+
 
 -- Insert Invoice
 INSERT INTO Invoice (ID_Order, Invoice_Date, Total_Amount, Delivery_Address) VALUES

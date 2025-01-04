@@ -1,4 +1,5 @@
 const BookModel = require('../../models/User/book.model');
+const ReviewModel = require('../../models/User/review.model');
 
 class DetailBookController {
 
@@ -30,6 +31,40 @@ class DetailBookController {
         }
     }
 
+    async review(req, res) {
+        // Kiểm tra nếu có file đã upload
+        const fileUrls = req.files && req.files.length > 0 ? req.files.map(file => file.path) : null;
+    
+        // Lấy các trường bổ sung từ req.body
+        const { id_book, email, content, date, rating, like_count = 0 } = req.body;
+    
+        // Xử lý dữ liệu (ví dụ lưu vào database)
+        console.log('Dữ liệu nhận được:', {
+            id_book,
+            email,
+            date,
+            rating,
+            like_count,
+            fileUrls
+        });
+    
+        try {
+            await ReviewModel.addReview(
+                parseInt(id_book),
+                email,
+                date,
+                parseInt(rating),
+                content,
+                fileUrls ? fileUrls[0] : null // Nếu có ảnh thì lấy ảnh đầu tiên, không có ảnh thì là null
+            );
+    
+            res.status(200).json({ success: true, message: 'Review đã được thêm thành công' });
+        } catch (err) {
+            console.error('Lỗi khi thêm review:', err);
+            res.status(500).json({ error: 'Đã xảy ra lỗi khi thêm review', details: err.message });
+        }
+    }
+    
     
 
 
