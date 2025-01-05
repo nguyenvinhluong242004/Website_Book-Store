@@ -533,7 +533,6 @@ export default {
       quantityOfBook: 1,
       book: [],
       id: null,
-      quantity: 1,
       status: false,
       isExpanded: false,
       isModalVisible: false,
@@ -692,8 +691,8 @@ export default {
     async addToCart() {
       try {
         const response = await axiosInstance.post("/cart/add", {
-          id_book: "1",
-          quantity: this.quantity,
+          id_book: `${this.$route.query.id_book}`,
+          quantity: this.quantityOfBook,
         });
 
         if (response.status === 200) {
