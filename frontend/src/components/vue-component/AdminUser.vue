@@ -7,34 +7,49 @@
       <table class="table mx-auto" style="width: 90%">
         <thead class="border-bottom-0">
           <tr>
-            <th scope="col" class="text-bg-primary rounded-start-4">Email</th>
+            <th
+              scope="col"
+              class="text-bg-primary rounded-start-4 ps-4"
+              style="width: 300px"
+            >
+              Email
+            </th>
             <th scope="col" class="text-bg-primary">Tên</th>
             <th scope="col" class="text-bg-primary">Role</th>
-            <th scope="col" class="text-bg-primary rounded-end-4">Thao tác</th>
+            <th
+              scope="col"
+              class="text-bg-primary rounded-end-4 text-center"
+              style="width: 200px"
+            >
+              Thao tác
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>tranloc@gmail.com</td>
+            <td class="ps-4">tranloc@gmail.com</td>
             <td>Trần Thiên Lộc</td>
             <td>admin</td>
-            <td>
+            <td class="fs-5 text-center">
+              <i class="fa-solid fa-address-card text-primary me-4"></i>
               <i class="fa-solid fa-address-card text-primary"></i>
             </td>
           </tr>
           <tr>
-            <td>pahdsn@gmail.com</td>
+            <td class="ps-4">pahdsn@gmail.com</td>
             <td>Không ai biết</td>
             <td>user</td>
-            <td>
+            <td class="fs-5 text-center">
+              <i class="fa-solid fa-address-card text-primary me-4"></i>
               <i class="fa-solid fa-address-card text-primary"></i>
             </td>
           </tr>
           <tr>
-            <td>mdlkasmdas@gmail.com</td>
+            <td class="ps-4">mdlkasmdas@gmail.com</td>
             <td>Larry the Bird</td>
             <td>user</td>
-            <td>
+            <td class="fs-5 text-center">
+              <i class="fa-solid fa-address-card text-primary me-4"></i>
               <i class="fa-solid fa-address-card text-primary"></i>
             </td>
           </tr>
