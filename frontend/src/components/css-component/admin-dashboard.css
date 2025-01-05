@@ -1,0 +1,13 @@
+.admin-dashboard-body{
+    padding: 20px 30px;
+}
+
+.admin-static-row{
+    display: flex;
+    justify-content: space-between;
+}
+
+.admin-static-box{
+    width: 250px;
+    height: 180px;
+}
