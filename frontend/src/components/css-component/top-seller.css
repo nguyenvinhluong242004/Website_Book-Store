@@ -5,6 +5,7 @@
   border-radius: 15px;
   overflow: auto;
   position: relative;
+  min-height: 100px;
 }
 
 .top-seller-label {
