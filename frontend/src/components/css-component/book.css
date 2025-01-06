@@ -11,13 +11,26 @@
   font-size: 30px;
   font-weight: bold;
 }
+.book-recommend{
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
+}
+.book-same-book{
+  margin-top: 20px;
+  display: flex;
+  width: 80%;
+  justify-content: space-between;
+  gap: 5%;
+}
 .book-view-intro {
   display: flex;
   justify-content: center;
   gap: 10px;
 
-  width: 1300px;
+  width: 70%;
 
   border-radius: 10px;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
@@ -428,7 +441,7 @@ body.modal {
 /* Review */
 .book-review {
   position: relative;
-  width: 1300px;
+  width: 70%;
   padding: 20px;
   display: flex;
   flex-flow: row wrap;
