@@ -146,6 +146,7 @@ CREATE TABLE Orders (
     Total_Amount NUMERIC(15, 2) NOT NULL CHECK (Total_Amount >= 0), 
     Status VARCHAR(50) DEFAULT 'Pending', -- pending, paid, cancelled and completed 
     Created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    method VARCHAR(50),
     FOREIGN KEY (Email) REFERENCES Users(Email) ON DELETE CASCADE
 );
 

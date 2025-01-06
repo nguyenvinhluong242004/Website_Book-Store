@@ -5,10 +5,14 @@ const router = express.Router();
 const statisticalRoutes = require('./statistical.routes');
 const categoriesRoutes = require('./categories.routes');
 const bookRoutes = require('./book.routes');
+const accountRoutes = require('./account.routes');
+const orderRoutes = require('../admin/order.routes');
 
 
 router.use('/categories', categoriesRoutes);
 router.use('/books', bookRoutes);
+router.use('/account', accountRoutes);
+router.use('/order', orderRoutes);
 router.use('/', statisticalRoutes);
 
 module.exports = router;
