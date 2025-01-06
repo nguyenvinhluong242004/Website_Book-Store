@@ -49,7 +49,7 @@ class UserModel {
 
     // 5. Get All Users
     async getAllUsers() {
-        const result = await this.pool.query('SELECT * FROM users');
+        const result = await this.pool.query("SELECT * FROM users WHERE role = '1'");
         return result.rows;
     }
 
