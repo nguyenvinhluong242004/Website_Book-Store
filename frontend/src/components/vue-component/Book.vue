@@ -606,6 +606,7 @@ export default {
   },
   created() {
     this.id_book = this.$route.query.id_book;
+    this.isLoadingReview = true;
     this.fetchBookDetails(this.id_book);
   },
   computed: {
@@ -680,11 +681,14 @@ export default {
           if (response.ok) {
             this.isLoadingSendReview = false;
 
-            this.toastMessage = "Cảm ơn vì review của bạn ";
-            this.showToast("bg-success"); // Màu đỏ cho thông báo lỗi
-
-            this.resetForm();
             this.fetchBookDetails(this.id_book);
+            this.toastMessage = "Cảm ơn bạn đã review cho sản phẩm!";
+            this.showToast("bg-success"); // Gọi toast trước khi reset form
+            setTimeout(() => {
+              this.resetForm(); // Gọi resetForm sau khi toast được hiển thị
+            }, 1000); // Delay ngắn để toast hiển thị kịp
+
+            //this.resetForm();
           } else {
             this.isLoadingSendReview = false;
             throw new Error("Có lỗi xảy ra khi gửi hình ảnh.");
@@ -748,7 +752,6 @@ export default {
     },
     async fetchBookDetails(id) {
       this.isLoadingImage = true;
-      this.isLoadingReview = true;
       try {
         const response = await axios.get(`/api/detail-book?id=${id}`); // Lấy API qua proxy
         if (response.data.success) {
