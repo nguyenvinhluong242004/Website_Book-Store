@@ -283,6 +283,30 @@
         </div>
       </div>
     </div>
+    <div class="book-recommend mt-3">
+      <h3>Sản phẩm tương tự</h3>
+
+      <div
+        v-if="isloadingsame"
+        class="spinner-border text-primary"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+
+      <div class="book-same-book">
+        <ProductCard
+          v-for="(book, index) in sameBook"
+          :key="index"
+          :img="book.images"
+          :name="book.book_name"
+          :old_price="book.list_price"
+          :new_price="book.discounted_price"
+          :type_money="type_money"
+          @click="goDetail(book.id_book)"
+        />
+      </div>
+    </div>
 
     <!-- Phần đánh giá của sách -->
     <div class="book-review mt-5">
@@ -521,9 +545,11 @@
           <!-- avatar -->
           <div
             class="d-flex justify-content-center align-items-center rounded-circle bg-primary text-white"
-            style="width: 3vw; height: 3vw; overflow: hidden"
+            style="width: 25px; height: 25px; overflow: hidden"
           >
-            <span class="text-truncate w-100 text-center">U</span>
+            <span class="text-truncate w-100 text-center"
+              ><i class="fas fa-user"></i
+            ></span>
           </div>
 
           <!-- phần review bên trái + phản hồi -->
@@ -566,11 +592,15 @@
 
 <script>
 import "../css-component/book.css";
+import ProductCard from "./ProductCard.vue";
 import axiosInstance from "../../services/axiosInstance.js";
 import axios from "axios";
 
 export default {
   name: "BookPage",
+  components: {
+    ProductCard,
+  },
   data() {
     return {
       visibleReviews: 3,
@@ -584,6 +614,8 @@ export default {
       isModalVisible_1: false,
       isModalVisible_2: false,
       isLoadingImage: true,
+      sameBook: [],
+      isloadingsame: false,
 
       //reviews
       images: [],
@@ -607,6 +639,7 @@ export default {
   created() {
     this.id_book = this.$route.query.id_book;
     this.isLoadingReview = true;
+    this.isloadingsame = true;
     this.fetchBookDetails(this.id_book);
   },
   computed: {
@@ -756,11 +789,14 @@ export default {
         const response = await axios.get(`/api/detail-book?id=${id}`); // Lấy API qua proxy
         if (response.data.success) {
           this.book = response.data.data;
+          this.sameBook = response.data.relatedBooks;
+          console.log("sameBook:", this.sameBook);
           this.images = this.book.images;
-          console.log(this.book);
+
           this.reviews = response.data.reviews;
           this.isLoadingImage = false;
           this.isLoadingReview = false;
+          this.isloadingsame = false;
           this.isSeeMore = true;
         }
         console.log("book tra ve:", this.book);
@@ -873,8 +909,11 @@ export default {
       this.imageFile = null;
       this.imagePreview = null;
       this.$refs.fileInput.value = ""; // Đặt lại input file
-      this.hoverRating = 0;
+      this.rating = 0;
       this.isToggleForm = false;
+    },
+    goDetail(id_book) {
+      window.location.href = `/book?id_book=${id_book}`;
     },
   },
 };
