@@ -1,6 +1,6 @@
 const pool = require('../../config/database');
 
-class UserModel {
+class OrderModel {
     constructor() {
         this.pool = pool;
     }
@@ -67,38 +67,6 @@ class UserModel {
         );
         return result.rows[0];
     }
-
-    // 4. Delete User
-    async deleteUser(email) {
-        const result = await this.pool.query(
-            'DELETE FROM users WHERE email = $1 RETURNING *',
-            [email]
-        );
-        return result.rows[0];
-    }
-
-
-
-    // 6. Get User by Refreshtoken
-    async getUserByRefreshToken(refreshToken) {
-        const result = await this.pool.query(
-            'SELECT * FROM users WHERE refresh_token = $1',
-            [refreshToken]
-        );
-        return result.rows[0];
-    }
-
-    // 7. Update user - refreshtoken
-    async updateRefreshToken(email, refreshToken) {
-        const result = await this.pool.query(
-            `UPDATE users 
-            SET refresh_token = $1
-            WHERE email = $2
-            RETURNING *`,
-            [refreshToken, email]
-        );
-        return result.rows[0];
-    }
 }
 
-module.exports = new UserModel(); 
+module.exports = new OrderModel(); 
