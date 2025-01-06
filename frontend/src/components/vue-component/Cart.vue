@@ -135,7 +135,6 @@ export default {
             // });
           }
         } catch (error) {
-          alert(error);
           if (error.response) {
             const status = error.response.status;
             const message = error.response.data.message;

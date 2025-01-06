@@ -1,0 +1,11 @@
+.admin-user-body{
+    padding: 20px 30px;
+}
+
+.admin-user-box{
+    background: white;
+    width: 100%;
+    padding: 10px 20px;
+
+    border-radius: 10px;
+}
