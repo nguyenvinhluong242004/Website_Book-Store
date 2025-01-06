@@ -2,10 +2,10 @@
   <div id="user-app-root">
     <div v-if="notification" class="notification">{{ notification }}</div>
     
-    <HeaderApp />
+    <HeaderApp @user-loaded="setUser"/>
     <NavApp :categories="categories" :subcategories="subcategories" />
     
-    <router-view/>
+    <router-view :user="user"/>
 
     <FooterApp/>
     <ChatBox />
@@ -34,7 +34,13 @@ export default {
       notification: "",
       categories: [],
       subcategories: [],
+      user: null,
     };
+  },
+  methods: {
+    setUser(user) {
+      this.user = user; // Nhận user từ HeaderApp
+    },
   },
 };
 </script>

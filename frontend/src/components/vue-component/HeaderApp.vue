@@ -212,6 +212,8 @@ export default {
         if (response.status === 200) {
           const user = response.data.user;
           this.name = user.name;
+          
+          this.$emit("user-loaded", user);
           console.log(user);
         }
       } catch (error) {

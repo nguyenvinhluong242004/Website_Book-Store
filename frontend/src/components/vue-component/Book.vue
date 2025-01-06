@@ -400,11 +400,12 @@
 
       <!-- Nút để bật đánh giá -->
       <div class="book-review-btn-review">
-        <!-- <div> Vui lòng đăng nhập để viết đánh giá </div> -->
+        <div class="fs-5" v-if="!user"> Vui lòng  <router-link to="/login">đăng nhập</router-link> để viết đánh giá </div>
         <button
           type="button"
           :class="isToggleForm ? 'btn btn-danger' : 'btn btn-outline-primary'"
           @click="toggleForm"
+          v-else
         >
           <i
             :class="
@@ -425,7 +426,10 @@
             <span class="visually-hidden">Loading...</span>
           </div>
         </div>
-        <form @submit.prevent="checkForm" enctype="multipart/form-data">
+        <form
+          @submit.prevent="checkAndSubmitForm"
+          enctype="multipart/form-data"
+        >
           <div class="mb-3">
             <label class="form-label fw-bold">Đánh giá</label>
             <div class="form-star-rating">
@@ -441,14 +445,12 @@
                 @click="setRating(i)"
               ></i>
             </div>
-            <input type="hidden" v-model="rating" name="Rating" />
-            <input type="hidden" v-model="emailUser" name="Email" />
           </div>
 
           <div class="mb-3">
             <label for="Review" class="form-label fw-bold">Nhận xét</label>
             <textarea
-              name="Comment"
+              name="comment"
               class="form-control"
               id="Review"
               rows="3"
@@ -545,7 +547,7 @@
           <!-- avatar -->
           <div
             class="d-flex justify-content-center align-items-center rounded-circle bg-primary text-white"
-            style="width: 25px; height: 25px; overflow: hidden"
+            style="width: 45px; height: 45px; overflow: hidden"
           >
             <span class="text-truncate w-100 text-center"
               ><i class="fas fa-user"></i
@@ -566,7 +568,6 @@
             </div>
             <div class="review-date">{{ formatDate(review.date) }}</div>
             <div class="review-content-text">
-              <br />
               {{ review.content }}
             </div>
 
@@ -627,7 +628,7 @@ export default {
       hoverRating: 0, // Giá trị khi hover lên cái sao
       imageFile: null,
       imagePreview: null, // Biến lưu trữ đường dẫn ảnh preview
-      conmment: "",
+      comment: "",
       emailUser: "minhpqdp02@gmail.com",
       id_book: 0,
       isLoadingSendReview: false,
@@ -636,6 +637,9 @@ export default {
       isSeeMore: false,
     };
   },
+  props: [
+    "user",
+  ],
   created() {
     this.id_book = this.$route.query.id_book;
     this.isLoadingReview = true;
@@ -676,61 +680,60 @@ export default {
   },
 
   methods: {
-    checkForm() {
-      if (this.imageFile === null || this.comment === "" || this.rating === 0) {
+    async checkAndSubmitForm() {
+      if (this.comment === "" || this.rating === 0) {
         this.toastMessage = "Vui lòng điền đầy đủ thông tin review !";
         this.showToast("bg-danger"); // Màu đỏ cho thông báo lỗi
       } else {
-        this.submitReview();
-      }
-    },
-    submitReview() {
-      // Gửi dữ liệu đánh giá
-      const formData = new FormData();
-      formData.append("images", this.imageFile);
-      formData.append("id_book", this.id_book);
-      formData.append("email", this.emailUser);
-      formData.append("content", this.comment);
+        const today = new Date();
+        const formattedDate = today.toISOString().split("T")[0];
 
-      const today = new Date();
-      const defaultDate =
-        today.getFullYear() +
-        "-" +
-        String(today.getMonth() + 1).padStart(2, "0") +
-        "-" +
-        String(today.getDate()).padStart(2, "0"); // YYYY-MM-DD
+        const formData = new FormData();
+        formData.append("images", this.imageFile);
+        formData.append("id_book", this.id_book);
+        formData.append("email", this.emailUser);
+        formData.append("content", this.comment);
+        formData.append("date", formattedDate);
+        formData.append("rating", this.rating);
+        formData.append("like_count", 0);
 
-      formData.append("date", defaultDate);
+        this.isLoadingSendReview = true;
+        try {
+          const response = await axiosInstance.post(
+            "/detail-book/review",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data", // Quan trọng
+              },
+            }
+          );
 
-      formData.append("rating", this.rating);
-      formData.append("like_count", 0);
-
-      this.isLoadingSendReview = true;
-      fetch("/api/detail-book/review", {
-        method: "POST",
-        body: formData,
-      })
-        .then((response) => {
-          if (response.ok) {
+          if (response.status === 200) {
             this.isLoadingSendReview = false;
-
+            this.toastMessage = "Cảm ơn vì review của bạn ";
+            this.showToast("bg-success"); // Màu đỏ cho thông báo lỗi
+            this.resetForm();
             this.fetchBookDetails(this.id_book);
-            this.toastMessage = "Cảm ơn bạn đã review cho sản phẩm!";
-            this.showToast("bg-success"); // Gọi toast trước khi reset form
-            setTimeout(() => {
-              this.resetForm(); // Gọi resetForm sau khi toast được hiển thị
-            }, 1000); // Delay ngắn để toast hiển thị kịp
-
-            //this.resetForm();
-          } else {
-            this.isLoadingSendReview = false;
-            throw new Error("Có lỗi xảy ra khi gửi hình ảnh.");
           }
-        })
-        .catch((error) => {
-          alert("Có lỗi xảy ra. Vui lòng thử lại!");
-          console.error(error);
-        });
+        } catch (error) {
+          if (error.response) {
+            const status = error.response.status;
+            const message = error.response.data.message;
+
+            // Xử lý các mã lỗi cụ thể
+            if (status === 403) {
+              alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+              this.$router.push("/login");
+            } else if (status === 500) {
+              alert(message);
+            }
+          } else {
+            // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
+            alert("Lỗi mạng: Không thể kết nối đến server.");
+          }
+        }
+      }
     },
     // Hàm xóa ảnh khi người dùng nhấn dấu X
     removeImage() {
