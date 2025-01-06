@@ -34,10 +34,12 @@ class DetailBookController {
     async review(req, res) {
         // Kiểm tra nếu có file đã upload
         const fileUrls = req.files && req.files.length > 0 ? req.files.map(file => file.path) : null;
-    
+        
         // Lấy các trường bổ sung từ req.body
         const { id_book, email, content, date, rating, like_count = 0 } = req.body;
-    
+
+        console.log(req.email)
+
         // Xử lý dữ liệu (ví dụ lưu vào database)
         console.log('Dữ liệu nhận được:', {
             id_book,
@@ -47,11 +49,11 @@ class DetailBookController {
             like_count,
             fileUrls
         });
-    
+        
         try {
             await ReviewModel.addReview(
                 parseInt(id_book),
-                email,
+                req.email,
                 date,
                 parseInt(rating),
                 content,
