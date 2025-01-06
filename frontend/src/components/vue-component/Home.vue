@@ -1,22 +1,13 @@
 <template>
   <div class="home-container">
     <div class="ctn-row">
-      <PosterSlide :posters="posters" />
+      <PosterSlide />
     </div>
     <div class="ctn-row">
-      <TopSeller :products_top="products_top" />
+      <TopSeller />
     </div>
     <div class="ctn-row">
-      <CategoryBook
-        :products_skill="products_skill"
-        :poster_skill="poster_skill"
-        :products_family="products_family"
-        :poster_family="poster_family"
-        :products_science="products_science"
-        :poster_science="poster_science"
-        :products_literature="products_literature"
-        :poster_literature="poster_literature"
-      />
+      <CategoryBook />
     </div>
   </div>
 </template>
@@ -35,39 +26,7 @@ export default {
     CategoryBook,
   },
   data() {
-    return {
-      posters: [],
-      poster_skill: "",
-      poster_family: "",
-      poster_science: "",
-      poster_literature: "",
-
-      products_top: [],
-      products_skill: [],
-      products_family: [],
-      products_science: [],
-      products_literature: [],
-
-      categories: [],
-      subcategories: [],
-    };
-  },
-  mounted() {
-    fetch("/DATABASE/data.json")
-      .then((response) => response.json())
-      .then((data) => {
-        this.posters = data.posters;
-        this.products_top = data.products_top;
-        this.products_skill = data.products_skill;
-        this.poster_skill = data.poster_skill;
-        this.poster_science = data.poster_science;
-        this.products_science = data.products_science;
-        this.products_family = data.products_family;
-        this.products_literature = data.products_literature;
-        this.poster_family = data.poster_family;
-        this.poster_literature = data.poster_literature;
-      })
-      .catch((error) => console.error("Có lỗi xảy ra:", error));
+    return {};
   },
 };
 </script>

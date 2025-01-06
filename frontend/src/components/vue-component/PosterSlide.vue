@@ -20,21 +20,25 @@
         :key="index"
         :class="{ active: index === 0 }"
       >
-        <img :src="poster.image_link" class="d-block w-100 h-100" alt="poster" />
+        <img
+          :src="poster.image_link"
+          class="d-block w-100 h-100"
+          alt="poster"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import '../css-component/poster-slide.css';
+import "../css-component/poster-slide.css";
 import axios from "axios";
+
 export default {
-    name: 'PosterSlide',
-    props: ["posters"],
-    data() {
+  name: "PosterSlide",
+  data() {
     return {
-      poster:[],
+      poster: [],
       type_money: "đ",
       loading: false,
       kinhTe: [],
@@ -58,7 +62,6 @@ export default {
         const response = await axios.get(`/api`); // Lấy API qua proxy
 
         if (response.data.success) {
-          
           this.poster = response.data.posters;
           console.log("poster:", this.poster);
         }

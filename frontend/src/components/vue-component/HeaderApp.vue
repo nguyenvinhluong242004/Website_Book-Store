@@ -58,8 +58,7 @@
         </div>
       </div>
       <div class="iconCart">
-        <i class="fas fa-shopping-cart" @click="goToCart"></i
-        >
+        <i class="fas fa-shopping-cart" @click="goToCart"></i>
       </div>
       <div
         class="iconUser"
@@ -182,7 +181,7 @@ export default {
   methods: {
     search() {
       const stringSearch = this.searchQuery.trim();
-      this.searchQuery = '';
+      this.searchQuery = "";
       if (stringSearch) {
         // Chuyển đến route /search với query parameter là giá trị nhập vào
         this.$router.push({
@@ -212,9 +211,14 @@ export default {
         if (response.status === 200) {
           const user = response.data.user;
           this.name = user.name;
-          
+
           this.$emit("user-loaded", user);
           console.log(user);
+
+          if (this.$route.path === "/login" || this.$route.path === "/register") {
+            // Nếu người dùng đã đăng nhập và đang ở login/register, điều hướng đến trang chủ
+            this.$router.push("/");
+          }
         }
       } catch (error) {
         // Nếu lỗi là ko có người dùng hoặc không hợp lệ thì không gán name, header sẽ không hiện người dùng
@@ -233,7 +237,7 @@ export default {
     goToProfileChangepw() {
       this.$router.push("/profile/changePW");
     },
-    goToCart(){
+    goToCart() {
       this.$router.push("/cart");
     },
   },
