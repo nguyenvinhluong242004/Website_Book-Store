@@ -33,9 +33,9 @@
     </div>
 
     <!-- Content for each tab -->
-    <div v-if="selectedTab === 'skill'">
-      <img :src="poster_skill" width="100%" height="370px" alt="poster" /> <!-- SỬA LẠI MẤY CHỖ NÀY LÀ LẤY API ĐI CHỨ -->
-      <div v-if="loading" class="spinner"></div>
+    <div v-if="selectedTab === 'skill'" style="min-height: 420px">
+      <img src="/IMG/kinang.jpg" width="100%" height="370px" alt="poster" />
+      <div v-if="loading" class="spinner mt-3"></div>
       <div v-else class="category-book-list-container">
         <ProductCard
           v-for="(product, index) in kinhTe"
@@ -50,9 +50,9 @@
       </div>
     </div>
 
-    <div v-if="selectedTab === 'family'">
-      <img :src="poster_family" width="100%" height="370px" alt="family" />
-      <div v-if="loading" class="spinner"></div>
+    <div v-if="selectedTab === 'family'" style="min-height: 420px">
+      <img src="/IMG/giadinh.jpg" width="100%" height="370px" alt="family" />
+      <div v-if="loading" class="spinner mt-3"></div>
       <div v-else class="category-book-list-container">
         <ProductCard
           v-for="(product, index) in tamLy"
@@ -66,9 +66,10 @@
         />
       </div>
     </div>
-    <div v-if="selectedTab === 'science'">
-      <img :src="poster_science" width="100%" height="370px" alt="science" />
-      <div v-if="loading" class="spinner"></div>
+
+    <div v-if="selectedTab === 'science'" style="min-height: 420px">
+      <img src="/IMG/khoahoc.jpg" width="100%" height="370px" alt="science" />
+      <div v-if="loading" class="spinner mt-3"></div>
       <div v-else class="category-book-list-container">
         <ProductCard
           v-for="(product, index) in vanHoc"
@@ -82,14 +83,10 @@
         />
       </div>
     </div>
-    <div v-if="selectedTab === 'literature'">
-      <img
-        :src="poster_literature"
-        width="100%"
-        height="370px"
-        alt="literature"
-      />
-      <div v-if="loading" class="spinner"></div>
+
+    <div v-if="selectedTab === 'literature'" style="min-height: 420px">
+      <img src="/IMG/kinang.jpg" width="100%" height="370px" alt="literature" />
+      <div v-if="loading" class="spinner mt-3"></div>
       <div v-else class="category-book-list-container">
         <ProductCard
           v-for="(product, index) in tieuThuyet"
