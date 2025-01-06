@@ -22,7 +22,6 @@ class DetailBookController {
                 success: true,
                 message: 'Lấy thông tin sách thành công',
                 data: result.data,
-                reviews: result.review,              
                 relatedBooks: relatedBooks.data      // 4 book liên quan
             });
         } catch (err) {
@@ -34,7 +33,7 @@ class DetailBookController {
     async review(req, res) {
         // Kiểm tra nếu có file đã upload
         const fileUrls = req.files && req.files.length > 0 ? req.files.map(file => file.path) : null;
-        
+
         // Lấy các trường bổ sung từ req.body
         const { id_book, content, date, rating, like_count = 0 } = req.body;
 
@@ -48,7 +47,7 @@ class DetailBookController {
             like_count,
             fileUrls
         });
-        
+
         try {
             await ReviewModel.addReview(
                 parseInt(id_book),
@@ -58,15 +57,34 @@ class DetailBookController {
                 content,
                 fileUrls ? fileUrls[0] : null // Nếu có ảnh thì lấy ảnh đầu tiên, không có ảnh thì là null
             );
-    
+
             res.status(200).json({ success: true, message: 'Review đã được thêm thành công' });
         } catch (err) {
             console.error('Lỗi khi thêm review:', err);
             res.status(500).json({ error: 'Đã xảy ra lỗi khi thêm review', details: err.message });
         }
     }
-    
-    
+
+    async getReviews(req, res) {
+        const { id, page = 1 } = req.query;
+        const per_page = 5;
+        try {
+            const result = await ReviewModel.getReviews(id, page, per_page);
+            // Trả về dữ liệu JSON bao gồm cả danh mục và số lượng bán
+            res.json({
+                success: true,
+                message: 'Thành công',
+                per_page: result.per_page,
+                total_pages: result.total_pages,
+                current_page: result.current_page,
+                total_records: result.total_records,
+                reviews: result.reviews
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Server Error' });
+        }
+    }
 
 
 }

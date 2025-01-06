@@ -23,19 +23,9 @@ class BookModel {
         const imgResult = await pool.query(imgQuery, [result.rows[0].id_book]);
         result.rows[0].images = imgResult.rows.map(img => img.image_link); // Gán ảnh vào sách
 
-        // Lấy các đánh giá (reviews) của sách và thông tin người dùng từ bảng Users
-        const reviewQuery = `
-            SELECT r.ID_Review, r.Email, r.Date, r.Rating, r.Content, r.Image_Link, r.Like_Count, u.Name AS user_name
-            FROM Review r
-            LEFT JOIN Users u ON r.Email = u.Email
-            WHERE r.ID_Book = $1
-            ORDER BY r.Date DESC`;  // Sắp xếp theo ngày đánh giá
-        const reviewResult = await pool.query(reviewQuery, [id]);
-
         // Trả về dữ liệu sách và đánh giá (có tên người dùng)
         return {
             data: result.rows[0], // Thông tin sách
-            review: reviewResult.rows // Danh sách đánh giá kèm tên người dùng
         };
     }
 
