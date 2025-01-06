@@ -20,28 +20,57 @@ class PosterController {
     async addPoster(req, res) {
         try {
             const { name, product_link } = req.body;
-            console.log('ADD POSTER BODY: ', req.body);
-
-            console.log(req.files);
-            const fileUrls = req.files && req.files.length > 0 ? req.files.map(file => file.path) : null;
-            console.log(fileUrls);
-
+            // console.log('ADD POSTER BODY: ', req.body);
+            
             if (!name || !product_link) {
                 return res.status(400).json({ message: 'Mọi trường đều phải được nhập' });
             }
 
-            const newPoster = await posterModel.add(name, fileUrls, product_link);
-
-            res.status(200).json({
-                message: 'Poster được thêm thành công',
-                poster: newPoster
-            });
+            console.log('REQ FILE: ', req.file);
+            if (req.file) {
+                // Lấy URL của file từ Cloudinary
+                const fileUrl = req.file.path;  // Lưu URL của ảnh
+    
+                // Gọi model để thêm poster vào database với URL ảnh từ Cloudinary
+                const newPoster = await posterModel.add(name, fileUrl, product_link);
+    
+                res.status(200).json({
+                    message: 'Poster được thêm thành công',
+                    poster: newPoster
+                });
+            } else {
+                res.status(400).json({ message: 'Không có ảnh nào được upload' });
+            }
         } catch (error) {
             console.error('Lỗi trong quá trình thêm poster: ', error);
             res.status(500).json({ message: 'Đã có lỗi trong quá trình thêm poster' });
         }
     }
 
+    // [DELETE]: admin/poster/delete
+    async deletePoster(req, res) {
+        try {
+            const { id_poster } = req.body;
+            console.log('REQ BODY DELETE: ', req.body);
+
+            if (!id_poster) {
+                return res.status(400).json({ message: 'Server không nhận được id_poster' });
+            }
+
+            const deletedPoster = await posterModel.delete(id_poster);
+
+            if (!deletedPoster) {
+                return res.status(404).json({ message: 'Không tìm thấy poster cần xóa' });
+            }
+
+            res.status(200).json({
+                message: 'Poster được xóa thành công',
+            });
+        } catch (error) {
+            console.error('Lỗi trong quá trình xóa poster', error);
+            res.status(500).json({ message: 'Đã có lỗi trong quá trình xóa poster' });
+        }
+    }
 }
 
 module.exports = new PosterController();

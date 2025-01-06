@@ -22,6 +22,14 @@ class PosterModel {
         );
         return result.rows[0];
     }
+
+    async delete(id_poster){
+        const result = await this.pool.query(
+            'DELETE FROM poster WHERE id_poster = $1 RETURNING *',
+            [id_poster]
+        );
+        return result.rows[0];
+    }
 }
 
 module.exports = new PosterModel(); 
