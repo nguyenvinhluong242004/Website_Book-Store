@@ -283,6 +283,30 @@
         </div>
       </div>
     </div>
+    <div class="book-recommend mt-3">
+      <h3>Sản phẩm tương tự</h3>
+
+      <div
+        v-if="isloadingsame"
+        class="spinner-border text-primary"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+
+      <div class="book-same-book">
+        <ProductCard
+          v-for="(book, index) in sameBook"
+          :key="index"
+          :img="book.images"
+          :name="book.book_name"
+          :old_price="book.list_price"
+          :new_price="book.discounted_price"
+          :type_money="type_money"
+          @click="goDetail(book.id_book)"
+        />
+      </div>
+    </div>
 
     <!-- Phần đánh giá của sách -->
     <div class="book-review mt-5">
@@ -376,11 +400,12 @@
 
       <!-- Nút để bật đánh giá -->
       <div class="book-review-btn-review">
-        <!-- <div> Vui lòng đăng nhập để viết đánh giá </div> -->
+        <div class="fs-5" v-if="!user"> Vui lòng  <router-link to="/login">đăng nhập</router-link> để viết đánh giá </div>
         <button
           type="button"
           :class="isToggleForm ? 'btn btn-danger' : 'btn btn-outline-primary'"
           @click="toggleForm"
+          v-else
         >
           <i
             :class="
@@ -401,7 +426,10 @@
             <span class="visually-hidden">Loading...</span>
           </div>
         </div>
-        <form @submit.prevent="checkForm" enctype="multipart/form-data">
+        <form
+          @submit.prevent="checkAndSubmitForm"
+          enctype="multipart/form-data"
+        >
           <div class="mb-3">
             <label class="form-label fw-bold">Đánh giá</label>
             <div class="form-star-rating">
@@ -417,14 +445,12 @@
                 @click="setRating(i)"
               ></i>
             </div>
-            <input type="hidden" v-model="rating" name="Rating" />
-            <input type="hidden" v-model="emailUser" name="Email" />
           </div>
 
           <div class="mb-3">
             <label for="Review" class="form-label fw-bold">Nhận xét</label>
             <textarea
-              name="Comment"
+              name="comment"
               class="form-control"
               id="Review"
               rows="3"
@@ -521,9 +547,11 @@
           <!-- avatar -->
           <div
             class="d-flex justify-content-center align-items-center rounded-circle bg-primary text-white"
-            style="width: 3vw; height: 3vw; overflow: hidden"
+            style="width: 45px; height: 45px; overflow: hidden"
           >
-            <span class="text-truncate w-100 text-center">U</span>
+            <span class="text-truncate w-100 text-center"
+              ><i class="fas fa-user"></i
+            ></span>
           </div>
 
           <!-- phần review bên trái + phản hồi -->
@@ -540,7 +568,6 @@
             </div>
             <div class="review-date">{{ formatDate(review.date) }}</div>
             <div class="review-content-text">
-              <br />
               {{ review.content }}
             </div>
 
@@ -566,11 +593,15 @@
 
 <script>
 import "../css-component/book.css";
+import ProductCard from "./ProductCard.vue";
 import axiosInstance from "../../services/axiosInstance.js";
 import axios from "axios";
 
 export default {
   name: "BookPage",
+  components: {
+    ProductCard,
+  },
   data() {
     return {
       visibleReviews: 3,
@@ -584,6 +615,8 @@ export default {
       isModalVisible_1: false,
       isModalVisible_2: false,
       isLoadingImage: true,
+      sameBook: [],
+      isloadingsame: false,
 
       //reviews
       images: [],
@@ -595,7 +628,7 @@ export default {
       hoverRating: 0, // Giá trị khi hover lên cái sao
       imageFile: null,
       imagePreview: null, // Biến lưu trữ đường dẫn ảnh preview
-      conmment: "",
+      comment: "",
       emailUser: "minhpqdp02@gmail.com",
       id_book: 0,
       isLoadingSendReview: false,
@@ -604,8 +637,13 @@ export default {
       isSeeMore: false,
     };
   },
+  props: [
+    "user",
+  ],
   created() {
     this.id_book = this.$route.query.id_book;
+    this.isLoadingReview = true;
+    this.isloadingsame = true;
     this.fetchBookDetails(this.id_book);
   },
   computed: {
@@ -642,58 +680,60 @@ export default {
   },
 
   methods: {
-    checkForm() {
-      if (this.imageFile === null || this.comment === "" || this.rating === 0) {
+    async checkAndSubmitForm() {
+      if (this.comment === "" || this.rating === 0) {
         this.toastMessage = "Vui lòng điền đầy đủ thông tin review !";
         this.showToast("bg-danger"); // Màu đỏ cho thông báo lỗi
       } else {
-        this.submitReview();
-      }
-    },
-    submitReview() {
-      // Gửi dữ liệu đánh giá
-      const formData = new FormData();
-      formData.append("images", this.imageFile);
-      formData.append("id_book", this.id_book);
-      formData.append("email", this.emailUser);
-      formData.append("content", this.comment);
+        const today = new Date();
+        const formattedDate = today.toISOString().split("T")[0];
 
-      const today = new Date();
-      const defaultDate =
-        today.getFullYear() +
-        "-" +
-        String(today.getMonth() + 1).padStart(2, "0") +
-        "-" +
-        String(today.getDate()).padStart(2, "0"); // YYYY-MM-DD
+        const formData = new FormData();
+        formData.append("images", this.imageFile);
+        formData.append("id_book", this.id_book);
+        formData.append("email", this.emailUser);
+        formData.append("content", this.comment);
+        formData.append("date", formattedDate);
+        formData.append("rating", this.rating);
+        formData.append("like_count", 0);
 
-      formData.append("date", defaultDate);
+        this.isLoadingSendReview = true;
+        try {
+          const response = await axiosInstance.post(
+            "/detail-book/review",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data", // Quan trọng
+              },
+            }
+          );
 
-      formData.append("rating", this.rating);
-      formData.append("like_count", 0);
-
-      this.isLoadingSendReview = true;
-      fetch("/api/detail-book/review", {
-        method: "POST",
-        body: formData,
-      })
-        .then((response) => {
-          if (response.ok) {
+          if (response.status === 200) {
             this.isLoadingSendReview = false;
-
             this.toastMessage = "Cảm ơn vì review của bạn ";
             this.showToast("bg-success"); // Màu đỏ cho thông báo lỗi
-
             this.resetForm();
             this.fetchBookDetails(this.id_book);
-          } else {
-            this.isLoadingSendReview = false;
-            throw new Error("Có lỗi xảy ra khi gửi hình ảnh.");
           }
-        })
-        .catch((error) => {
-          alert("Có lỗi xảy ra. Vui lòng thử lại!");
-          console.error(error);
-        });
+        } catch (error) {
+          if (error.response) {
+            const status = error.response.status;
+            const message = error.response.data.message;
+
+            // Xử lý các mã lỗi cụ thể
+            if (status === 403) {
+              alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+              this.$router.push("/login");
+            } else if (status === 500) {
+              alert(message);
+            }
+          } else {
+            // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
+            alert("Lỗi mạng: Không thể kết nối đến server.");
+          }
+        }
+      }
     },
     // Hàm xóa ảnh khi người dùng nhấn dấu X
     removeImage() {
@@ -748,16 +788,18 @@ export default {
     },
     async fetchBookDetails(id) {
       this.isLoadingImage = true;
-      this.isLoadingReview = true;
       try {
         const response = await axios.get(`/api/detail-book?id=${id}`); // Lấy API qua proxy
         if (response.data.success) {
           this.book = response.data.data;
+          this.sameBook = response.data.relatedBooks;
+          console.log("sameBook:", this.sameBook);
           this.images = this.book.images;
-          console.log(this.book);
+
           this.reviews = response.data.reviews;
           this.isLoadingImage = false;
           this.isLoadingReview = false;
+          this.isloadingsame = false;
           this.isSeeMore = true;
         }
         console.log("book tra ve:", this.book);
@@ -870,8 +912,11 @@ export default {
       this.imageFile = null;
       this.imagePreview = null;
       this.$refs.fileInput.value = ""; // Đặt lại input file
-      this.hoverRating = 0;
+      this.rating = 0;
       this.isToggleForm = false;
+    },
+    goDetail(id_book) {
+      window.location.href = `/book?id_book=${id_book}`;
     },
   },
 };

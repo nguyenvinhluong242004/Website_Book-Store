@@ -1,7 +1,7 @@
 <template>
   <div class="nav">
     <div class="nav-product nav-tab" @click="menuClick" @mouseleave="hideMenu">
-      <i class="fas fa-bars"></i>
+      <i class="fas fa-bars nav-menu"></i>
       <div>TẤT CẢ SẢN PHẨM</div>
       <div class="menuBox" v-if="menuVisible">
         <div
