@@ -34,7 +34,6 @@ export default {
   components: {
     ProductCard,
   },
-  props: ["products_top"],
   data() {
     return {
       loading: false,

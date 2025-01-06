@@ -7,7 +7,7 @@
         :class="{ 'choosen-tab': selectedTab === 'skill' }"
         @click="selectTab('skill')"
       >
-         KINH TẾ
+        KINH TẾ
       </div>
       <div
         class="family-book-tab tab"
@@ -21,7 +21,7 @@
         :class="{ 'choosen-tab': selectedTab === 'science' }"
         @click="selectTab('science')"
       >
-         VĂN HỌC
+        VĂN HỌC
       </div>
       <div
         class="literature-book-tab tab"
@@ -34,7 +34,7 @@
 
     <!-- Content for each tab -->
     <div v-if="selectedTab === 'skill'">
-      <img :src="poster_skill" width="100%" height="370px" alt="poster" />
+      <img :src="poster_skill" width="100%" height="370px" alt="poster" /> <!-- SỬA LẠI MẤY CHỖ NÀY LÀ LẤY API ĐI CHỨ -->
       <div v-if="loading" class="spinner"></div>
       <div v-else class="category-book-list-container">
         <ProductCard
@@ -83,7 +83,12 @@
       </div>
     </div>
     <div v-if="selectedTab === 'literature'">
-      <img :src="poster_literature" width="100%" height="370px" alt="literature" />
+      <img
+        :src="poster_literature"
+        width="100%"
+        height="370px"
+        alt="literature"
+      />
       <div v-if="loading" class="spinner"></div>
       <div v-else class="category-book-list-container">
         <ProductCard
@@ -112,16 +117,6 @@ export default {
   components: {
     ProductCard,
   },
-  props: [
-    "products_skill",
-    "products_family",
-    "poster_skill",
-    "poster_family",
-    "products_science",
-    "poster_science",
-    "products_literature",
-    "poster_literature",
-  ],
   data() {
     return {
       type_money: "đ",

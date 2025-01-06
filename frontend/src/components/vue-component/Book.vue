@@ -324,7 +324,7 @@
               :key="i"
             ></i>
           </div>
-          <div class="rate-based-on">{{ reviews.length }}</div>
+          <div class="rate-based-on">{{ reviews.length }} đánh giá</div>
         </div>
 
         <div class="book-review-rate-detail">
@@ -629,7 +629,6 @@ export default {
       imageFile: null,
       imagePreview: null, // Biến lưu trữ đường dẫn ảnh preview
       comment: "",
-      emailUser: "minhpqdp02@gmail.com",
       id_book: 0,
       isLoadingSendReview: false,
       isLoadingReview: false,
@@ -691,7 +690,6 @@ export default {
         const formData = new FormData();
         formData.append("images", this.imageFile);
         formData.append("id_book", this.id_book);
-        formData.append("email", this.emailUser);
         formData.append("content", this.comment);
         formData.append("date", formattedDate);
         formData.append("rating", this.rating);
