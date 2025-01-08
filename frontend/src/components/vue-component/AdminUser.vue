@@ -95,7 +95,7 @@
               <div class="col-sm-8">
                 {{
                   selectedAccount.birth_date
-                    ? selectedAccount.birth_date.split("T")[0]
+                    ? new Date(selectedAccount.birth_date).toLocaleDateString("en-CA") // Sử dụng "en-CA" để có định dạng YYYY-MM-DD
                     : "--"
                 }}
               </div>

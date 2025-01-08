@@ -1,0 +1,13 @@
+.admin-new-order-body {
+    padding: 20px 30px;
+}
+
+.admin-new-order-box {
+    background: white;
+    width: 100%;
+    min-height: 300px;
+
+    padding: 20px 30px;
+
+    border-radius: 10px;
+}

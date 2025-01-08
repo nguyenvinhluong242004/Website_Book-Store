@@ -27,6 +27,12 @@ import AdminOrder from "../components/vue-component/AdminOrder.vue"
 import AdminCategory from "../components/vue-component/AdminCategory.vue"
 import AdminPoster from "../components/vue-component/AdminPoster.vue"
 
+import AdminNewOrder from "../components/vue-component/AdminNewOrder.vue"
+import AdminRefuseOrder from "../components/vue-component/AdminRefuseOrder.vue"
+import AdminDeliveryOrder from "../components/vue-component/AdminDeliveryOrder.vue"
+import AdminCompleteOrder from "../components/vue-component/AdminCompleteOrder.vue"
+
+
 const routes = [
   {
     path: "/",
@@ -35,7 +41,7 @@ const routes = [
       { path: "", component: HomePage, name: "HomePage" },
       { path: "login", component: LoginPage, name: "LoginPage" },
       { path: "register", component: RegisterPage, name: "RegisterPage" },
-      { path: "/genre", component: GenrePage, name:"GenrePage"},
+      { path: "/genre", component: GenrePage, name: "GenrePage" },
       {
         path: "profile", component: ProfilePage, name: "ProfilePage", children: [
           { path: "info", component: InfoTab, name: "InfoTab" },
@@ -62,12 +68,18 @@ const routes = [
       { path: "dashboard", component: AdminDashboard, name: "AdminDashboard" },
       { path: "user", component: AdminUser, name: "AdminUser" },
       { path: "product", component: AdminProduct, name: "AdminProduct" },
-      { path: "order", component: AdminOrder, name: "AdminOrder" },
+      {
+        path: "order", component: AdminOrder, name: "AdminOrder", children: [
+          { path: "neworder", component: AdminNewOrder, name: "AdminNewOrder" },
+          { path: "refuse", component: AdminRefuseOrder, name: "AdminRefuseOrder" },
+          { path: "delivery", component: AdminDeliveryOrder, name: "AdminDeliveryOrder" },
+          { path: "complete", component: AdminCompleteOrder, name: "AdminCompleteOrder" },
+        ],
+      },
       { path: "category", component: AdminCategory, name: "AdminCategory" },
       { path: "poster", component: AdminPoster, name: "AdminPoster" },
     ],
   },
-
 ];
 
 

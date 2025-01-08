@@ -1,10 +1,10 @@
 <template>
-  <router-view/>
+  <div>com order</div>
 </template>
 
 <script>
 export default {
-  name: "AdminOrder",
+  name: "AdminCompleteOrder",
   data() {
     return {};
   },
