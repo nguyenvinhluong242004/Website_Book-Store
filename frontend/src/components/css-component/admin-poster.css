@@ -1,0 +1,20 @@
+.admin-poster-body {
+    padding: 20px 30px;
+}
+
+.admin-poster-box {
+    background: white;
+    width: 100%;
+    min-height: 300px;
+
+    padding: 20px 30px;
+
+    border-radius: 10px;
+}
+
+.admin-poster-single-row{
+    padding: 20px;
+
+    border: 1px solid rgb(199, 199, 199);
+    border-radius: 10px;
+}
