@@ -221,7 +221,7 @@ export default {
           this.phone = user.phone;
           this.gender = user.gender;
           this.birthday = user.birth_date
-            ? user.birth_date.split("T")[0]
+            ? new Date(user.birth_date).toLocaleDateString("en-CA") // Sử dụng "en-CA" để có định dạng YYYY-MM-DD
             : null;
         }
       } catch (error) {

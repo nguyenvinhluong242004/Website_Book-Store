@@ -21,10 +21,9 @@
 .admin-side-body {
     display: flex;
     flex-direction: column;
-    gap: 20px;
 }
 
 .admin-side-tab {
-    margin: 0px 30px;
+    margin: 10px 30px;
     padding: 10px 15px;
 }

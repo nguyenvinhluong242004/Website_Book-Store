@@ -57,6 +57,7 @@
         class="modal-dialog d-flex justify-content-center modal-dialog-centered"
       >
         <div class="modal-content p-0" style="width: 1000px">
+          <!-- Để width 1000px mà nó bị giới hạn không thể lớn hơn bao nhiêu đó -->
           <div class="modal-header">
             <h1
               class="modal-title fs-3 text-primary"
@@ -99,7 +100,7 @@
                 >
                 <div class="col-sm-11">
                   <div
-                    class="review-image"
+                    class="admin-poster-image-ctn"
                     v-if="!previewImage"
                     @click="toggleFileInput"
                   >

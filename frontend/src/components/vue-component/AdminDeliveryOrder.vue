@@ -1,10 +1,10 @@
 <template>
-  <router-view/>
+  <div>Deli order</div>
 </template>
 
 <script>
 export default {
-  name: "AdminOrder",
+  name: "AdminDeliveryOrder",
   data() {
     return {};
   },
