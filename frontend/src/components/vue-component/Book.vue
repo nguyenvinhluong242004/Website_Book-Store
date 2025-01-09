@@ -313,6 +313,7 @@
       <div class="book-review-title">Đánh giá sản phẩm</div>
 
       <div class="book-review-rate">
+      
         <div class="book-review-rate-overall">
           <div class="rate-digit">{{ averageRating }}</div>
           <div class="rate-star">
@@ -324,7 +325,7 @@
               :key="i"
             ></i>
           </div>
-          <div class="rate-based-on">{{ reviews.length }} đánh giá</div>
+          <div class="rate-based-on">{{ reviews.length }}</div>
         </div>
 
         <div class="book-review-rate-detail">
@@ -400,12 +401,13 @@
 
       <!-- Nút để bật đánh giá -->
       <div class="book-review-btn-review">
-        <div class="fs-5" v-if="!user"> Vui lòng  <router-link to="/login">đăng nhập</router-link> để viết đánh giá </div>
+        <!-- <div class="fs-5" v-if="!user"> Vui lòng  <router-link to="/login">đăng nhập</router-link> để viết đánh giá </div> -->
+
         <button
           type="button"
           :class="isToggleForm ? 'btn btn-danger' : 'btn btn-outline-primary'"
           @click="toggleForm"
-          v-else
+          
         >
           <i
             :class="
@@ -644,6 +646,7 @@ export default {
     this.isLoadingReview = true;
     this.isloadingsame = true;
     this.fetchBookDetails(this.id_book);
+    this.getReview(this.id_book);
   },
   computed: {
     discounted() {
@@ -669,7 +672,10 @@ export default {
       };
     },
     averageRating() {
-      if (this.reviews.length === 0) return 0; // Kiểm tra nếu không có reviews
+      console.log('Current reviews:', this.reviews);
+      if (this.reviews.length === 0) {
+        return 0;
+      } // Kiểm tra nếu không có reviews
       const totalRating = this.reviews.reduce(
         (sum, review) => sum + parseFloat(review.rating),
         0
@@ -711,8 +717,8 @@ export default {
             this.isLoadingSendReview = false;
             this.toastMessage = "Cảm ơn vì review của bạn ";
             this.showToast("bg-success"); // Màu đỏ cho thông báo lỗi
-            this.resetForm();
-            this.fetchBookDetails(this.id_book);
+            //this.resetForm();
+            this.resetForm(this.id_book);
           }
         } catch (error) {
           if (error.response) {
@@ -767,8 +773,7 @@ export default {
       return totalReviews > 0 ? (starReviews / totalReviews) * 100 : 0; // Tính tỷ lệ phần trăm
     },
     countStarReviews(star) {
-      return this.reviews.filter((review) => parseInt(review.rating) === star)
-        .length;
+      return this.reviews.filter((review) => parseInt(review.rating) === star).length;
     },
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -794,7 +799,6 @@ export default {
           console.log("sameBook:", this.sameBook);
           this.images = this.book.images;
 
-          this.reviews = response.data.reviews;
           this.isLoadingImage = false;
           this.isLoadingReview = false;
           this.isloadingsame = false;
@@ -916,6 +920,27 @@ export default {
     goDetail(id_book) {
       window.location.href = `/book?id_book=${id_book}`;
     },
+   async getReview(id){
+      try {
+        const response = await axios.get(`/api/detail-book/get-reviews?id=${id}&page=1`); // Lấy API qua proxy
+        if (response.data.success) {
+          this.reviews = response.data.reviews;
+
+  
+          console.log("reviews:", this.reviews);
+       
+
+          this.isLoadingImage = false;
+          this.isLoadingReview = false;
+          this.isloadingsame = false;
+          this.isSeeMore = true;
+        }
+        console.log("book tra ve:", this.book);
+      } catch (error) {
+        this.error = "Không thể lấy thông tin sách!";
+        console.error(error);
+      }
+    }
   },
 };
 </script>
