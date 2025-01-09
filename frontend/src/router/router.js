@@ -27,6 +27,11 @@ import AdminOrder from "../components/vue-component/AdminOrder.vue"
 import AdminCategory from "../components/vue-component/AdminCategory.vue"
 import AdminPoster from "../components/vue-component/AdminPoster.vue"
 
+//
+import AdminThongKe from "../components/vue-component/Admin-thongke-M.vue"
+import AdminQuanLiSach from "../components/vue-component/Admin-quanlisach-M.vue"
+import test from "../components/vue-component/Admin-quanlitheloai-M.vue"
+
 const routes = [
   {
     path: "/",
@@ -65,6 +70,9 @@ const routes = [
       { path: "order", component: AdminOrder, name: "AdminOrder" },
       { path: "category", component: AdminCategory, name: "AdminCategory" },
       { path: "poster", component: AdminPoster, name: "AdminPoster" },
+      { path: "thongke", component:  AdminThongKe, name: "AdminThongKe" },
+      { path: "quanlisach", component:  AdminQuanLiSach, name: "AdminQLSach" },
+      { path: "quanlitheloai", component:  test, name: "AdminQLTL" },
     ],
   },
 
