@@ -20,17 +20,17 @@ import DefaultAddressPage from "../components/vue-component/DefaultAddressPage.v
 import AddressAddPage from "../components/vue-component/AddressAddPage.vue"
 import AddressEditPage from "../components/vue-component/AddressEditPage.vue"
 
-import AdminDashboard from "../components/vue-component/AdminDashboard.vue"
+// import AdminDashboard from "../components/vue-component/AdminDashboard.vue"
 import AdminUser from "../components/vue-component/AdminUser.vue"
-import AdminProduct from "../components/vue-component/AdminProduct.vue"
+// import AdminProduct from "../components/vue-component/AdminProduct.vue"
 import AdminOrder from "../components/vue-component/AdminOrder.vue"
-import AdminCategory from "../components/vue-component/AdminCategory.vue"
+// import AdminCategory from "../components/vue-component/AdminCategory.vue"
 import AdminPoster from "../components/vue-component/AdminPoster.vue"
 
 //
 import AdminThongKe from "../components/vue-component/Admin-thongke-M.vue"
 import AdminQuanLiSach from "../components/vue-component/Admin-quanlisach-M.vue"
-import test from "../components/vue-component/Admin-quanlitheloai-M.vue"
+import AdminQuanLiTheLoai from "../components/vue-component/Admin-quanlitheloai-M.vue"
 
 const routes = [
   {
@@ -64,15 +64,12 @@ const routes = [
     path: "/admin",
     component: AdminApp, // Layout cho admin
     children: [
-      { path: "dashboard", component: AdminDashboard, name: "AdminDashboard" },
+      { path: "dashboard", component: AdminThongKe, name: "AdminDashboard" },
       { path: "user", component: AdminUser, name: "AdminUser" },
-      { path: "product", component: AdminProduct, name: "AdminProduct" },
+      { path: "product", component: AdminQuanLiSach, name: "AdminProduct" },
       { path: "order", component: AdminOrder, name: "AdminOrder" },
-      { path: "category", component: AdminCategory, name: "AdminCategory" },
+      { path: "category", component: AdminQuanLiTheLoai, name: "AdminCategory" },
       { path: "poster", component: AdminPoster, name: "AdminPoster" },
-      { path: "thongke", component:  AdminThongKe, name: "AdminThongKe" },
-      { path: "quanlisach", component:  AdminQuanLiSach, name: "AdminQLSach" },
-      { path: "quanlitheloai", component:  test, name: "AdminQLTL" },
     ],
   },
 
