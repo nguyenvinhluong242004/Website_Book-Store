@@ -14,7 +14,7 @@
             }"
             @mouseenter="hoverTab = 'dashboard'"
             @mouseleave="hoverTab = null"
-            @click="switchTab('thongke')"
+            @click="switchTab('dashboard')"
           >
             <i class="fa-solid fa-chart-pie me-2 col-sm-1 text-center"></i> Thống Kê
           </div>
@@ -40,7 +40,7 @@
             }"
             @mouseenter="hoverTab = 'category'"
             @mouseleave="hoverTab = null"
-            @click="switchTab('quanlitheloai')"
+            @click="switchTab('category')"
           >
             <i class="fa-solid fa-list-ul me-2 col-sm-1 text-center"></i> Danh mục
           </div>
@@ -53,7 +53,7 @@
             }"
             @mouseenter="hoverTab = 'product'"
             @mouseleave="hoverTab = null"
-            @click="switchTab('quanlisach')"
+            @click="switchTab('product')"
           >
             <i class="fa-solid fa-box-open me-2 col-sm-1 text-center"></i> Sản Phẩm
           </div>
