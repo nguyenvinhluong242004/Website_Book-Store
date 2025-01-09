@@ -64,9 +64,11 @@ class BookController {
             status = 1
         } = req.body;
 
+        console.log('du lieu vao controller:',req.body);
+
         console.log(req.files);  // Kiểm tra file tải lên
         const fileUrls = req.files && req.files.length > 0 ? req.files.map(file => file.path) : null;
-        console.log(fileUrls);  // Kiểm tra đường dẫn file
+        //console.log(fileUrls);  // Kiểm tra đường dẫn file
 
         try {
             // Gọi model.addBook và truyền bookDetails cùng với fileUrls
@@ -128,13 +130,14 @@ class BookController {
             status = 1,
             images_to_delete = []
         } = req.body;
+        console.log('vao controller change:',images_to_delete);
 
         // Parse danh sách ảnh từ form (nếu gửi qua JSON string)
         const parsedImagesToDelete = typeof images_to_delete === 'string'
             ? JSON.parse(images_to_delete)
             : images_to_delete;
 
-        console.log(id);
+        console.log('id gui den la :',id);
         console.log(parsedImagesToDelete);
 
         console.log(req.files);  // Kiểm tra file tải lên
