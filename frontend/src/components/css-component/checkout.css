@@ -1,0 +1,48 @@
+.checkout-container {
+    padding: 40px 0px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 40px;
+}
+
+.checkout-address-box, .checkout-payment-box, .checkout-order-box, .checkout-total-box{
+    width: 1100px;
+    padding: 10px 20px;
+
+    background: white;
+
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.checkout-item-row, .checkout-total-row {
+    margin: 0px;
+    padding: 20px 0px;
+}
+
+.checkout-item-row img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+
+    margin: 0px 20px;
+}
+
+.checkout-item-name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    height: fit-content;
+}
+
+.checkout-item-price .checkout-old-price{
+    font-size: 14px;
+}

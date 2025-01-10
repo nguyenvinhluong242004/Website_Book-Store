@@ -10,6 +10,7 @@ import BookPage from "../components/vue-component/Book.vue";
 import SearchPage from "../components/vue-component/Search.vue"
 import CartPage from "../components/vue-component/Cart.vue"
 import GenrePage from "../components/vue-component/GenreBook.vue"
+import CheckoutPage from "../components/vue-component/CheckoutPage.vue"
 
 import InfoTab from "../components/vue-component/InfoTab.vue"
 import AddressTab from "../components/vue-component/AddressTab.vue"
@@ -59,6 +60,7 @@ const routes = [
       { path: "book", component: BookPage, name: "BookPage" },
       { path: "search", component: SearchPage, name: "SearchPage" },
       { path: "cart", component: CartPage, name: "CartPage" },
+      { path: "checkout", component: CheckoutPage, name: "CheckoutPage" },
     ]
   },
   {
