@@ -283,6 +283,8 @@
         </div>
       </div>
     </div>
+    
+  <!-- Sản phẩm tương tự -->
     <div class="book-recommend mt-3">
       <h3>Sản phẩm tương tự</h3>
 

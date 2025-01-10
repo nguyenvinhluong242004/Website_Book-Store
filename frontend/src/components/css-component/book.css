@@ -12,18 +12,23 @@
   font-weight: bold;
 }
 .book-recommend{
+  padding: 1%;
   width: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 
 }
 .book-same-book{
   margin-top: 20px;
   display: flex;
-  width: 80%;
+  width: 100%;
   justify-content: space-between;
   gap: 5%;
+  padding-left: 1%;
+  padding-right: 1%;
 }
 .book-view-intro {
   display: flex;
