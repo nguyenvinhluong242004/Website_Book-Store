@@ -1,38 +1,44 @@
-const TransactionModel = require('../models/transaction.model');
+const AccountBank = require('../models/accountBank.model');
 
 class DashboardController {
     async index(req, res) {
         // Render view
         res.render('accountBank', {
-            title: 'Tài khoản ngân hàng'
+            title: 'Tài khoản đã duyệt'
         });
     }
 
     async getData(req, res) {
-        const { page = 1, fromDate = 'null', toDate = 'null'} = req.query;
+        const { page = 1 } = req.query;
         const perPage = 10;
 
-        console.log(fromDate, toDate)
-
         try {
-            let result;
+            const result = await AccountBank.getAccounts(page, perPage);
 
-            //result = await TransactionModel.getPaginatedTransactions(page, perPage);
-            // if (fromDate && toDate) {
-                result = await TransactionModel.getFilteredPaginatedTransactions(page, perPage, fromDate, toDate);
-            // } else {
-            // }
-
-            console.log(result)
-
-            console.log(result);
             res.json({
-                title: 'Lịch sử giao dịch',
                 per_page: result.per_page,
                 total_pages: result.total_pages,
                 current_page: result.current_page,
                 total_records: result.total_records,
-                transaction: result.data
+                data: result.data
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Server Error');
+        }
+    }
+
+    async change(req, res) {
+        const { id = 0 } = req.query;
+        const { balance = 0 } = req.body;
+
+        console.log(id, balance)
+
+        try {
+            await AccountBank.updateBalance(Number(id), Number(balance));
+
+            res.json({
+                message: 'Thành công',
             });
         } catch (error) {
             console.error(error);

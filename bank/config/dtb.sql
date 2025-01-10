@@ -25,8 +25,7 @@ CREATE TABLE Payment (
 CREATE TABLE Request (
     ID_Request SERIAL PRIMARY KEY,
     Email VARCHAR(255) UNIQUE NOT NULL,
-    Request_Date DATE NOT NULL,
-    Approved BOOLEAN DEFAULT FALSE -- Admin sẽ phê duyệt yêu cầu này
+    Request_Date DATE NOT NULL
 );
 
 -- Dữ liệu mẫu cho Account_Bank
