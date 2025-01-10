@@ -1,0 +1,102 @@
+<div class="container mt-1">
+    <div class="row mt-2" style="padding-left: 10px; padding-right: 10px;">
+        <!-- Danh sách giao dịch -->
+        <div>
+            <h4 class="text-primary">NGÂN HÀNG ABC PHÁT TÀI</h4>
+
+        </div>
+    </div>
+    <div class="row mt-2">
+        <!-- Số tiền hiện có -->
+        <div class="col-md-8 offset-md-2 text-center">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Số tiền hiện có</h5>
+                    <h2 class="card-text text-success">{{balance.balance}} VND</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4" style="padding-left: 10px; padding-right: 10px;">
+        <!-- Danh sách giao dịch -->
+        <div>
+            <h4 class="text-primary">Giao dịch gần đây</h4>
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID Giao dịch</th>
+                        <th>Người giao dịch</th>
+                        <th>Số tiền</th>
+                        <th>Thời gian</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each transaction}}
+                    <tr data-toggle="modal" data-target="#transactionModal" class="clickable-row"
+                        style="cursor: pointer;" data-id="{{id_payment}}" data-nguoigd="{{full_name}}"
+                        data-loaigd="Ngân hàng" data-sotien="{{amount}}" data-taikhoan="{{account_number}}" data-sodu="{{balance}}"
+                        data-thoigian="{{formatDate payment_date}}">
+                        <td>{{id_payment}}</td>
+                        <td>{{full_name}}</td>
+                        <td>{{amount}} VND</td>
+                        <td>{{formatDate payment_date}}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary">Xem chi tiết</button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="transactionModalLabel" aria-hidden="true"
+    style="margin-top: 100px;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-primary text-center" id="transactionModalLabel">Thông tin chi tiết giao dịch
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="mb-3 text-success">Thông tin giao dịch:</h5>
+                <p><strong>ID Giao dịch:</strong> <span id="modal-id-payment"></span></p>
+                <p><strong>Người giao dịch:</strong> <span id="modal-full-name"></span></p>
+                <p><strong>Loại giao dịch:</strong> <span id="modal-loai-gd"></span></p>
+                <p><strong>Số tiền:</strong> <span id="modal-so-tien"></span> VND</p>
+                <p><strong>Thời gian:</strong> <span id="modal-thoi-gian"></span></p>
+                <p><strong>Tài khoản số:</strong> <span id="modal-account-number"></span></p>
+                <p><strong>Số dư còn lại:</strong> <span id="modal-so-du"></span> VND</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.clickable-row').on('click', function () {
+            var id_payment = $(this).data('id');
+            var full_name = $(this).data('nguoigd');
+            var loaiGiaoDich = $(this).data('loaigd');
+            var soTien = $(this).data('sotien');
+            var thoiGian = $(this).data('thoigian');
+            var taiKhoan = $(this).data('taikhoan');
+            var soDu = $(this).data('sodu');
+
+            $('#modal-id-payment').text(id_payment);
+            $('#modal-full-name').text(full_name);
+            $('#modal-loai-gd').text(loaiGiaoDich);
+            $('#modal-so-tien').text(soTien);
+            $('#modal-thoi-gian').text(thoiGian);
+            $('#modal-account-number').text(taiKhoan);
+            $('#modal-so-du').text(soDu);
+
+            $('#transactionModal').modal('show');
+        });
+    });
+</script>
