@@ -31,23 +31,17 @@ class DashboardController {
 
 
     async valid(req, res) {
-        const { page = 1 } = req.query;
-        const perPage = 10;
+        const { email = '', initial_balance = 0 } = req.body;
+
+        console.log(email, initial_balance)
 
         try {
-            let result;
-            result = await AccReqModel.getFilteredPaginatedTransactions(page, perPage, fromDate, toDate);
+            const result = await AccReqModel.approveRequest(email, initial_balance)
 
             console.log(result)
 
-            console.log(result);
             res.json({
-                title: 'Lịch sử giao dịch',
-                per_page: result.per_page,
-                total_pages: result.total_pages,
-                current_page: result.current_page,
-                total_records: result.total_records,
-                transaction: result.data
+                message: 'Thành công'
             });
         } catch (error) {
             console.error(error);

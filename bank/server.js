@@ -24,9 +24,19 @@ const app = express();
 const port = process.env.PORT_BANK; // Cổng để chạy server
 
 const bodyParser = require('body-parser'); // Xử lý dữ liệu từ các yêu cầu HTTP
+const cors = require('cors');
 
 const route = require('./routes/index.routes');
 const pool = require('./config/database');
+
+// Cấu hình CORS
+app.use(cors({
+    origin: 'https://localhost:8888', // Cho phép origin cụ thể (có thể thay đổi theo nhu cầu)
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], 
+    allowedHeaders: ['Content-Type', 'Authorization'], 
+    credentials: true, 
+    optionsSuccessStatus: 200
+}));
 
 // Middleware session
 app.use(session({

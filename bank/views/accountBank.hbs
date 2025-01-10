@@ -8,7 +8,6 @@
                     <th>Email</th>
                     <th>Balance</th>
                     <th>Full Name</th>
-                    <th>Phone Number</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -57,6 +56,70 @@
     </div>
 </div>
 
+<!-- Modal xem dòng tiền -->
+<div class="modal fade" id="transactionHistoryModal" tabindex="-1" aria-labelledby="transactionHistoryModalLabel"
+    aria-hidden="true" style="margin-top: 100px;">
+    <div class="modal-dialog modal-lg"> <!-- Thêm modal-lg để mở rộng modal -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="transactionHistoryModalLabel">Lịch sử giao dịch 
+                <p id="email-user" style="margin-bottom: 5px; color: blue; font-size: 17px;"></p></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID Giao dịch</th>
+                            <th>Ngày giao dịch</th>
+                            <th>Số tiền</th>
+                            <th>Số dư cuối</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionTableBody"></tbody>
+                </table>
+                <!-- Phân trang -->
+                <div class="d-flex justify-content-center">
+                    <nav>
+                        <ul class="pagination" id="transactionPagination"></ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal xem chi tiết giao dịch -->
+<div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="transactionModalLabel" aria-hidden="true"
+    style="margin-top: 100px;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-primary text-center" id="transactionModalLabel">Thông tin chi tiết giao dịch
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="mb-3 text-success">Thông tin giao dịch:</h5>
+                <p><strong>ID Giao dịch:</strong> <span id="modal-id-transaction"></span></p>
+                <p><strong>Email Admin:</strong> <span id="modal-admin-email"></span></p>
+                <p><strong>Email Người dùng:</strong> <span id="modal-user-email"></span></p>
+                <p><strong>Số tiền:</strong> <span id="modal-amount"></span> VND</p>
+                <p><strong>Thời gian:</strong> <span id="modal-date"></span></p>
+                <p><strong>Số dư trước:</strong> <span id="modal-balance-before"></span> VND</p>
+                <p><strong>Số dư sau:</strong> <span id="modal-balance-after"></span> VND</p>
+                <p><strong>Phương thức:</strong> <span id="modal-method"></span> </p>
+                <p><strong>Mô tả:</strong> <span id="modal-description"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true"
     data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
@@ -80,6 +143,8 @@
         const perPage = 10;
         let currentPage = 1;
         let totalPages = 0;
+        let transactions = [];
+        let email_stored = '';
 
         function fetchAccounts(page = 1) {
             $.ajax({
@@ -110,14 +175,20 @@
                     <td>${account.email}</td>
                     <td>${account.balance} VND</td>
                     <td>${account.full_name || 'N/A'}</td>
-                    <td>${account.phone_number || 'N/A'}</td>
                     <td>
+                        <button class="btn btn-info view-transaction-btn" data-id="${account.account_id}" data-email="${account.email}">Xem dòng tiền</button>
                         <button class="btn btn-warning change-balance-btn" data-id="${account.account_id}" data-balance="${account.balance}" data-name="${account.full_name}"> 
                             Thay đổi số dư
                         </button>
                     </td>
                 </tr>
             `);
+            });
+
+            // Gán sự kiện cho nút "Xem dòng tiền"
+            $('.view-transaction-btn').on('click', function () {
+                const email = $(this).data('email');
+                fetchTransactions(email, 1);
             });
 
             // Gán sự kiện cho nút "Thay đổi số dư"
@@ -140,17 +211,17 @@
             pagination.empty();
 
             pagination.append(`
-            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-                <a class="page-link" href="#" data-page="${currentPage - 1}">«</a>
-            </li>
-        `);
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" data-page="${currentPage - 1}">«</a>
+                </li>
+            `);
 
             for (let i = 1; i <= totalPages; i++) {
                 pagination.append(`
-                <li class="page-item ${i === currentPage ? 'active' : ''}">
-                    <a class="page-link" href="#" data-page="${i}">${i}</a>
-                </li>
-            `);
+                    <li class="page-item ${i === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${i}">${i}</a>
+                    </li>
+                `);
             }
 
             pagination.append(`
@@ -203,6 +274,107 @@
         });
 
         fetchAccounts();
+
+
+        // Lấy thông tin giao dịch của người dùng
+        function fetchTransactions(email, page = 1) {
+            email_stored = email;
+            $.ajax({
+                url: `/acc-bank/history?email=${email}&page=${page}`,
+                method: "GET",
+                success: function (response) {
+                    console.log(response)
+                    transactions = response.data;
+                    displayTransactions();
+                    updateTransactionPagination(response.total_pages, page);
+                    $('#transactionHistoryModal').modal('show');
+                },
+                error: function () {
+                    alert('Không thể tải lịch sử giao dịch.');
+                }
+            });
+        }
+
+        // Hiển thị các giao dịch trong modal
+        function displayTransactions() {
+            $('#email-user').text(`Email: ${email_stored}`);
+            const tbody = $('#transactionTableBody');
+            tbody.empty();
+
+            transactions.forEach((transaction) => {
+                tbody.append(`
+                <tr>
+                    <td>${transaction.transaction_id}</td>
+                    <td>${transaction.transaction_date}</td>
+                    <td>${transaction.amount} VND</td>
+                    <td>${transaction.balance_after}</td>
+                    <td>
+                        <button class="btn btn-info view-transaction-detail-btn" data-id="${transaction.transaction_id}">Xem chi tiết</button>
+                    </td>
+                </tr>
+            `);
+            });
+
+            $('.view-transaction-detail-btn').on('click', function () {
+                const transactionId = $(this).data('id');
+                console.log(transactionId)
+                console.log(transactions)
+
+                // Tìm giao dịch với ID tương ứng
+                const transaction = transactions.find(t => t.transaction_id === transactionId);
+
+                console.log(transaction)
+                // Hiển thị thông tin chi tiết trong modal
+                $('#modal-id-transaction').text(transaction.transaction_id);
+                $('#modal-admin-email').text(transaction.admin_email);
+                $('#modal-user-email').text(transaction.user_email);
+                $('#modal-amount').text(transaction.amount);
+                $('#modal-date').text(transaction.transaction_date);
+                $('#modal-method').text(transaction.transaction_type);
+                $('#modal-balance-before').text(transaction.balance_before);
+                $('#modal-balance-after').text(transaction.balance_after);
+                $('#modal-description').text(transaction.description);
+
+                // Hiển thị modal
+                $('#transactionModal').modal('show');
+            });
+        }
+
+        // Cập nhật phân trang cho giao dịch
+        function updateTransactionPagination(totalPages, currentPage) {
+            const pagination = $('#transactionPagination');
+            pagination.empty();
+
+            pagination.append(`
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" data-page="${currentPage - 1}">«</a>
+                </li>
+            `);
+
+            for (let i = 1; i <= totalPages; i++) {
+                pagination.append(`
+                    <li class="page-item ${i === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${i}">${i}</a>
+                    </li>
+                `);
+            }
+
+            pagination.append(`
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" data-page="${currentPage + 1}">»</a>
+                </li>
+            `);
+
+            $('.page-link').on('click', function (e) {
+                e.preventDefault();
+                const page = $(this).data('page');
+                if (page >= 1 && page <= totalPages) {
+                    fetchTransactions(email_stored, page);
+                }
+            });
+        }
+
+
     });
 
 </script>

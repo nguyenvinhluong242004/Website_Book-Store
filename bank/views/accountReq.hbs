@@ -138,6 +138,8 @@
             const email = $('#approveEmail').val();
             const initialBalance = $('#initialBalance').val();
 
+            console.log(email, initialBalance)
+
             if (!initialBalance || initialBalance < 0) {
                 $('#approveAccountModal').modal('hide');
                 $('#notificationMessage').text('Vui lòng nhập số dư khởi tạo hợp lệ.');
@@ -147,7 +149,7 @@
 
             $.ajax({
                 url: `/acc-request/valid?id=${requestId}`,
-                method: "POST",
+                method: "PUT",
                 contentType: "application/json",
                 data: JSON.stringify({ email: email, initial_balance: initialBalance }),
                 success: function () {

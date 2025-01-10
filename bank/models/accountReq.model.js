@@ -8,7 +8,7 @@ class StatisticalModel {
                 SELECT 
                     ID_Request,
                     Email,
-                    TO_CHAR(Request_Date, 'HH24:MI:SS DD-MM-YYYY') AS Request_Date
+                    TO_CHAR(Request_Date AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Ho_Chi_Minh', 'HH24:MI:SS - DD-MM-YYYY') AS Request_Date
                 FROM Request
                 ORDER BY Request_Date DESC
             `;
@@ -37,6 +37,7 @@ class StatisticalModel {
     // Phê duyệt request và tạo tài khoản mới
     async approveRequest(email, initialBalance = 0) {
         const client = await pool.connect();
+        initialBalance = parseInt(initialBalance);
 
         try {
             await client.query('BEGIN'); // Bắt đầu transaction
@@ -55,11 +56,30 @@ class StatisticalModel {
             `;
             await client.query(insertQuery, [email, initialBalance]);
 
+            const adminBalanceQuery = `SELECT Email FROM Account_Bank WHERE Is_Admin = TRUE`;
+            const adminResult = await client.query(adminBalanceQuery);
+            const adminEmail = adminResult.rows[0].email;
+
+            // Thêm vào bảng User_Transaction_History với số dư trước là 0
+            const insertTransactionQuery = `
+            INSERT INTO User_Transaction_History (Email, Admin_Email, Transaction_Type, Amount, Balance_Before, Balance_After, Description)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+        `;
+            await client.query(insertTransactionQuery, [
+                email,
+                adminEmail, // Admin_Email có thể để null nếu không có thông tin admin
+                'Account Creation', // Loại giao dịch
+                initialBalance, // Số tiền giao dịch (là số dư khởi tạo tài khoản)
+                0, // Số dư trước khi tạo tài khoản
+                initialBalance, // Số dư sau khi tạo tài khoản
+                'Khởi tạo tài khoản ngân hàng' // Mô tả giao dịch
+            ]);
+
             // Xóa request sau khi phê duyệt
             const deleteRequestQuery = `
-                DELETE FROM Request
-                WHERE Email = $1
-            `;
+            DELETE FROM Request
+            WHERE Email = $1
+        `;
             await client.query(deleteRequestQuery, [email]);
 
             await client.query('COMMIT'); // Hoàn tất transaction
@@ -73,6 +93,7 @@ class StatisticalModel {
             client.release(); // Giải phóng client
         }
     }
+
 
     // Tạo request mới
     async createRequest(email) {
