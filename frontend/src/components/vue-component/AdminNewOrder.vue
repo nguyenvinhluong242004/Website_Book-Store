@@ -43,7 +43,20 @@
               }}
             </td>
             <td class="align-content-center text-center">{{ order.method }}</td>
-            <td class="align-content-center text-center">{{ order.status }}</td>
+            <td class="align-content-center text-center">
+              <select
+                class="form-select"
+                aria-label="select status"
+                v-model="order.status"
+                @change="updateStatus(order.id_order, order.status)"
+              >
+                <option value="Pending">Pending</option>
+                <option value="Paid">Paid</option>
+                <option value="Refused">Refused</option>
+                <option value="Delivering">Delivering</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </td>
             <td class="align-content-center">
               <div
                 class="text-primary text-center fw-bold"
@@ -101,9 +114,24 @@
             </div>
             <div class="row mb-4 px-2">
               <div class="col-sm-3 fw-bold">Thời điểm đặt hàng:</div>
-              <div class="col-sm-9">{{ selectedOrderDetail.created_at }}</div>
+              <div class="col-sm-9">
+                {{
+                  new Date(selectedOrderDetail.created_at).toLocaleString(
+                    "en-CA",
+                    {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                      hour12: false,
+                    }
+                  )
+                }}
+              </div>
             </div>
-            
+
             <table class="table mx-auto border-dark-subtle">
               <thead class="border-bottom-0">
                 <tr>
@@ -125,26 +153,31 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(book, index) in selectedOrderDetail.books" :key="index">
-                  <td class="ps-4 align-content-center">{{ book.book_name }}</td>
+                <tr
+                  v-for="(book, index) in selectedOrderDetail.books"
+                  :key="index"
+                >
+                  <td class="ps-4 align-content-center">
+                    {{ book.book_name }}
+                  </td>
                   <td class="align-content-center text-center">
                     {{ formatPrice(book.price) }}
                   </td>
                   <td class="align-content-center text-center">
-                    {{
-                      book.quantity
-                    }}
+                    {{ book.quantity }}
                   </td>
                   <td class="align-content-center text-center">
-                    {{ formatPrice(book.price*book.quantity) }}
+                    {{ formatPrice(book.price * book.quantity) }}
                   </td>
                 </tr>
               </tbody>
             </table>
-            
+
             <div class="row px-2">
               <div class="col-sm-9 fw-bold text-end">Tổng cộng:</div>
-              <div class="col-sm-3 text-center">{{ formatPrice(selectedOrderDetail.total_amount) }}</div>
+              <div class="col-sm-3 text-center">
+                {{ formatPrice(selectedOrderDetail.total_amount) }}
+              </div>
             </div>
           </div>
           <div class="modal-footer">
@@ -209,6 +242,42 @@ export default {
 
     formatPrice(price) {
       return new Intl.NumberFormat("vi-VN").format(price) + " vnđ";
+    },
+
+    async updateStatus(id_order, status) {
+      try {
+        const response = await axiosInstance.patch(
+          "/admin/order/update-status",
+          {
+            id_order: id_order,
+            status: status,
+          }
+        );
+        if (response.status === 200) {
+          alert("ok");
+          this.orderList = response.data.updatedOrder;
+        }
+      } catch (error) {
+        if (error.response) {
+          const status = error.response.status;
+          const message = error.response.data.message;
+
+          // Xử lý các mã lỗi cụ thể
+          if (status === 400) {
+            alert(message);
+          } else if (status === 403) {
+            alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+            this.$router.push("/login");
+          } else if (status === 404) {
+            alert(message);
+          } else if (status === 500) {
+            alert(message);
+          }
+        } else {
+          // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
+          alert("Lỗi mạng: Không thể kết nối đến server.");
+        }
+      }
     },
 
     async showModal(id_order) {
