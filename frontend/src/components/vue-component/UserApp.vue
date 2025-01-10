@@ -1,13 +1,13 @@
 <template>
-  <div id="user-app-root">
+  <div id="user-app-root"  :class="{ 'dark-mode': darkMode, 'light-mode': !darkMode }">
     <div v-if="notification" class="notification">{{ notification }}</div>
     
-    <HeaderApp @user-loaded="setUser"/>
+    <HeaderApp @user-loaded="setUser" :dark-mode="darkMode"/>
     <NavApp :categories="categories" :subcategories="subcategories" />
     
     <router-view :user="user"/>
 
-    <FooterApp/>
+    <FooterApp @toggle-dark-mode="setDarkMode"/>
     <ChatBox />
   </div>
 </template>
@@ -31,15 +31,21 @@ export default {
   },
   data() {
     return {
-      notification: "",
+      notification: "TẾT ĐOÀN VIÊN - TẾT SUM VẦY - GIẢM GIÁ MỪNG XUÂN ẤT TỴ",
       categories: [],
       subcategories: [],
       user: null,
+      // Trạng thái darkmode
+      darkMode: true,
     };
   },
   methods: {
     setUser(user) {
       this.user = user; // Nhận user từ HeaderApp
+    },
+    setDarkMode(is) {
+      console.log('fadsfasdf');
+      this.darkMode = is; // Cập nhật trạng thái Dark Mode từ FooterApp
     },
   },
 };
