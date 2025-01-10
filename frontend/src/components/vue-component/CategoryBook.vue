@@ -40,7 +40,7 @@
         <ProductCard
           v-for="(product, index) in kinhTe"
           :key="index"
-          :img="product.images"
+          :img="product.images[0]"
           :name="product.book_name"
           :old_price="product.list_price"
           :new_price="product.discounted_price"
@@ -57,7 +57,7 @@
         <ProductCard
           v-for="(product, index) in tamLy"
           :key="index"
-          :img="product.images"
+          :img="product.images[0]"
           :name="product.book_name"
           :old_price="product.list_price"
           :new_price="product.discounted_price"
@@ -74,7 +74,7 @@
         <ProductCard
           v-for="(product, index) in vanHoc"
           :key="index"
-          :img="product.images"
+          :img="product.images[0]"
           :name="product.book_name"
           :old_price="product.list_price"
           :new_price="product.discounted_price"
@@ -91,7 +91,7 @@
         <ProductCard
           v-for="(product, index) in tieuThuyet"
           :key="index"
-          :img="product.images"
+          :img="product.images[0]"
           :name="product.book_name"
           :old_price="product.list_price"
           :new_price="product.discounted_price"
