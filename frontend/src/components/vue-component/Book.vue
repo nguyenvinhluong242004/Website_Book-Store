@@ -300,7 +300,7 @@
         <ProductCard
           v-for="(book, index) in sameBook"
           :key="index"
-          :img="book.images"
+          :img="book.images[0]"
           :name="book.book_name"
           :old_price="book.list_price"
           :new_price="book.discounted_price"
