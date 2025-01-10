@@ -11,7 +11,7 @@ class StatisticalModel {
                     p.ID_Payment,
                     p.Email,
                     TRIM(TO_CHAR(p.Amount, '999G999G999G990')) AS Amount,
-                    TO_CHAR(p.Payment_Date, 'HH24:MI:SS DD-MM-YYYY') AS Payment_Date,
+                    TO_CHAR(p.Payment_Date AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Ho_Chi_Minh', 'HH24:MI:SS - DD-MM-YYYY') AS Payment_Date,
                     ab.Account_ID,
                     TRIM(TO_CHAR(ab.Balance, '999G999G999G990')) AS Balance
                 FROM Payment p
