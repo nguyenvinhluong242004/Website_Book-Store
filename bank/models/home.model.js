@@ -24,10 +24,11 @@ class StatisticalModel {
             // Lấy dữ liệu từ bảng `Payment` và liên kết với `Account_Bank`
             const depositQuery = `
                 SELECT 
+                    p.ID_Invoice,
                     p.ID_Payment,
                     p.Email,
                     TRIM(TO_CHAR(p.Amount, '999G999G999G990')) AS Amount,
-                    p.Payment_Date,
+                    TO_CHAR(p.Payment_Date, 'HH24:MI:SS DD-MM-YYYY') AS Payment_Date,
                     ab.Account_ID,
                     TRIM(TO_CHAR(ab.Balance, '999G999G999G990')) AS Balance
                 FROM Payment p
@@ -65,6 +66,7 @@ class StatisticalModel {
             const result = depositResult.rows.map((transaction) => {
                 const userInfo = userMap.get(transaction.email) || {};
                 return {
+                    id_invoice: transaction.id_invoice,
                     id_payment: transaction.id_payment,
                     email: transaction.email,
                     full_name: userInfo.full_name || null,

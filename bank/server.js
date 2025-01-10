@@ -67,7 +67,7 @@ app.engine('hbs', expressHandlebars.engine({
             return result;
         },
         formatDate: function(date) {
-            return format(new Date(date), 'dd/MM/yyyy HH:mm');
+            return format(new Date(date), ' HH:mm:ss dd/MM/yyyy');
         }
     }
 }));

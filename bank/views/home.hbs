@@ -36,12 +36,12 @@
                     {{#each transaction}}
                     <tr data-toggle="modal" data-target="#transactionModal" class="clickable-row"
                         style="cursor: pointer;" data-id="{{id_payment}}" data-nguoigd="{{full_name}}"
-                        data-loaigd="Ngân hàng" data-sotien="{{amount}}" data-taikhoan="{{account_number}}" data-sodu="{{balance}}"
-                        data-thoigian="{{formatDate payment_date}}">
+                        data-loaigd="Ngân hàng" data-sotien="{{amount}}" data-taikhoan="{{account_number}}" data-sodu="{{balance}}" data-idinvoice="{{id_invoice}}"
+                        data-thoigian="{{payment_date}}">
                         <td>{{id_payment}}</td>
                         <td>{{full_name}}</td>
                         <td>{{amount}} VND</td>
-                        <td>{{formatDate payment_date}}</td>
+                        <td>{{payment_date}}</td>
                         <td>
                             <button type="button" class="btn btn-primary">Xem chi tiết</button>
                         </td>
@@ -59,17 +59,19 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-primary text-center" id="transactionModalLabel">Thông tin chi tiết giao dịch
-                </h5>
+                <h4 class="modal-title text-primary text-center" id="transactionModalLabel">Thông tin chi tiết giao dịch
+                </h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <h5 class="mb-3 text-success">Thông tin giao dịch:</h5>
+                <p><strong>ID Đơn hàng:</strong> <span id="modal-id-invoice"></span></p>
                 <p><strong>ID Giao dịch:</strong> <span id="modal-id-payment"></span></p>
                 <p><strong>Người giao dịch:</strong> <span id="modal-full-name"></span></p>
                 <p><strong>Loại giao dịch:</strong> <span id="modal-loai-gd"></span></p>
                 <p><strong>Số tiền:</strong> <span id="modal-so-tien"></span> VND</p>
                 <p><strong>Thời gian:</strong> <span id="modal-thoi-gian"></span></p>
+                <hr>
                 <p><strong>Tài khoản số:</strong> <span id="modal-account-number"></span></p>
                 <p><strong>Số dư còn lại:</strong> <span id="modal-so-du"></span> VND</p>
             </div>
@@ -80,6 +82,7 @@
 <script>
     $(document).ready(function () {
         $('.clickable-row').on('click', function () {
+            var id_invoice = $(this).data('idinvoice');
             var id_payment = $(this).data('id');
             var full_name = $(this).data('nguoigd');
             var loaiGiaoDich = $(this).data('loaigd');
@@ -88,6 +91,7 @@
             var taiKhoan = $(this).data('taikhoan');
             var soDu = $(this).data('sodu');
 
+            $('#modal-id-invoice').text(id_invoice);
             $('#modal-id-payment').text(id_payment);
             $('#modal-full-name').text(full_name);
             $('#modal-loai-gd').text(loaiGiaoDich);
