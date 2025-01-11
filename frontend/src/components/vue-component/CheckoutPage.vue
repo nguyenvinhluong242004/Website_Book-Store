@@ -11,6 +11,7 @@
           >
             <input
               class="form-check-input"
+              style="cursor: pointer"
               type="radio"
               name="checkoutAddress"
               :id="'checkoutAddrrb' + index"
@@ -38,6 +39,7 @@
         <div class="form-check">
           <input
             class="form-check-input"
+            style="cursor: pointer"
             type="radio"
             name="checkoutPayment"
             id="checkoutPaymentrb1"
@@ -53,6 +55,7 @@
         <div class="form-check">
           <input
             class="form-check-input"
+            style="cursor: pointer"
             type="radio"
             name="checkoutPayment"
             id="checkoutPaymentrb2"

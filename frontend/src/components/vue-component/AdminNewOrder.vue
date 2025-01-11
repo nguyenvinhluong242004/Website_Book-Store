@@ -45,13 +45,13 @@
             <td class="align-content-center text-center">{{ order.method }}</td>
             <td class="align-content-center text-center">
               <select
-                class="form-select"
+                class="form-select" style="cursor: pointer"
                 aria-label="select status"
                 v-model="order.status"
                 @change="updateStatus(order.id_order, order.status)"
               >
                 <option value="Pending">Pending</option>
-                <option value="Paid">Paid</option>
+                <option value="Approved">Approved</option>
                 <option value="Refused">Refused</option>
                 <option value="Delivering">Delivering</option>
                 <option value="Completed">Completed</option>
@@ -59,6 +59,7 @@
             </td>
             <td class="align-content-center">
               <div
+              type="button"
                 class="text-primary text-center fw-bold"
                 @click="showModal(order.id_order)"
               >
@@ -254,7 +255,6 @@ export default {
           }
         );
         if (response.status === 200) {
-          alert("ok");
           this.orderList = response.data.updatedOrder;
         }
       } catch (error) {

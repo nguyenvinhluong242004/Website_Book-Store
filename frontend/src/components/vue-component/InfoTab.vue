@@ -93,6 +93,7 @@
           id="profile-birthday"
           class="form-control"
           :class="{ 'is-invalid': birthdayErr !== '' }"
+          style="cursor: text"
           placeholder="Nhập ngày sinh của bạn"
           v-model="birthday"
         />

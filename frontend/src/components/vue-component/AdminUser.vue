@@ -30,10 +30,12 @@
             </td>
             <td class="fs-5 text-center align-content-center">
               <i
+                type="button"
                 class="fa-solid fa-address-card text-primary me-4"
                 @click="showModal(account)"
               ></i>
               <i
+                type="button"
                 class="fa-solid fa-trash-can text-danger"
                 @click="deleteAcc(account.email)"
               ></i>
@@ -95,7 +97,9 @@
               <div class="col-sm-8">
                 {{
                   selectedAccount.birth_date
-                    ? new Date(selectedAccount.birth_date).toLocaleDateString("en-CA") // Sử dụng "en-CA" để có định dạng YYYY-MM-DD
+                    ? new Date(selectedAccount.birth_date).toLocaleDateString(
+                        "en-CA"
+                      ) // Sử dụng "en-CA" để có định dạng YYYY-MM-DD
                     : "--"
                 }}
               </div>

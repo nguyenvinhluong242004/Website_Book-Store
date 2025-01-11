@@ -1,6 +1,6 @@
 <template>
-  <div id="admin-app-root">
-    <HeaderAdmin />
+  <div id="admin-app-root" style="cursor: default">
+    <AdminHeader />
 
     <div class="admin-body">
       <div class="admin-side">
@@ -39,6 +39,7 @@
             <i class="fa-solid fa-receipt me-2 col-sm-1 text-center"></i> Đơn
             Hàng
           </div>
+
           <div
             class="admin-side-tab my-0 border border-top-0"
             :class="{
@@ -46,7 +47,8 @@
                 activeSubTab === 'neworder' || hoverTab === 'neworder',
               'text-secondary border-secondary-subtle':
                 activeSubTab !== 'neworder' && hoverTab !== 'neworder',
-              'border-bottom-0': activeSubTab === 'refuse' || hoverTab === 'refuse',
+              'border-bottom-0':
+                activeSubTab === 'verify' || hoverTab === 'verify',
             }"
             @mouseenter="hoverTab = 'neworder'"
             @mouseleave="hoverTab = null"
@@ -56,6 +58,26 @@
             <i class="fa-solid fa-scroll me-2 col-sm-1 text-center"></i> Đơn
             Hàng Mới
           </div>
+
+          <div
+            class="admin-side-tab my-0 border"
+            :class="{
+              'text-primary border-primary':
+                activeSubTab === 'verify' || hoverTab === 'verify',
+              'text-secondary border-secondary-subtle border-top-0':
+                activeSubTab !== 'verify' && hoverTab !== 'verify',
+              'border-bottom-0':
+                activeSubTab === 'refuse' || hoverTab === 'refuse',
+            }"
+            @mouseenter="hoverTab = 'verify'"
+            @mouseleave="hoverTab = null"
+            @click="switchOrderTab('verify')"
+            v-if="activeTab === 'order'"
+          >
+            <i class="fa-regular fa-circle-check me-2 col-sm-1 text-center"></i> Đơn Hàng
+            Đã Xác Nhận
+          </div>
+
           <div
             class="admin-side-tab my-0 border"
             :class="{
@@ -63,7 +85,8 @@
                 activeSubTab === 'refuse' || hoverTab === 'refuse',
               'text-secondary border-secondary-subtle border-top-0':
                 activeSubTab !== 'refuse' && hoverTab !== 'refuse',
-              'border-bottom-0': activeSubTab === 'delivery' || hoverTab === 'delivery',
+              'border-bottom-0':
+                activeSubTab === 'delivery' || hoverTab === 'delivery',
             }"
             @mouseenter="hoverTab = 'refuse'"
             @mouseleave="hoverTab = null"
@@ -73,6 +96,7 @@
             <i class="fa-solid fa-ban me-2 col-sm-1 text-center"></i> Từ Chối
             Đơn Hàng
           </div>
+
           <div
             class="admin-side-tab my-0 border"
             :class="{
@@ -80,7 +104,8 @@
                 activeSubTab === 'delivery' || hoverTab === 'delivery',
               'text-secondary border-secondary-subtle border-top-0':
                 activeSubTab !== 'delivery' && hoverTab !== 'delivery',
-              'border-bottom-0': activeSubTab === 'complete' || hoverTab === 'complete',
+              'border-bottom-0':
+                activeSubTab === 'complete' || hoverTab === 'complete',
             }"
             @mouseenter="hoverTab = 'delivery'"
             @mouseleave="hoverTab = null"
@@ -90,6 +115,7 @@
             <i class="fa-solid fa-truck me-2 col-sm-1 text-center"></i> Đơn Hàng
             Đang Giao
           </div>
+
           <div
             class="admin-side-tab mt-0 border rounded-bottom-3"
             :class="{
@@ -103,7 +129,7 @@
             @click="switchOrderTab('complete')"
             v-if="activeTab === 'order'"
           >
-            <i class="fa-solid fa-check me-2 col-sm-1 text-center"></i> Đơn Đã
+            <i class="fa-solid fa-circle-check me-2 col-sm-1 text-center"></i> Đơn Đã
             Hoàn Thành
           </div>
 
@@ -180,12 +206,12 @@
 <script>
 import "../css-component/admin-app.css";
 
-import HeaderAdmin from "./AdminHeader.vue";
+import AdminHeader from "./AdminHeader.vue";
 
 export default {
   name: "AdminApp",
   components: {
-    HeaderAdmin,
+    AdminHeader,
   },
   data() {
     return {

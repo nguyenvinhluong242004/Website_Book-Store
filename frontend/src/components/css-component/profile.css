@@ -48,6 +48,7 @@
 
 .profile-side-tab{
   padding: 10px 15px;
+  cursor: pointer;
 }
 
 .profile-side-tab i{
