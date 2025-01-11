@@ -20,7 +20,9 @@ class BookModel {
             `SELECT b.*, c.Name AS genre_name
              FROM Book b
              LEFT JOIN Categories c ON b.Genre = c.ID_Category
-             WHERE b.Status = 1`
+             WHERE b.Status = 1
+             ORDER BY b.id_book  --Thêm cái này để dễ thêm ảnh.
+             `
         );
 
         // Tất cả sách phù hợp

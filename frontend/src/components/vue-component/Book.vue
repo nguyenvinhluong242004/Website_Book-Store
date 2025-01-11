@@ -283,6 +283,8 @@
         </div>
       </div>
     </div>
+    
+  <!-- Sản phẩm tương tự -->
     <div class="book-recommend mt-3">
       <h3>Sản phẩm tương tự</h3>
 
@@ -298,7 +300,7 @@
         <ProductCard
           v-for="(book, index) in sameBook"
           :key="index"
-          :img="book.images"
+          :img="book.images[0]"
           :name="book.book_name"
           :old_price="book.list_price"
           :new_price="book.discounted_price"
@@ -324,7 +326,7 @@
               :key="i"
             ></i>
           </div>
-          <div class="rate-based-on">{{ reviews.length }} đánh giá</div>
+          <div class="rate-based-on">{{ reviews.length }}</div>
         </div>
 
         <div class="book-review-rate-detail">
@@ -400,12 +402,16 @@
 
       <!-- Nút để bật đánh giá -->
       <div class="book-review-btn-review">
-        <div class="fs-5" v-if="!user"> Vui lòng  <router-link to="/login">đăng nhập</router-link> để viết đánh giá </div>
+        <div class="fs-5" v-if="!user">
+          Vui lòng <router-link to="/login">đăng nhập</router-link> để viết đánh
+          giá
+        </div>
+
         <button
+          v-else
           type="button"
           :class="isToggleForm ? 'btn btn-danger' : 'btn btn-outline-primary'"
           @click="toggleForm"
-          v-else
         >
           <i
             :class="
@@ -539,11 +545,7 @@
             <span class="visually-hidden">Loading...</span>
           </div>
         </div>
-        <div
-          v-for="review in reviews.slice(0, visibleReviews)"
-          :key="review.id_review"
-          class="review"
-        >
+        <div v-for="review in reviews" :key="review.id_review" class="review">
           <!-- avatar -->
           <div
             class="d-flex justify-content-center align-items-center rounded-circle bg-primary text-white"
@@ -571,21 +573,86 @@
               {{ review.content }}
             </div>
 
-            <div class="review-content-images">
+            <div v-if="isImageLoaded" class="review-content-images">
               <div class="image-ctn">
                 <img
                   :src="review.image_link"
                   class="image-review"
                   alt="image review"
+                   @error="handleImageError"
                 />
               </div>
             </div>
           </div>
         </div>
 
-        <button @click="toggleReviews" class="book-btn-review" v-if="isSeeMore">
+        <!-- Phân trang  -->
+        <div class="mt-4 d-flex justify-content-center">
+          <nav>
+            <ul class="pagination pagination-sm">
+              <li class="page-item" :class="{ disabled: current_page === 1 }">
+                <button class="page-link" @click="goToPage(id_book,current_page - 1)">
+                  «
+                </button>
+              </li>
+
+              <!-- Hiển thị số trang đầu tiên -->
+              <li
+                class="page-item"
+                :class="{ disabled: current_page === 1 }"
+                v-if="visiblePages[0] > 1"
+              >
+                <button class="page-link" @click="goToPage(id_book,1)">1</button>
+              </li>
+
+              <!-- Hiển thị dấu ba chấm nếu có nhiều trang -->
+              <li v-if="showEllipsisBefore" class="page-item disabled">
+                <span class="page-link">...</span>
+              </li>
+
+              <!-- Hiển thị các trang xung quanh trang hiện tại -->
+              <li
+                class="page-item"
+                v-for="pageNumber in visiblePages"
+                :key="pageNumber"
+                :class="{ active: pageNumber === current_page }"
+              >
+                <button class="page-link" @click="goToPage(id_book,pageNumber)">
+                  {{ pageNumber }}
+                </button>
+              </li>
+
+              <!-- Hiển thị dấu ba chấm nếu có nhiều trang -->
+              <li v-if="showEllipsisAfter" class="page-item disabled">
+                <span class="page-link">...</span>
+              </li>
+
+              <!-- Hiển thị số trang cuối cùng -->
+             <li
+                class="page-item"
+                :class="{ disabled: current_page === total_pages }"
+                v-if="visiblePages[visiblePages.length - 1] < total_pages"
+              >
+                <button class="page-link" @click="goToPage(id_book,total_pages)">
+                  {{ total_pages }}
+                </button>
+              </li>
+
+              <li
+                class="page-item"
+                :class="{ disabled: current_page === total_pages }"
+              >
+                <button class="page-link" @click="goToPage(id_book,current_page + 1)">
+                  »
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <!-- <button @click="toggleReviews" class="book-btn-review" v-if="isSeeMore">
           {{ visibleReviews === reviews.length ? "Thu gọn" : "Xem thêm" }}
-        </button>
+        </button> -->
       </div>
     </div>
   </div>
@@ -633,19 +700,52 @@ export default {
       isLoadingSendReview: false,
       isLoadingReview: false,
       toastMessage: "",
-      isSeeMore: false,
+      isImageLoaded: true,
+
+      current_page: 1,
+      total_pages: 0,
+      max_visible_pages: 5,
     };
   },
-  props: [
-    "user",
-  ],
+  props: ["user"],
   created() {
     this.id_book = this.$route.query.id_book;
     this.isLoadingReview = true;
     this.isloadingsame = true;
     this.fetchBookDetails(this.id_book);
+    console.log(this.id_book);
+    console.log(this.current_page);
+    this.getReview(this.id_book, this.current_page);
   },
   computed: {
+    visiblePages() {
+      // Hiển thị các trang xung quanh trang hiện tại, giới hạn số lượng trang
+      let pages = [];
+      const start = Math.max(
+        1,
+        this.current_page - Math.floor(this.max_visible_pages / 2)
+      );
+      const end = Math.min(
+        this.total_pages,
+        this.current_page + Math.floor(this.max_visible_pages / 2)
+      );
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+      return pages;
+    },
+    showEllipsisBefore() {
+      // Kiểm tra nếu dấu ba chấm cần hiển thị ở trước các trang
+      return this.visiblePages[0] > 2;
+    },
+    showEllipsisAfter() {
+      // Kiểm tra nếu dấu ba chấm cần hiển thị ở sau các trang
+      return (
+        this.visiblePages[this.visiblePages.length - 1] < this.total_pages - 1
+      );
+    },
+
     discounted() {
       const listPrice = parseFloat(this.book.list_price); // Chuyển chuỗi thành số
       const discountedPrice = parseFloat(this.book.discounted_price); // Chuyển chuỗi thành số
@@ -669,7 +769,9 @@ export default {
       };
     },
     averageRating() {
-      if (this.reviews.length === 0) return 0; // Kiểm tra nếu không có reviews
+      if (this.reviews.length === 0) {
+        return 0;
+      } // Kiểm tra nếu không có reviews
       const totalRating = this.reviews.reduce(
         (sum, review) => sum + parseFloat(review.rating),
         0
@@ -679,6 +781,9 @@ export default {
   },
 
   methods: {
+    handleImageError() {
+      this.isImageLoaded = false; // Ẩn ảnh khi không tải được
+    },
     async checkAndSubmitForm() {
       if (this.comment === "" || this.rating === 0) {
         this.toastMessage = "Vui lòng điền đầy đủ thông tin review !";
@@ -711,8 +816,8 @@ export default {
             this.isLoadingSendReview = false;
             this.toastMessage = "Cảm ơn vì review của bạn ";
             this.showToast("bg-success"); // Màu đỏ cho thông báo lỗi
-            this.resetForm();
-            this.fetchBookDetails(this.id_book);
+            //this.resetForm();
+            this.resetForm(this.id_book);
           }
         } catch (error) {
           if (error.response) {
@@ -791,16 +896,14 @@ export default {
         if (response.data.success) {
           this.book = response.data.data;
           this.sameBook = response.data.relatedBooks;
-          console.log("sameBook:", this.sameBook);
+
           this.images = this.book.images;
 
-          this.reviews = response.data.reviews;
           this.isLoadingImage = false;
           this.isLoadingReview = false;
           this.isloadingsame = false;
           this.isSeeMore = true;
         }
-        console.log("book tra ve:", this.book);
       } catch (error) {
         this.error = "Không thể lấy thông tin sách!";
         console.error(error);
@@ -915,6 +1018,34 @@ export default {
     },
     goDetail(id_book) {
       window.location.href = `/book?id_book=${id_book}`;
+    },
+    async getReview(id, page) {
+      try {
+        const response = await axios.get(
+          `/api/detail-book/get-reviews?id=${id}&page=${page}`
+        ); // Lấy API qua proxy
+        if (response.data.success) {
+          const result = response.data;
+          console.log(result);
+
+          this.reviews = result.reviews;
+          this.total_pages = parseInt(result.total_pages);
+          this.current_page = parseInt(result.current_page);
+
+          console.log("total:", this.total_pages);
+          console.log("current:", this.current_page);
+          this.isLoadingImage = false;
+          this.isLoadingReview = false;
+          this.isloadingsame = false;
+          this.isSeeMore = true;
+        }
+      } catch (error) {
+        this.error = "Không thể lấy thông tin sách!";
+        console.error(error);
+      }
+    },
+    goToPage(id,page) {
+      this.getReview(id,page);
     },
   },
 };
