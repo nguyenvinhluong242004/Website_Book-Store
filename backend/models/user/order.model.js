@@ -5,7 +5,6 @@ class OrderModel {
         this.pool = pool;
     }
 
-    // CRUD
     // Get total orders
     async getTotalOrdersByEmail(email) {
         const result = await this.pool.query(
@@ -66,6 +65,10 @@ class OrderModel {
             console.error("Error fetching order details:", error);
             throw error;
         }
+    }
+    // Cancel order with status "Pending"
+    async cancelOrder(id_order){
+        
     }
 }
 
