@@ -6,7 +6,7 @@ class AddressModel {
     }
 
     // CRUD
-    // 1. Create Address 
+    // Create Address 
     async createAddress(name, phone, country, city, district, ward, address, email) {
         const result = await this.pool.query(
             `INSERT INTO address_booking (name, phone, country, city, district, ward, address, email) 
@@ -17,7 +17,7 @@ class AddressModel {
         return result.rows[0];
     }
 
-    // 2. Update address 
+    // Update address 
     async updateAddress({id_address, email}, { name, phone, country, city, district, ward, address }) {
         const result = await this.pool.query(
             `UPDATE address_booking
@@ -29,7 +29,7 @@ class AddressModel {
         return result.rows[0];
     }
 
-    // 3. Delete Address
+    // Delete Address
     async deleteAddress(id_address, email) {
         const result = await this.pool.query(
             'DELETE FROM address_booking WHERE id_address = $1 and email = $2 RETURNING *',
@@ -39,10 +39,21 @@ class AddressModel {
         return result.rows[0];
     }
 
-    // 4. Get All Address
-    async getAllAddress(email) {
-        const result = await this.pool.query('SELECT * FROM address_booking WHERE email = $1',
+    // Get total addresses
+    async getTotalAddress(email) {
+        const result = await this.pool.query(
+            "SELECT COUNT(*) FROM address_booking WHERE email = $1",
             [email]
+        );
+        return parseInt(result.rows[0].count, 10);
+    }
+
+    // Get all addresses
+    async getAllAddress(email, page, per_page) {
+        const offset = (page - 1) * per_page;
+        const result = await this.pool.query(
+            'SELECT * FROM address_booking WHERE email = $1 LIMIT $2 OFFSET $3',
+            [email, per_page, offset]
         );
         return result.rows;
     }
