@@ -48,7 +48,7 @@
               'text-secondary border-secondary-subtle':
                 activeSubTab !== 'neworder' && hoverTab !== 'neworder',
               'border-bottom-0':
-                activeSubTab === 'verify' || hoverTab === 'verify',
+                activeSubTab === 'approved' || hoverTab === 'approved',
             }"
             @mouseenter="hoverTab = 'neworder'"
             @mouseleave="hoverTab = null"
@@ -63,15 +63,15 @@
             class="admin-side-tab my-0 border"
             :class="{
               'text-primary border-primary':
-                activeSubTab === 'verify' || hoverTab === 'verify',
+                activeSubTab === 'approved' || hoverTab === 'approved',
               'text-secondary border-secondary-subtle border-top-0':
-                activeSubTab !== 'verify' && hoverTab !== 'verify',
+                activeSubTab !== 'approved' && hoverTab !== 'approved',
               'border-bottom-0':
                 activeSubTab === 'refuse' || hoverTab === 'refuse',
             }"
-            @mouseenter="hoverTab = 'verify'"
+            @mouseenter="hoverTab = 'approved'"
             @mouseleave="hoverTab = null"
-            @click="switchOrderTab('verify')"
+            @click="switchOrderTab('approved')"
             v-if="activeTab === 'order'"
           >
             <i class="fa-regular fa-circle-check me-2 col-sm-1 text-center"></i> Đơn Hàng

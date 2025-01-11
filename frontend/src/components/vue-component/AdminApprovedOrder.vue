@@ -1,8 +1,8 @@
 <template>
-  <div class="admin-refuse-order-body">
-    <div class="admin-refuse-order-box">
-      <div class="admin-refuse-order-box-title fs-4 fw-bold text-primary mb-4">
-        ĐƠN HÀNG ĐÃ TỪ CHỐI
+  <div class="admin-approved-order-body">
+    <div class="admin-approved-order-box">
+      <div class="admin-approved-order-box-title fs-4 fw-bold text-primary mb-4">
+        ĐƠN HÀNG ĐÃ XÁC NHẬN
       </div>
       <table class="table mx-auto border-dark-subtle" style="width: 95%">
         <thead class="border-bottom-0">
@@ -117,13 +117,13 @@
 
     <div
       class="modal d-block"
-      id="modalAdminRefuseOrder"
+      id="modalAdminApprovedOrder"
       tabindex="-1"
-      aria-labelledby="modalAdminRefuseOrderLabel"
+      aria-labelledby="modalAdminApprovedOrderLabel"
       v-if="isModalVisible"
       @click.self="closeModal"
     >
-      <!-- @click.self="closeModal" là khi nhấn vào vùng tối bên ngoài (là cái modalAdminRefuseOrder) thay vì nhấn vào modal là div con thì sẽ tắt -->
+      <!-- @click.self="closeModal" là khi nhấn vào vùng tối bên ngoài (là cái modalAdminApprovedOrder) thay vì nhấn vào modal là div con thì sẽ tắt -->
       <div
         class="modal-dialog d-flex justify-content-center modal-dialog-centered"
       >
@@ -131,7 +131,7 @@
           <div class="modal-header">
             <h1
               class="modal-title fs-3 text-primary"
-              id="modalAdminRefuseOrderLabel"
+              id="modalAdminApprovedOrderLabel"
             >
               Thông tin chi tiết
             </h1>
@@ -237,11 +237,11 @@
 </template>
 
 <script>
-import "../css-component/admin-refuse-order.css";
+import "../css-component/admin-approved-order.css";
 import axiosInstance from "../../services/axiosInstance.js";
 
 export default {
-  name: "AdminRefuseOrder",
+  name: "AdminApprovedOrder",
   data() {
     return {
       orderList: [],
@@ -267,7 +267,7 @@ export default {
     async handleRouteChange() {
       try {
         const response = await axiosInstance.get(
-          `/admin/order/status-order?status=Refused&page=${this.currentPage}&per_page=${this.per_page}`
+          `/admin/order/status-order?status=Approved&page=${this.currentPage}&per_page=${this.per_page}`
         );
         if (response.status === 200) {
           this.orderList = response.data.orders;
@@ -373,7 +373,7 @@ export default {
       if (page >= 1 && page <= this.total_page) {
         try {
           const response = await axiosInstance.get(
-            `/admin/order/status-order?status=Refused&page=${page}&per_page=${this.per_page}`
+            `/admin/order/status-order?status=Approved&page=${page}&per_page=${this.per_page}`
           );
           if (response.status === 200) {
             this.orderList = response.data.orders;
