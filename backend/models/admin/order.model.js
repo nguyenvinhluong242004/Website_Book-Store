@@ -6,13 +6,39 @@ class OrderModel {
     }
 
     // CRUD
-    // 1. Get all orders
-    async getAllOrders() {
-        const result = await this.pool.query("SELECT * FROM orders");
+    // Get total orders
+    async getTotalOrders() {
+        const result = await this.pool.query("SELECT COUNT(*) FROM orders");
+        return parseInt(result.rows[0].count, 10);
+    }
+    // Get all orders - with pagination
+    async getAllOrders(page, per_page) {
+        const offset = (page - 1) * per_page;
+
+        const result = await this.pool.query(
+            "SELECT * FROM orders LIMIT $1 OFFSET $2",
+            [per_page, offset]
+        );
         return result.rows;
     }
 
-    // 2. Get detail orders
+    async getOrdersByStatus(status, page, per_page) {
+        const offset = (page - 1) * per_page;
+
+        const result = await this.pool.query(
+            "SELECT * FROM orders WHERE status = $3 LIMIT $1 OFFSET $2",
+            [per_page, offset, status]
+        );
+        return result.rows;
+    }
+    async getTotalOrdersByStatus(status) {
+        const result = await this.pool.query("SELECT COUNT(*) FROM orders WHERE status = $1",
+            [status]
+        );
+        return parseInt(result.rows[0].count, 10);
+    }
+
+    // Get detail orders
     async getDetailOrder(id_order) {
         const query = `
             SELECT 
@@ -56,7 +82,7 @@ class OrderModel {
         }
     }
 
-    // 3. Update status of product
+    // Update status of product
     async updateStatus(id_order, status) {
         const result = await this.pool.query(
             `UPDATE orders

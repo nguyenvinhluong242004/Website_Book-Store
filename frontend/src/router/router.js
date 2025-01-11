@@ -22,12 +22,14 @@ import DefaultAddressPage from "../components/vue-component/DefaultAddressPage.v
 import AddressAddPage from "../components/vue-component/AddressAddPage.vue"
 import AddressEditPage from "../components/vue-component/AddressEditPage.vue"
 
-import AdminDashboard from "../components/vue-component/AdminDashboard.vue"
 import AdminUser from "../components/vue-component/AdminUser.vue"
-import AdminProduct from "../components/vue-component/AdminProduct.vue"
 import AdminOrder from "../components/vue-component/AdminOrder.vue"
-import AdminCategory from "../components/vue-component/AdminCategory.vue"
 import AdminPoster from "../components/vue-component/AdminPoster.vue"
+
+//
+import AdminThongKe from "../components/vue-component/Admin-thongke-M.vue"
+import AdminQuanLiSach from "../components/vue-component/Admin-quanlisach-M.vue"
+import AdminQuanLiTheLoai from "../components/vue-component/Admin-quanlitheloai-M.vue"
 
 import AdminNewOrder from "../components/vue-component/AdminNewOrder.vue"
 import AdminVerifyOrder from "../components/vue-component/AdminVerifyOrder.vue"
@@ -70,9 +72,10 @@ const routes = [
     path: "/admin",
     component: AdminApp, // Layout cho admin
     children: [
-      { path: "dashboard", component: AdminDashboard, name: "AdminDashboard" },
+      { path: "dashboard", component: AdminThongKe, name: "AdminDashboard" },
       { path: "user", component: AdminUser, name: "AdminUser" },
-      { path: "product", component: AdminProduct, name: "AdminProduct" },
+      { path: "product", component: AdminQuanLiSach, name: "AdminProduct" },
+      { path: "category", component: AdminQuanLiTheLoai, name: "AdminCategory" },
       {
         path: "order", component: AdminOrder, name: "AdminOrder", children: [
           { path: "neworder", component: AdminNewOrder, name: "AdminNewOrder" },
@@ -82,7 +85,6 @@ const routes = [
           { path: "complete", component: AdminCompleteOrder, name: "AdminCompleteOrder" },
         ],
       },
-      { path: "category", component: AdminCategory, name: "AdminCategory" },
       { path: "poster", component: AdminPoster, name: "AdminPoster" },
     ],
   },

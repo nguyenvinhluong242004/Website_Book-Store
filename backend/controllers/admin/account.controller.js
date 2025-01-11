@@ -1,14 +1,27 @@
 const userModel = require('../../models/user.model');
 
 class AccountController {
-    // [GET]: admin/account
+    // [GET]: admin/account?page=...&per_page=...
     async getAllAccount(req, res) {
         try {
-            const allAccount = await userModel.getAllUsers();
+            const { page = 1, per_page = 12 } = req.query;
+
+            const pageNum = parseInt(page, 10);
+            const perPageNum = parseInt(per_page, 10);
+
+            const allAccounts = await userModel.getAllUsers(pageNum, perPageNum);
+            // console.log('ALL ACCOUNT: ', allAccounts);
+
+            const totalUsers = await userModel.getTotalUsers();
+            const totalPages = Math.ceil(totalUsers / perPageNum);
             // console.log('ALL ACCOUNT: ', allAccount);
             res.status(200).json({
                 message: 'Thông tin toàn bộ tài khoản được lấy thành công',
-                accounts: allAccount
+                page: pageNum,
+                total_page: totalPages,
+                per_page: perPageNum,
+                total: totalUsers,
+                users: allAccounts
             });
         } catch (err) {
             console.error('Lỗi trong quá trình lấy thông tin toàn bộ tài khoản: ', err);

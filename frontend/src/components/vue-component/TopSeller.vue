@@ -11,7 +11,7 @@
         <ProductCard
           v-for="(product, index) in arrayBook"
           :key="index"
-          :img="product.images"
+          :img="product.images[0]"
           :name="product.book_name"
           :old_price="product.list_price"
           :new_price="product.discounted_price"
