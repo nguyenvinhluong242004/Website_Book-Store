@@ -2,6 +2,21 @@ const pool = require('../config/database'); // Kết nối đến cơ sở dữ 
 const pool2 = require('../../backend/config/database'); // Kết nối đến cơ sở dữ liệu ở backend
 
 class StatisticalModel {
+    async getAmount(email) {
+        try {
+            const result = await pool.query(
+                `SELECT TRIM(TO_CHAR(balance, '999G999G999G990')) AS balance
+                 FROM account_bank
+                 WHERE email = $1`, [email]
+            );
+
+            return result.rows.length > 0 ? result.rows[0] : null;
+        } catch (error) {
+            console.error('Error in getAmount:', error.message);
+            throw new Error('Failed to fetch getAmount.');
+        }
+    }
+
     async getAccounts(page = 1, perPage = 10) {
         try {
             // Truy vấn danh sách tài khoản không phải admin
