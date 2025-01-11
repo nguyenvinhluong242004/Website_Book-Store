@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 
 const userModel = require('../../models/user.model');
 const addressModel = require('../../models/user/address.model');
+const orderModel = require('../../models/user/order.model');
 
 
 class AccountController {
@@ -52,18 +53,26 @@ class AccountController {
         }
     }
 
-    // [GET]: /account/address
+    // [GET]: /account/address?page=...&per_page=...
     async getAllAddress(req, res) {
         try {
             const email = req.email;
-            const allAddress = await addressModel.getAllAddress(email);
-            if (allAddress.length === 0) {
-                return res.status(404).json({ message: 'Chưa có địa chỉ' });
-            }
+            const { page = 1, per_page = 12 } = req.query;
+            const pageNum = parseInt(page, 10);
+            const perPageNum = parseInt(per_page, 10);
+
+            const allAddress = await addressModel.getAllAddress(email, pageNum, perPageNum);
+
+            const totalAddress = await addressModel.getTotalAddress(email);
+            const totalPages = Math.ceil(totalAddress / perPageNum);
 
             res.status(200).json({
                 message: 'Địa chỉ được lấy thành công',
-                allAddress: allAddress
+                page: pageNum,
+                total_page: totalPages,
+                per_page: perPageNum,
+                total: totalAddress,
+                orders: allAddress
             });
         } catch (error) {
             console.error('Lỗi trong quá trình lấy địa chỉ: ', error);
@@ -194,6 +203,51 @@ class AccountController {
             res.status(500).json({ message: 'Đã xảy ra lỗi trong quá trình cập nhật mật khẩu' });
         }
     }
+
+    // [GET]: account/my-order
+    async getMyOrder(req, res) {
+        try {
+            const email = req.email;
+            const { page = 1, per_page = 12 } = req.query;
+            const pageNum = parseInt(page, 10);
+            const perPageNum = parseInt(per_page, 10);
+
+            const allOrders = await orderModel.getAllOrdersByEmail(email, pageNum, perPageNum);
+
+            const totalOrders = await orderModel.getTotalOrdersByEmail(email);
+            const totalPages = Math.ceil(totalOrders / perPageNum);
+            // console.log('ALL ORDERS: ', allOrders);
+            res.status(200).json({
+                message: 'Thông tin toàn bộ đơn hàng của bạn được lấy thành công',
+                page: pageNum,
+                total_page: totalPages,
+                per_page: perPageNum,
+                total: totalOrders,
+                orders: allOrders
+            });
+        } catch (err) {
+            console.error('Lỗi trong quá trình lấy thông tin toàn bộ đơn hàng của bạn: ', err);
+            res.status(500).json({ message: 'Đã có lỗi trong quá trình lấy thông tin toàn bộ đơn hàng của bạn' });
+        }
+
+    }
+
+    // [GET]: account/my-order/detail/:id_order
+    async getDetailOrder(req, res) {
+        try {
+            const id_order = req.params.id_order;
+            const detailOrder = await orderModel.getDetailOrder(id_order);
+            // console.log('DETAIL ORDER: ', detailOrder);
+            res.status(200).json({
+                message: 'Chi tiết đơn hàng được lấy thành công',
+                detail: detailOrder
+            });
+        } catch (err) {
+            console.error('Lỗi trong quá trình lấy chi tiết đơn hàng: ', err);
+            res.status(500).json({ message: 'Đã có lỗi trong quá trình lấy chi tiết đơn hàng' });
+        }
+    }
+
 }
 
 module.exports = new AccountController();
