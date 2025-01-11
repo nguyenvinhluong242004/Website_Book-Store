@@ -1,13 +1,25 @@
 const orderModel = require('../../models/admin/order.model');
 
 class OrderController {
-    // [GET]: admin/order
+    // [GET]: admin/order?page=...&per_page=...
     async getAllOrders(req, res) {
         try {
-            const allOrders = await orderModel.getAllOrders();
+            const { page = 1, per_page = 12 } = req.query;
+
+            const pageNum = parseInt(page, 10);
+            const perPageNum = parseInt(per_page, 10);
+
+            const allOrders = await orderModel.getAllOrders(pageNum, perPageNum);
+
+            const totalOrders = await orderModel.getTotalOrders();
+            const totalPages = Math.ceil(totalOrders / perPageNum);
             // console.log('ALL ORDERS: ', allOrders);
             res.status(200).json({
                 message: 'Thông tin toàn bộ đơn hàng được lấy thành công',
+                page: pageNum,
+                total_page: totalPages,
+                per_page: perPageNum,
+                total: totalOrders,
                 orders: allOrders
             });
         } catch (err) {
@@ -32,6 +44,33 @@ class OrderController {
         }
     }
 
+    // [GET]: admin/order/status?status=...&page=...&per_page=...
+    async getOrdersByStatus(req, res){
+        try {
+            const { status, page = 1, per_page = 12 } = req.query;
+
+            const pageNum = parseInt(page, 10);
+            const perPageNum = parseInt(per_page, 10);
+
+            const allOrders = await orderModel.getOrdersByStatus(status, pageNum, perPageNum);
+
+            const totalOrders = await orderModel.getTotalOrdersByStatus(status);
+            const totalPages = Math.ceil(totalOrders / perPageNum);
+            // console.log('ALL ORDERS: ', allOrders);
+            res.status(200).json({
+                message: 'Thông tin toàn bộ đơn hàng được lấy thành công',
+                page: pageNum,
+                total_page: totalPages,
+                per_page: perPageNum,
+                total: totalOrders,
+                orders: allOrders
+            });
+        } catch (err) {
+            console.error('Lỗi trong quá trình lấy thông tin toàn bộ đơn hàng: ', err);
+            res.status(500).json({ message: 'Đã có lỗi trong quá trình lấy thông tin toàn bộ đơn hàng' });
+        }
+    }
+
     // [PATCH]: admin/order/update-status
     async updateStatusOfOrder(req, res) {
         try {
@@ -43,7 +82,6 @@ class OrderController {
             }
 
             const updatedOrder = await orderModel.updateStatus(id_order, status);
-            const allOrders = await orderModel.getAllOrders();
 
             if (!updatedOrder) {
                 return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
@@ -51,13 +89,13 @@ class OrderController {
 
             res.status(200).json({
                 message: 'Trạng thái đơn hàng được cập nhật thành công',
-                updatedOrder: allOrders
+                updatedOrder: updatedOrder
             });
         } catch (error) {
             console.error('Lỗi khi cập nhật trạng thái đơn hàng: ', error);
             res.status(500).json({ message: 'Đã có lỗi trong quá trình cập nhật trạng thái đơn hàng' });
         }
-    } 
+    }
 }
 
 module.exports = new OrderController();

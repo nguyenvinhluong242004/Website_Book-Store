@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const handleNewUser = async (req, res) => {
     // console.log('BODY CLIENT SENT: ', req.body);
     const { email, name, phone, password, confirmedPassword } = req.body;
+    console.log('REQ BODY: ', req.body);
     // Mã 400: Lỗi phía client
     if (!email || !password || !confirmedPassword || !name || !phone) return res.status(400).json({ 'message': 'Các trường đều phải được nhập' });
 
