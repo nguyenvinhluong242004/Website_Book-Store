@@ -6,7 +6,7 @@ class UserModel {
     }
 
     // CRUD
-    // 1. Create User - REGISTER 
+    // Create User - REGISTER 
     async createUser(email, name, phone, role, passwordorgoogleid) {
         const result = await this.pool.query(
             `INSERT INTO users (email, name, phone, role, passwordorgoogleid) 
@@ -17,7 +17,7 @@ class UserModel {
         return result.rows[0];
     }
 
-    // 2. Get user by Email - FIND CONFLICT
+    // Get user by Email - FIND CONFLICT
     async getUserByEmail(email) {
         const result = await this.pool.query(
             'SELECT * FROM Users WHERE Email = $1',
@@ -26,7 +26,7 @@ class UserModel {
         return result.rows[0];
     }
 
-    // 3. Update User - Profile
+    // Update User - Profile
     async updateUser(email, { name, phone, gender, birthday }) {
         const result = await this.pool.query(
             `UPDATE users 
@@ -38,7 +38,7 @@ class UserModel {
         return result.rows[0];
     }
 
-    // 4. Delete User
+    // Delete User
     async deleteUser(email) {
         const result = await this.pool.query(
             'DELETE FROM users WHERE email = $1 RETURNING *',
@@ -47,13 +47,24 @@ class UserModel {
         return result.rows[0];
     }
 
-    // 5. Get All Users
-    async getAllUsers() {
-        const result = await this.pool.query("SELECT * FROM users WHERE role = '1'");
+    // Get total users
+    async getTotalUsers() {
+        const result = await this.pool.query("SELECT COUNT(*) FROM users WHERE role = '1'");
+        return parseInt(result.rows[0].count, 10);
+    }
+
+    // Get All Users
+    async getAllUsers(page, per_page) {
+        const offset = (page - 1) * per_page;
+
+        const result = await this.pool.query(
+            "SELECT * FROM users WHERE role = '1' LIMIT $1 OFFSET $2",
+            [per_page, offset]
+        );
         return result.rows;
     }
 
-    // 6. Get User by Refreshtoken
+    // Get User by Refreshtoken
     async getUserByRefreshToken(refreshToken) {
         const result = await this.pool.query(
             'SELECT * FROM users WHERE refresh_token = $1',
@@ -62,7 +73,7 @@ class UserModel {
         return result.rows[0];
     }
 
-    // 7. Update user - refreshtoken
+    // Update user - refreshtoken
     async updateRefreshToken(email, refreshToken) {
         const result = await this.pool.query(
             `UPDATE users 
@@ -74,7 +85,7 @@ class UserModel {
         return result.rows[0];
     }
 
-    // 8. Get profile user 
+    // Get profile user 
     async getProfileByEmail(email) {
         const result = await this.pool.query(
             'SELECT name, phone, email, gender, birth_date FROM Users WHERE email = $1',
@@ -83,7 +94,7 @@ class UserModel {
         return result.rows[0];
     }
 
-    // 9. Change password
+    // Change password
     async changePassword(newPassword, email) {
         const result = await this.pool.query(
             `UPDATE users 
