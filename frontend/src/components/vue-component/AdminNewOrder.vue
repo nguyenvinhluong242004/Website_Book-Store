@@ -45,7 +45,8 @@
             <td class="align-content-center text-center">{{ order.method }}</td>
             <td class="align-content-center text-center">
               <select
-                class="form-select" style="cursor: pointer"
+                class="form-select"
+                style="cursor: pointer"
                 aria-label="select status"
                 v-model="order.status"
                 @change="updateStatus(order.id_order, order.status)"
@@ -59,7 +60,7 @@
             </td>
             <td class="align-content-center">
               <div
-              type="button"
+                type="button"
                 class="text-primary text-center fw-bold"
                 @click="showModal(order.id_order)"
               >
@@ -69,6 +70,49 @@
           </tr>
         </tbody>
       </table>
+      <nav v-if="total_page > 1" class="mx-auto mt-3" style="width: 95%">
+        <ul class="pagination">
+          <li class="page-item" :class="{ disabled: currentPage === 1 }">
+            <a
+              class="page-link"
+              href="#"
+              aria-label="Previous"
+              @click.prevent="goToPage(currentPage - 1)"
+            >
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+
+          <li
+            class="page-item"
+            v-for="page in pages"
+            :key="page"
+            :class="{ active: page === currentPage, disabled: page === '...' }"
+          >
+            <a
+              class="page-link"
+              href="#"
+              @click.prevent="page !== '...' && goToPage(page)"
+            >
+              {{ page }}
+            </a>
+          </li>
+
+          <li
+            class="page-item"
+            :class="{ disabled: currentPage === total_page }"
+          >
+            <a
+              class="page-link"
+              href="#"
+              aria-label="Next"
+              @click.prevent="goToPage(currentPage + 1)"
+            >
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
 
     <div
@@ -201,6 +245,10 @@ export default {
   data() {
     return {
       orderList: [],
+      currentPage: 1,
+      total_page: 0,
+      per_page: 12,
+      total: 0,
 
       isModalVisible: false,
 
@@ -218,9 +266,15 @@ export default {
   methods: {
     async handleRouteChange() {
       try {
-        const response = await axiosInstance.get("/admin/order");
+        const response = await axiosInstance.get(
+          `/admin/order/status-order?status=Pending&page=${this.currentPage}&per_page=${this.per_page}`
+        );
         if (response.status === 200) {
           this.orderList = response.data.orders;
+          this.currentPage = response.data.page;
+          this.total_page = response.data.total_page;
+          this.per_page = response.data.per_page;
+          this.total = response.data.total;
         }
       } catch (error) {
         console.log(error);
@@ -255,7 +309,7 @@ export default {
           }
         );
         if (response.status === 200) {
-          this.orderList = response.data.updatedOrder;
+          this.handleRouteChange();
         }
       } catch (error) {
         if (error.response) {
@@ -313,6 +367,69 @@ export default {
 
     closeModal() {
       this.isModalVisible = false;
+    },
+
+    async goToPage(page) {
+      if (page >= 1 && page <= this.total_page) {
+        try {
+          const response = await axiosInstance.get(
+            `/admin/order/status-order?status=Pending&page=${page}&per_page=${this.per_page}`
+          );
+          if (response.status === 200) {
+            this.orderList = response.data.orders;
+            this.currentPage = response.data.page;
+            this.total_page = response.data.total_page;
+            this.per_page = response.data.per_page;
+            this.total = response.data.total;
+          }
+        } catch (error) {
+          console.log(error);
+          if (error.response.status === 401) {
+            // Không có accesstoken
+            this.$router.push("/login");
+          }
+          if (error.response.status === 403) {
+            // refreshtoken hết hạn
+            alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+            this.$router.push("/login");
+          }
+          if (error.response.status === 500) {
+            // Lỗi server
+            alert(error);
+            this.$router.push("/login");
+          }
+        }
+      }
+    },
+  },
+  computed: {
+    pages() {
+      const maxVisiblePages = 5; // Số trang hiển thị tối đa
+      const total_page = this.total_page;
+      const currentPage = this.currentPage;
+
+      const pages = [];
+      if (total_page <= maxVisiblePages) {
+        for (let i = 1; i <= total_page; i++) {
+          pages.push(i);
+        }
+        return pages;
+      }
+
+      const half = Math.floor(maxVisiblePages / 2);
+
+      const startPage = Math.max(1, currentPage - half);
+      const endPage = Math.min(total_page, currentPage + half);
+
+      if (startPage > 1) pages.push(1);
+      if (startPage > 2) pages.push("...");
+
+      for (let i = startPage; i <= endPage; i++) pages.push(i);
+
+      if (endPage < total_page - 1) pages.push("...");
+      if (endPage < total_page) pages.push(total_page);
+
+      return pages;
     },
   },
 };

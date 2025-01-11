@@ -22,17 +22,17 @@ import DefaultAddressPage from "../components/vue-component/DefaultAddressPage.v
 import AddressAddPage from "../components/vue-component/AddressAddPage.vue"
 import AddressEditPage from "../components/vue-component/AddressEditPage.vue"
 
+
+
 import AdminUser from "../components/vue-component/AdminUser.vue"
 import AdminOrder from "../components/vue-component/AdminOrder.vue"
 import AdminPoster from "../components/vue-component/AdminPoster.vue"
-
-//
 import AdminThongKe from "../components/vue-component/Admin-thongke-M.vue"
 import AdminQuanLiSach from "../components/vue-component/Admin-quanlisach-M.vue"
 import AdminQuanLiTheLoai from "../components/vue-component/Admin-quanlitheloai-M.vue"
 
 import AdminNewOrder from "../components/vue-component/AdminNewOrder.vue"
-import AdminVerifyOrder from "../components/vue-component/AdminVerifyOrder.vue"
+import AdminApprovedOrder from "../components/vue-component/AdminApprovedOrder.vue"
 import AdminRefuseOrder from "../components/vue-component/AdminRefuseOrder.vue"
 import AdminDeliveryOrder from "../components/vue-component/AdminDeliveryOrder.vue"
 import AdminCompleteOrder from "../components/vue-component/AdminCompleteOrder.vue"
@@ -79,7 +79,7 @@ const routes = [
       {
         path: "order", component: AdminOrder, name: "AdminOrder", children: [
           { path: "neworder", component: AdminNewOrder, name: "AdminNewOrder" },
-          { path: "verify", component: AdminVerifyOrder, name: "AdminVerifyOrder" },
+          { path: "approved", component: AdminApprovedOrder, name: "AdminApprovedOrder" },
           { path: "refuse", component: AdminRefuseOrder, name: "AdminRefuseOrder" },
           { path: "delivery", component: AdminDeliveryOrder, name: "AdminDeliveryOrder" },
           { path: "complete", component: AdminCompleteOrder, name: "AdminCompleteOrder" },
