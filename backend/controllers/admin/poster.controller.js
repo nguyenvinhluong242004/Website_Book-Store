@@ -1,13 +1,24 @@
 const posterModel = require('../../models/admin/poster.model');
 
 class PosterController {
-    // [GET]: admin/poster
+    // [GET]: admin/poster?page=...&per_page=...
     async getAllPoster(req, res) {
         try {
-            const allPosters = await posterModel.getAllPosters();
+            const { page = 1, per_page = 6 } = req.query;
+            const pageNum = parseInt(page, 10);
+            const perPageNum = parseInt(per_page, 10);
+
+            const allPosters = await posterModel.getAllPosters(pageNum, perPageNum);
+
+            const totalPosters = await posterModel.getTotalPosters();
+            const totalPages = Math.ceil(totalPosters / perPageNum);
             // console.log('ALL POSTERS: ', allPosters);
             res.status(200).json({
                 message: 'Thông tin toàn bộ posters được lấy thành công',
+                page: pageNum,
+                total_page: totalPages,
+                per_page: perPageNum,
+                total: totalPosters,
                 posters: allPosters
             });
         } catch (err) {
@@ -21,7 +32,7 @@ class PosterController {
         try {
             const { name, product_link } = req.body;
             // console.log('ADD POSTER BODY: ', req.body);
-            
+
             if (!name || !product_link) {
                 return res.status(400).json({ message: 'Mọi trường đều phải được nhập' });
             }
@@ -30,10 +41,10 @@ class PosterController {
             if (req.file) {
                 // Lấy URL của file từ Cloudinary
                 const fileUrl = req.file.path;  // Lưu URL của ảnh
-    
+
                 // Gọi model để thêm poster vào database với URL ảnh từ Cloudinary
                 const newPoster = await posterModel.add(name, fileUrl, product_link);
-    
+
                 res.status(200).json({
                     message: 'Poster được thêm thành công',
                     poster: newPoster
