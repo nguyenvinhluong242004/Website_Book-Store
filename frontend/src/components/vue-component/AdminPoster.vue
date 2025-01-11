@@ -20,6 +20,7 @@
           <div class="col-sm-10">{{ poster.name }}</div>
           <div class="col-sm-1 text-end">
             <i
+              type="button"
               class="fa-solid fa-trash-can text-danger"
               @click="deletePoster(poster.id_poster)"
             ></i>
@@ -101,6 +102,7 @@
                 <div class="col-sm-11">
                   <div
                     class="admin-poster-image-ctn"
+                    style="cursor: pointer"
                     v-if="!previewImage"
                     @click="toggleFileInput"
                   >
@@ -336,13 +338,13 @@ export default {
         }
       }
     },
-    resetForm(){
+    resetForm() {
       this.name = null;
       this.product_link = null;
       this.image = null;
       this.previewImage = null;
       this.$refs.imagePosterInput.value = "";
-    }
+    },
   },
 };
 </script>

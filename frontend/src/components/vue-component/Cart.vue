@@ -6,6 +6,7 @@
           <input
             class="form-check-input"
             type="checkbox"
+            style="cursor: pointer"
             id="cbSelectAll"
             v-model="selectAll"
             @change="handleChangeSelectAll"
@@ -16,9 +17,7 @@
         </div>
         <div class="col-2 text-center">Số lượng</div>
         <div class="col-2 text-center">Thành tiền</div>
-        <div class="col-1 text-center">
-          <i class="fa-solid fa-trash-can"></i>
-        </div>
+        <div class="col-1 text-center"></div>
       </div>
       <div class="cart-detail-body">
         <div v-if="listProduct.length !== 0">
@@ -31,6 +30,7 @@
               <input
                 class="form-check-input"
                 type="checkbox"
+                style="cursor: pointer"
                 :value="product.id_book"
                 v-model="selectedProducts"
               />
@@ -57,6 +57,7 @@
               <div class="cart-item-quantity-box text-muted">
                 <i
                   class="fa-solid fa-minus"
+                  type="button"
                   @click="
                     updateQuantity(
                       product.id_book,
@@ -68,6 +69,7 @@
                 <div class="fs-5 mx-3">{{ product.quantity }}</div>
                 <i
                   class="fa-solid fa-plus"
+                  type="button"
                   @click="
                     updateQuantity(
                       product.id_book,
@@ -86,6 +88,7 @@
             <div class="col-1 d-flex justify-content-center align-items-center">
               <i
                 class="fa-solid fa-trash-can"
+                type="button"
                 @click="deleteProduct(product.id_book)"
               ></i>
             </div>
@@ -246,10 +249,10 @@ export default {
       }
     },
 
-    handleChangeSelectAll(){
+    handleChangeSelectAll() {
       if (this.selectAll) {
         // Nếu "Chọn tất cả", gán selectedItems cho tất cả ID sản phẩm
-        this.selectedProducts = this.listProduct.map(item => item.id_book);
+        this.selectedProducts = this.listProduct.map((item) => item.id_book);
       } else {
         // Nếu "Bỏ chọn tất cả", xóa hết các mục trong selectedItems
         this.selectedProducts = [];

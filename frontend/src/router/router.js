@@ -15,6 +15,7 @@ import CheckoutPage from "../components/vue-component/CheckoutPage.vue"
 import InfoTab from "../components/vue-component/InfoTab.vue"
 import AddressTab from "../components/vue-component/AddressTab.vue"
 import OrderTab from "../components/vue-component/OrderTab.vue"
+import BankAccountTab from "../components/vue-component/BankAccountTab.vue"
 import ChangePasswordTab from "../components/vue-component/ChangePasswordTab.vue"
 
 import DefaultAddressPage from "../components/vue-component/DefaultAddressPage.vue"
@@ -29,6 +30,7 @@ import AdminCategory from "../components/vue-component/AdminCategory.vue"
 import AdminPoster from "../components/vue-component/AdminPoster.vue"
 
 import AdminNewOrder from "../components/vue-component/AdminNewOrder.vue"
+import AdminVerifyOrder from "../components/vue-component/AdminVerifyOrder.vue"
 import AdminRefuseOrder from "../components/vue-component/AdminRefuseOrder.vue"
 import AdminDeliveryOrder from "../components/vue-component/AdminDeliveryOrder.vue"
 import AdminCompleteOrder from "../components/vue-component/AdminCompleteOrder.vue"
@@ -54,6 +56,7 @@ const routes = [
             ],
           },
           { path: "order", component: OrderTab, name: "OrderTab" },
+          { path: "bankaccount", component: BankAccountTab, name: "BankAccountTab" },
           { path: "changePW", component: ChangePasswordTab, name: "ChangePasswordTab" },
         ],
       },
@@ -73,6 +76,7 @@ const routes = [
       {
         path: "order", component: AdminOrder, name: "AdminOrder", children: [
           { path: "neworder", component: AdminNewOrder, name: "AdminNewOrder" },
+          { path: "verify", component: AdminVerifyOrder, name: "AdminVerifyOrder" },
           { path: "refuse", component: AdminRefuseOrder, name: "AdminRefuseOrder" },
           { path: "delivery", component: AdminDeliveryOrder, name: "AdminDeliveryOrder" },
           { path: "complete", component: AdminCompleteOrder, name: "AdminCompleteOrder" },
