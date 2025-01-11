@@ -55,6 +55,20 @@
         <div
           class="profile-side-tab border rounded-3"
           :class="{
+            'border-white': activeTab !== 'bankaccount',
+            'text-primary border-primary': activeTab === 'bankaccount',
+            'text-primary': hoverTab === 'bankaccount',
+          }"
+          @mouseenter="hoverTab = 'bankaccount'"
+          @mouseleave="hoverTab = null"
+          @click="switchTab('bankaccount')"
+        >
+          <i class="fa-solid fa-money-check me-2"></i> Tài khoản ngân hàng
+        </div>
+
+        <div
+          class="profile-side-tab border rounded-3"
+          :class="{
             'border-white': activeTab !== 'changePW',
             'text-primary border-primary': activeTab === 'changePW',
             'text-primary': hoverTab === 'changePW',
@@ -78,6 +92,7 @@
             <span v-if="action === 'edit'">Sửa Địa Chỉ</span>
           </span>
           <span v-if="activeTab === 'order'">Đơn Hàng Của Tôi</span>
+          <span v-if="activeTab === 'bankaccount'">Tài Khoản Ngân Hàng</span>
           <span v-if="activeTab === 'changePW'">Đổi Mật Khẩu</span>
         </div>
         <router-link to="/profile/address/add">

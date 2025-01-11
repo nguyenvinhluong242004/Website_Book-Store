@@ -1,14 +1,12 @@
-.admin-user-body {
+.admin-delivery-order-body {
     padding: 20px 30px;
 }
 
-.admin-user-box {
+.admin-delivery-order-box {
     background: white;
     width: 100%;
-    min-height: 300px;
 
     padding: 20px 30px;
 
     border-radius: 10px;
 }
-

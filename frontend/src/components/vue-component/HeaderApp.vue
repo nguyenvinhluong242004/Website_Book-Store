@@ -23,13 +23,13 @@
         @mouseenter="notiVisible = true"
         @mouseleave="notiVisible = false"
       >
-        <i class="fas fa-bell"></i>
+        <i type="button" class="fas fa-bell"></i>
         <div v-if="notiVisible" class="notiBox">
           <div class="notiBoxHeader">
             <div>Thông báo</div>
-            <div class="notiBoxTxtAllNoti">Xem tất cả</div>
+            <div class="notiBoxTxtAllNoti" type="button">Xem tất cả</div>
           </div>
-          <div class="notiItemList">
+          <!-- <div class="notiItemList">
             <div class="notiItem">
               <div class="notiItemTitle">Thông báo số 1</div>
               <div class="notiItemContent">hello Thong báo đây lo</div>
@@ -54,23 +54,27 @@
               <div class="notiItemTitle">Thông báo số 5</div>
               <div class="notiItemContent">hello haizzz đây lo</div>
             </div>
+          </div> -->
+          <div class="text-secondary p-3 fs-5 fw-bold">
+            Chức năng chưa phát triển
           </div>
         </div>
       </div>
       <div class="iconCart">
-        <i class="fas fa-shopping-cart" @click="goToCart"></i>
+        <i type="button" class="fas fa-shopping-cart" @click="goToCart"></i>
       </div>
       <div
         class="iconUser"
         @mouseenter="userVisible = true"
         @mouseleave="userVisible = false"
       >
-        <i class="fas fa-user" @click="goToProfileInfo"></i>
+        <i type="button" class="fas fa-user" @click="goToProfileInfo"></i>
         <div v-if="userVisible" class="userBox">
           <div class="userBoxLogined" v-if="name">
             <div
               class="userBoxHeader"
               :class="{ 'text-primary': userHoverOption === 'info' }"
+              style="cursor: pointer"
               @mouseenter="userHoverOption = 'info'"
               @mouseleave="userHoverOption = null"
               @click="goToProfileInfo"
@@ -96,6 +100,7 @@
             <div
               class="userItem"
               :class="{ 'text-primary': userHoverOption === 'order' }"
+              style="cursor: pointer"
               @mouseenter="userHoverOption = 'order'"
               @mouseleave="userHoverOption = null"
               @click="goToProfileOrder"
@@ -106,6 +111,7 @@
             <div
               class="userItem"
               :class="{ 'text-primary': userHoverOption === 'address' }"
+              style="cursor: pointer"
               @mouseenter="userHoverOption = 'address'"
               @mouseleave="userHoverOption = null"
               @click="goToProfileAddress"
@@ -116,6 +122,7 @@
             <div
               class="userItem"
               :class="{ 'text-primary': userHoverOption === 'changePW' }"
+              style="cursor: pointer"
               @mouseenter="userHoverOption = 'changePW'"
               @mouseleave="userHoverOption = null"
               @click="goToProfileChangepw"
@@ -126,6 +133,7 @@
             <div
               class="userItem"
               :class="{ 'text-primary': userHoverOption === 'logout' }"
+              style="cursor: pointer"
               @click="handleLogOut"
               @mouseenter="userHoverOption = 'logout'"
               @mouseleave="userHoverOption = null"
@@ -215,7 +223,10 @@ export default {
           this.$emit("user-loaded", user);
           console.log(user);
 
-          if (this.$route.path === "/login" || this.$route.path === "/register") {
+          if (
+            this.$route.path === "/login" ||
+            this.$route.path === "/register"
+          ) {
             // Nếu người dùng đã đăng nhập và đang ở login/register, điều hướng đến trang chủ
             this.$router.push("/");
           }

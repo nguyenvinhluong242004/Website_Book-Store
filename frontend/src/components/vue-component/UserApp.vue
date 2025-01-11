@@ -1,5 +1,5 @@
 <template>
-  <div id="user-app-root">
+  <div id="user-app-root" style="cursor: default">
     <div v-if="notification" class="notification">{{ notification }}</div>
     
     <HeaderApp @user-loaded="setUser"/>
