@@ -6,10 +6,10 @@
           <input
             class="form-check-input"
             type="checkbox"
-            value=""
+            style="cursor: pointer"
             id="cbSelectAll"
-            :checked="selectAll"
-            @change="toggleSelectAll"
+            v-model="selectAll"
+            @change="handleChangeSelectAll"
           />
           <label class="form-check-label ms-3" for="cbSelectAll"
             >Tất cả sản phẩm</label
@@ -17,9 +17,7 @@
         </div>
         <div class="col-2 text-center">Số lượng</div>
         <div class="col-2 text-center">Thành tiền</div>
-        <div class="col-1 text-center">
-          <i class="fa-solid fa-trash-can"></i>
-        </div>
+        <div class="col-1 text-center"></div>
       </div>
       <div class="cart-detail-body">
         <div v-if="listProduct.length !== 0">
@@ -32,8 +30,9 @@
               <input
                 class="form-check-input"
                 type="checkbox"
-                value=""
-                :id="index"
+                style="cursor: pointer"
+                :value="product.id_book"
+                v-model="selectedProducts"
               />
               <img :src="product.image" alt="product image" />
               <div
@@ -58,12 +57,26 @@
               <div class="cart-item-quantity-box text-muted">
                 <i
                   class="fa-solid fa-minus"
-                  @click="updateQuantity(product.id_book, product.quantity - 1, product.available_quantity)"
+                  type="button"
+                  @click="
+                    updateQuantity(
+                      product.id_book,
+                      product.quantity - 1,
+                      product.available_quantity
+                    )
+                  "
                 ></i>
                 <div class="fs-5 mx-3">{{ product.quantity }}</div>
                 <i
                   class="fa-solid fa-plus"
-                  @click="updateQuantity(product.id_book, product.quantity + 1, product.available_quantity)"
+                  type="button"
+                  @click="
+                    updateQuantity(
+                      product.id_book,
+                      product.quantity + 1,
+                      product.available_quantity
+                    )
+                  "
                 ></i>
               </div>
             </div>
@@ -75,6 +88,7 @@
             <div class="col-1 d-flex justify-content-center align-items-center">
               <i
                 class="fa-solid fa-trash-can"
+                type="button"
                 @click="deleteProduct(product.id_book)"
               ></i>
             </div>
@@ -95,7 +109,19 @@
         Thành tiền
         <div class="ms-auto text-danger">{{ formatPrice(totalPrice) }}</div>
       </div>
-      <button type="button" class="btn btn-danger w-100">Thanh toán</button>
+      <button
+        type="button"
+        class="btn w-100"
+        :class="
+          selectedProducts.length > 0 && listProduct.length > 0
+            ? 'btn-danger'
+            : 'btn-secondary'
+        "
+        @click="handleCheckout"
+        :disabled="listProduct.length === 0 || selectedProducts.length === 0"
+      >
+        Thanh toán
+      </button>
     </div>
   </div>
 </template>
@@ -109,6 +135,10 @@ export default {
   data() {
     return {
       listProduct: [],
+
+      selectAll: false,
+
+      selectedProducts: [],
     };
   },
   mounted() {
@@ -117,6 +147,10 @@ export default {
   watch: {
     $route() {
       this.handleRouteChange();
+    },
+    // Giám sát mảng selectedProducts để cập nhật selectAll
+    selectedProducts(newVal) {
+      this.selectAll = newVal.length === this.listProduct.length;
     },
   },
   methods: {
@@ -129,7 +163,7 @@ export default {
           });
 
           if (response.status === 200) {
-            this.listProduct=response.data.cart;
+            this.listProduct = response.data.cart;
             // this.$router.push("/").then(() => {
             //   this.$router.push("/cart");
             // });
@@ -165,7 +199,7 @@ export default {
         });
 
         if (response.status === 200) {
-          this.listProduct=response.data.cart;
+          this.listProduct = response.data.cart;
           // this.$router.push("/").then(() => {
           //   this.$router.push("/cart");
           // });
@@ -213,6 +247,26 @@ export default {
           alert("Lỗi mạng: Không thể kết nối đến server.");
         }
       }
+    },
+
+    handleChangeSelectAll() {
+      if (this.selectAll) {
+        // Nếu "Chọn tất cả", gán selectedItems cho tất cả ID sản phẩm
+        this.selectedProducts = this.listProduct.map((item) => item.id_book);
+      } else {
+        // Nếu "Bỏ chọn tất cả", xóa hết các mục trong selectedItems
+        this.selectedProducts = [];
+      }
+    },
+
+    handleCheckout() {
+      if (this.selectedProducts.length === 0) {
+        alert("Vui lòng chọn sản phẩm để thanh toán.");
+        return;
+      }
+
+      // Chuyển hướng sang trang thanh toán
+      this.$router.push("/checkout");
     },
   },
   computed: {

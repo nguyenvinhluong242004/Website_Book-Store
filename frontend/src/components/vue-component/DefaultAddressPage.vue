@@ -29,14 +29,20 @@
             {{ address.country }}
           </div>
         </div>
-        <div class="d-flex text-secondary">
+        <div class="d-flex">
           <span
+            type="button"
             class="text-primary pe-2 text-opacity-75 border-end border-2 border-secondary-subtle"
             @click="editAddress(address)"
-            >Sửa</span
-          ><span class="ps-2" @click="deleteAddress(address.id_address)"
-            ><i class="fa-solid fa-trash-can"></i
-          ></span>
+            >Sửa
+          </span>
+          <span
+            type="button"
+            class="ps-2"
+            @click="deleteAddress(address.id_address)"
+          >
+            <i class="fa-solid fa-trash-can text-danger"></i>
+          </span>
         </div>
       </div>
 

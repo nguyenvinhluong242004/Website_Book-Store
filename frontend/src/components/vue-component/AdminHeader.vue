@@ -1,9 +1,9 @@
 <template>
   <div class="admin-header">
-    <div class="admin-header-logo-box text-primary">
-      <router-link to="/admin"><i class="fas fa-book"></i></router-link>
+    <router-link to="/admin/dashboard"><div class="admin-header-logo-box text-primary">
+      <i class="fas fa-book"></i>
       <div class="admin-header-logo-text">BÁCH KHOA SÁCH</div>
-    </div>
+    </div></router-link>
     <div class="col border-2 border-start border-end h-50"></div>
     <div class="admin-header-user-box">
       <img
@@ -17,6 +17,7 @@
         :class="{ 'text-primary': hoverLogout, 'text-muted': !hoverLogout }"
         @mouseenter="hoverLogout = true"
         @mouseleave="hoverLogout = false"
+        style="cursor: pointer"
       ></i>
     </div>
   </div>

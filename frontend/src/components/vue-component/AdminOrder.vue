@@ -1,5 +1,5 @@
 <template>
-  <div>order</div>
+  <router-view/>
 </template>
 
 <script>
