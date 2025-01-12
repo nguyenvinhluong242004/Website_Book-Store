@@ -12,10 +12,8 @@ const detailBookRoutes = require('./detailBook.routes');
 const bookTypeRoutes = require('./bookType.routes');
 const homeRoutes = require('./home.routes');
 
-// Protected routes
-router.use('/account', verifyJWT, verifyRole('user'), accountRoutes);
-// Non-Protected routes
 router.use('/cart', cartRoutes);
+router.use('/account', verifyJWT, verifyRole('user'), accountRoutes);
 router.use('/detail-book', detailBookRoutes); 
 router.use('/get-list', bookTypeRoutes); 
 router.use('/search', searchRoutes);
