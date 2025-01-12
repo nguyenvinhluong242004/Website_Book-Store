@@ -73,7 +73,10 @@ const handleLogin = async (req, res) => {
                 console.log('Dữ liệu giỏ hàng tạm được thêm vào database');
             }
 
-             return res.status(200).json({ accessToken });
+             return res.status(200).json({ 
+                accessToken,
+                role: foundUser.role
+            });
         } else {
             // Mã 401: Lỗi xác thực
             return res.status(401).json({ 'message': 'Mật khẩu không chính xác' });

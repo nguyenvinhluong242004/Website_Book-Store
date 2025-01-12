@@ -10,7 +10,7 @@ function route(app) {
     app.use('/', authRoutes); 
     app.use('/', googleRoutes);
     app.use('/', userRoutes); 
-    app.use('/admin', adminRoutes); 
+    app.use('/admin', verifyJWT, verifyRole('admin'), adminRoutes); 
 }
 
 module.exports = route;
