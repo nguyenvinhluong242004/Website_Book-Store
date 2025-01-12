@@ -75,7 +75,7 @@
 import "../css-component/admin-thong-ke-M.css";
 import BarChart from "../vue-component/Admin-bieudocot_M.vue";
 import PieChart from "../vue-component/Admin-bieudotron-M.vue";
-import axios from "axios";
+import axiosInstance from "../../services/axiosInstance.js";
 
 export default {
   name: "AdminDashboard",
@@ -122,23 +122,56 @@ export default {
     },
     async getData(year) {
       console.log("namw trong hamf gecth:", year);
+
       try {
-        const response = await axios.get(`/api/admin?year=${year}`);
-        const data = response.data;
-        console.log(data);
+        const response = await axiosInstance.get(`/admin?year=${year}`);
 
-        this.total_users = data.stats.total_users;
-        this.total_revenue = data.stats.total_revenue;
-        this.total_products_sold = data.stats.total_products_sold;
+        if (response.status === 200) {
+          this.total_users = response.data.stats.total_users;
+          this.total_revenue = response.data.stats.total_revenue;
+          this.total_products_sold = response.data.stats.total_products_sold;
 
-        this.revenueLabels = response.data.revenueLabels;
-        this.revenueData = response.data.revenueData;
-        console.log(this.revenueData);
+          this.revenueLabels = response.data.revenueLabels;
+          this.revenueData = response.data.revenueData;
+          console.log(this.revenueData);
 
-        this.productsSold = response.data.productsSold;
+          this.productsSold = response.data.productsSold;
+        }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.log(error);
+        if (error.response.status === 401) {
+          // Không có accesstoken
+          this.$router.push("/login");
+        }
+        if (error.response.status === 403) {
+          // refreshtoken hết hạn
+          alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          this.$router.push("/login");
+        }
+        if (error.response.status === 500) {
+          // Lỗi server
+          alert(error);
+          this.$router.push("/login");
+        }
       }
+
+      // try {
+      //   const response = await axios.get(`/api/admin?year=${year}`);
+      //   const data = response.data;
+      //   console.log(data);
+
+      //   this.total_users = data.stats.total_users;
+      //   this.total_revenue = data.stats.total_revenue;
+      //   this.total_products_sold = data.stats.total_products_sold;
+
+      //   this.revenueLabels = response.data.revenueLabels;
+      //   this.revenueData = response.data.revenueData;
+      //   console.log(this.revenueData);
+
+      //   this.productsSold = response.data.productsSold;
+      // } catch (error) {
+      //   console.error("Error fetching data:", error);
+      // }
     },
   },
   async created() {
