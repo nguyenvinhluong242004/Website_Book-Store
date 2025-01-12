@@ -8,7 +8,7 @@ class CategoriesController {
         try {
             const result = await CategoriesModel.getAllCategories(page, per_page);
 
-            res.json({
+            res.status(200).json({
                 success: true,
                 message: 'Thành công',
                 per_page: result.per_page,
@@ -31,14 +31,14 @@ class CategoriesController {
             const result = await CategoriesModel.addCategory(name);
 
             if (result) {
-                return res.json({
+                return res.status(200).json({
                     success: true,
                     message: 'Thành công',
                     result
                 });
             }
             console.log('fail')
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'Thất bại'
             });
@@ -58,14 +58,14 @@ class CategoriesController {
             const result = await CategoriesModel.updateCategoryName(id, name);
 
             if (result) {
-                return res.json({
+                return res.status(200).json({
                     success: true,
                     message: 'Thành công',
                     result
                 });
             }
             console.log('fail')
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: 'Thất bại'
             });
@@ -82,7 +82,7 @@ class CategoriesController {
         try {
             const result = await CategoriesModel.deleteCategory(id);
 
-            res.json({
+            res.status(200).json({
                 success: true,
                 message: 'Thành công',
                 result
