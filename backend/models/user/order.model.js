@@ -66,9 +66,29 @@ class OrderModel {
             throw error;
         }
     }
+
     // Cancel order with status "Pending"
-    async cancelOrder(id_order){
-        
+    async cancelOrder(id_order) {
+
+    }
+
+    async getLastIdOrder() {
+        const query = 'SELECT ID_Order FROM Orders ORDER BY Created_At DESC LIMIT 1';
+        try {
+            const result = await pool.query(query);
+
+            if (result.rows.length > 0) {
+                const lastOrderId = parseInt(result.rows[0].id_order, 10); 
+                console.log('Last order ID:', lastOrderId);
+                return lastOrderId;
+            } else {
+                // console.log('No orders found.');
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching last order ID:', error);
+            throw error;
+        }
     }
 }
 
