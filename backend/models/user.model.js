@@ -5,7 +5,6 @@ class UserModel {
         this.pool = pool;
     }
 
-    // CRUD
     // Create User - REGISTER 
     async createUser(email, name, phone, role, passwordorgoogleid) {
         const result = await this.pool.query(
@@ -13,6 +12,17 @@ class UserModel {
              VALUES ($1, $2, $3, $4, $5) 
              RETURNING *`,
             [email, name, phone, role, passwordorgoogleid]
+        );
+        return result.rows[0];
+    }
+
+    // Create usser with google strategy
+    async createUserWithGoogle(email, name, role, passwordorgoogleid){
+        const result = await this.pool.query(
+            `INSERT INTO users (email, name, role, passwordorgoogleid) 
+             VALUES ($1, $2, $3, $4) 
+             RETURNING *`,
+            [email, name, role, passwordorgoogleid]
         );
         return result.rows[0];
     }

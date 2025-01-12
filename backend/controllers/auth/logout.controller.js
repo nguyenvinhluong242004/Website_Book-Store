@@ -20,6 +20,11 @@ handleLogout = async (req, res) => {
         // console.log('USER AFTER LOGOUT: ', result);
 
         res.clearCookie('jwt', { httpOnly: true, secure: true }); // secure: true --> Khi deploy thì thêm vào
+        req.logout((err) => {
+            if (err) {
+                console.error('Lỗi đăng xuất: ', err);
+            }
+        });
         res.sendStatus(204);
     } catch (err) {
         console.error('Lỗi trong quá trình đăng xuất: ', err);

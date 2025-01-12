@@ -1,4 +1,5 @@
 const authRoutes = require('./auth/auth.routes');
+const googleRoutes = require('./auth/google.routes');
 const userRoutes = require('./user/index.routes');
 const adminRoutes = require('./admin/index.routes');
 
@@ -7,6 +8,7 @@ const verifyRole = require('../middlewares/auth/verifyRole');
 
 function route(app) {
     app.use('/', authRoutes); 
+    app.use('/', googleRoutes);
     app.use('/', userRoutes); 
     app.use('/admin', adminRoutes); 
 }
