@@ -176,7 +176,7 @@ class CartController {
 
             // Cập nhật số lượng
             existingProduct.quantity = quantity;
-            
+
             const cart = req.session.cart;
             const detailedCart = await getDetailedCart(cart);
 
@@ -260,7 +260,7 @@ class CartController {
             const email = decoded.UserInfo.email;
 
             const deletedProduct = await cartModel.deleteProductFromCart(email, id_book);
-            
+
             const cart = await cartModel.getAllProductInCart(email);
             const detailedCart = await getDetailedCart(cart);
 
@@ -293,7 +293,7 @@ class CartController {
         }
     }
 
-    async mergeCartForGoogleAccount(req, res){
+    async mergeCartForGoogleAccount(req, res) {
         const authHeader = req.headers.authorization || req.headers.Authorization;
 
         // Nếu có Authorization header, xác minh JWT và lấy giỏ hàng từ database
@@ -302,37 +302,31 @@ class CartController {
             const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
             const email = decoded.UserInfo.email;
 
-            // Lấy giỏ hàng từ database
-            const cart = await cartModel.getAllProductInCart(email);
-            const detailedCart = await getDetailedCart(cart);
-            if (!cart || cart.length === 0) {
-                return res.status(200).json({
-                    success: true,
-                    message: "Giỏ hàng trống",
-                    cart: [],
-                });
-            }
+            if (req.session.cart && req.session.cart.length > 0) {
+                // Merge giỏ hàng từ session vào cơ sở dữ liệu
+                for (let item of req.session.cart) {
+                    const existingProduct = await cartModel.getBookByIDBook(email, item.id_book);
 
-            return res.status(200).json({
-                success: true,
-                message: "Lấy sản phẩm trong giỏ hàng thành công",
-                cart: detailedCart,
-            });
+                    if (!existingProduct) {
+                        // Nếu sản phẩm chưa có trong giỏ hàng của người dùng, thêm mới vào
+                        await cartModel.addBookIntoCart(email, item.id_book, item.quantity);
+                    } else {
+                        // Nếu sản phẩm đã có, cập nhật số lượng
+                        await cartModel.updateQuantity(email, item.id_book, item.quantity);
+                    }
+                }
+
+                // Xóa giỏ hàng tạm thời trong session sau khi đã merge
+                req.session.cart = [];
+
+                console.log('Dữ liệu giỏ hàng tạm được thêm vào database');
+            }
         } catch (err) {
             console.error(err);
-
-            // Kiểm tra lỗi token không hợp lệ
-            if (err.name === "TokenExpiredError") {
-                return res.status(403).json({
-                    success: false,
-                    message: "Sai token, từ chối truy cập giỏ hàng",
-                });
-            }
-
             // Các lỗi khác
             return res.status(500).json({
                 success: false,
-                message: "Đã xảy ra lỗi trong quá trình lấy sản phẩm trong giỏ hàng",
+                message: "Đã xảy ra lỗi trong quá trình thêm sản phẩm vào giỏ hàng",
             });
         }
     }
@@ -346,7 +340,7 @@ async function getDetailedCart(cart) {
         if (bookDetails) {
             detailedCart.push({
                 ...item,
-                ...bookDetails, 
+                ...bookDetails,
             });
         }
     }
