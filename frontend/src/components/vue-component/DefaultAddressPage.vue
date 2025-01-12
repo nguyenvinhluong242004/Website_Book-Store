@@ -1,7 +1,7 @@
 <template>
   <div class="address-default-tab-body">
     <div
-      v-if="totalPages === 0"
+      v-if="total_page === 0"
       class="text-body-tertiary fs-1 p-4 text-center"
     >
       Chưa lưu địa chỉ nào
@@ -9,10 +9,10 @@
     <div v-else>
       <div
         class="address-single-row"
-        v-for="(address, index) in currentPageAddress"
+        v-for="(address, index) in allAddress"
         :key="index"
         :class="{
-          'border-bottom-0': index === currentPageAddress.length - 1,
+          'border-bottom-0': index === allAddress.length - 1,
           'pt-0': index === 0,
         }"
       >
@@ -46,7 +46,7 @@
         </div>
       </div>
 
-      <nav v-if="totalPages !== 1">
+      <nav v-if="total_page > 1" class="mt-4 d-flex justify-content-center">
         <ul class="pagination">
           <li class="page-item" :class="{ disabled: currentPage === 1 }">
             <a
@@ -76,7 +76,7 @@
 
           <li
             class="page-item"
-            :class="{ disabled: currentPage === totalPages }"
+            :class="{ disabled: currentPage === total_page }"
           >
             <a
               class="page-link"
@@ -103,21 +103,20 @@ export default {
     return {
       allAddress: [],
       currentPage: 1,
-      itemsPerPage: 6,
+      total_page: 0,
+      per_page: 3,
+      total: 0,
     };
   },
   computed: {
-    totalPages() {
-      return Math.ceil(this.allAddress.length / this.itemsPerPage);
-    },
     pages() {
       const maxVisiblePages = 5; // Số trang hiển thị tối đa
-      const totalPages = this.totalPages;
+      const total_page = this.total_page;
       const currentPage = this.currentPage;
 
       const pages = [];
-      if (totalPages <= maxVisiblePages) {
-        for (let i = 1; i <= totalPages; i++) {
+      if (total_page <= maxVisiblePages) {
+        for (let i = 1; i <= total_page; i++) {
           pages.push(i);
         }
         return pages;
@@ -126,28 +125,68 @@ export default {
       const half = Math.floor(maxVisiblePages / 2);
 
       const startPage = Math.max(1, currentPage - half);
-      const endPage = Math.min(totalPages, currentPage + half);
+      const endPage = Math.min(total_page, currentPage + half);
 
       if (startPage > 1) pages.push(1);
       if (startPage > 2) pages.push("...");
 
       for (let i = startPage; i <= endPage; i++) pages.push(i);
 
-      if (endPage < totalPages - 1) pages.push("...");
-      if (endPage < totalPages) pages.push(totalPages);
+      if (endPage < total_page - 1) pages.push("...");
+      if (endPage < total_page) pages.push(total_page);
 
       return pages;
     },
-    currentPageAddress() {
-      const start = (this.currentPage - 1) * this.itemsPerPage;
-      const end = start + this.itemsPerPage;
-      return this.allAddress.slice(start, end); // Lấy phần tử từ start đến trước end
-    },
   },
   methods: {
-    goToPage(page) {
-      if (page >= 1 && page <= this.totalPages) {
-        this.currentPage = page;
+    async handleRouteChange() {
+      try {
+        const response = await axiosInstance.get(
+          `/account/address?page=${this.currentPage}&per_page=${this.per_page}`
+        );
+        if (response.status === 200) {
+          this.allAddress = response.data.allAddress;
+          this.currentPage = response.data.page;
+          this.total_page = response.data.total_page;
+          this.per_page = response.data.per_page;
+          this.total = response.data.total;
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response.status === 401 || error.response.status === 403) {
+          // Không có accesstoken hoặc refreshtoken hết hạn
+          this.$router.push("/login");
+        }
+        if (error.response.status === 500) {
+          // Lỗi server
+          this.$router.push("/login");
+        }
+      }
+    },
+    async goToPage(page) {
+      if (page >= 1 && page <= this.total_page) {
+        try {
+          const response = await axiosInstance.get(
+            `/account/address?page=${page}&per_page=${this.per_page}`
+          );
+          if (response.status === 200) {
+            this.allAddress = response.data.allAddress;
+            this.currentPage = response.data.page;
+            this.total_page = response.data.total_page;
+            this.per_page = response.data.per_page;
+            this.total = response.data.total;
+          }
+        } catch (error) {
+          console.log(error);
+          if (error.response.status === 401 || error.response.status === 403) {
+            // Không có accesstoken hoặc refreshtoken hết hạn
+            this.$router.push("/login");
+          }
+          if (error.response.status === 500) {
+            // Lỗi server
+            this.$router.push("/login");
+          }
+        }
       }
     },
     editAddress(address) {
@@ -165,9 +204,7 @@ export default {
         });
 
         if (response.status === 200) {
-          this.$router.push("/").then(() => {
-            this.$router.push("/profile/address");
-          });
+          this.handleRouteChange();
         }
       } catch (error) {
         if (error.response) {
@@ -188,28 +225,6 @@ export default {
         } else {
           // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
           alert("Lỗi mạng: Không thể kết nối đến server.");
-        }
-      }
-    },
-    async handleRouteChange() {
-      try {
-        const response = await axiosInstance.get("/account/address");
-        if (response.status === 200) {
-          this.allAddress = response.data.allAddress;
-        }
-      } catch (error) {
-        console.log(error);
-        if (error.response.status === 401 || error.response.status === 403) {
-          // Không có accesstoken hoặc refreshtoken hết hạn
-          this.$router.push("/login");
-        }
-        if (error.response.status === 404) {
-          // Chưa có địa chỉ
-          this.allAddress = [];
-        }
-        if (error.response.status === 500) {
-          // Lỗi server
-          this.$router.push("/login");
         }
       }
     },

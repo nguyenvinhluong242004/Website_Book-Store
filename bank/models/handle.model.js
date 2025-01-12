@@ -46,7 +46,7 @@ class StatisticalModel {
             client.release();
         }
     }
-    async processPayment(email, idInvoice, amount, adminEmail) {
+    async processPayment(email, idInvoice, amount) {
         const client = await pool.connect();
 
         try {
@@ -144,6 +144,112 @@ class StatisticalModel {
             client.release();
         }
     }
+
+    async refundPayment(email, idInvoice) {
+        const client = await pool.connect();
+
+        try {
+            // Bắt đầu transaction
+            await client.query('BEGIN');
+
+            // Kiểm tra thông tin thanh toán từ bảng Payment
+            const paymentQuery = `SELECT Amount FROM Payment WHERE ID_Invoice = $1 AND Email = $2 AND Status = 'Completed'`;
+            const paymentResult = await client.query(paymentQuery, [idInvoice, email]);
+
+            if (paymentResult.rowCount === 0) {
+                throw new Error('No payment record found for this invoice and email.');
+            }
+
+            const refundAmount = parseInt(paymentResult.rows[0].amount);
+
+            // Lấy thông tin tài khoản admin
+            const adminBalanceQuery = `SELECT Email, Balance FROM Account_Bank WHERE Is_Admin = TRUE`;
+            const adminResult = await client.query(adminBalanceQuery);
+            const adminBalance = parseInt(adminResult.rows[0].balance);
+            const adminEmail = adminResult.rows[0].email;
+
+            // Kiểm tra số dư admin có đủ để hoàn tiền không
+            if (adminBalance < refundAmount) {
+                throw new Error('Insufficient admin balance for refund.');
+            }
+
+            // Lấy số dư người dùng trước khi hoàn tiền
+            const userAccountQuery = `SELECT Balance FROM Account_Bank WHERE Email = $1`;
+            const userAccountResult = await client.query(userAccountQuery, [email]);
+
+            if (userAccountResult.rowCount === 0) {
+                throw new Error('User account not found.');
+            }
+
+            const userBalanceBefore = parseInt(userAccountResult.rows[0].balance);
+
+            // Cập nhật số dư admin (trừ tiền)
+            const updateAdminBalanceQuery = `
+                UPDATE Account_Bank
+                SET Balance = Balance - $1
+                WHERE Is_Admin = TRUE
+            `;
+            await client.query(updateAdminBalanceQuery, [refundAmount]);
+
+            // Cập nhật số dư người dùng (cộng tiền)
+            const updateUserBalanceQuery = `
+                UPDATE Account_Bank
+                SET Balance = Balance + $1
+                WHERE Email = $2
+            `;
+            await client.query(updateUserBalanceQuery, [refundAmount, email]);
+
+            // Thêm vào bảng User_Transaction_History
+            const insertUserHistoryQuery = `
+                INSERT INTO User_Transaction_History (Email, Admin_Email, Transaction_Type, Amount, Balance_Before, Balance_After, Description)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
+            `;
+            await client.query(insertUserHistoryQuery, [
+                email,
+                adminEmail,
+                'Refund',
+                refundAmount,
+                userBalanceBefore,
+                userBalanceBefore + refundAmount,
+                `Hoàn tiền đơn hàng #${idInvoice}`
+            ]);
+
+            // Thêm vào bảng Admin_Transaction_History
+            const insertAdminHistoryQuery = `
+                INSERT INTO Admin_Transaction_History (Admin_Email, User_Email, Amount, Balance_Before, Balance_After, Description)
+                VALUES ($1, $2, $3, $4, $5, $6)
+            `;
+            await client.query(insertAdminHistoryQuery, [
+                adminEmail,
+                email,
+                - refundAmount,
+                adminBalance,
+                adminBalance - refundAmount,
+                `Hoàn tiền cho đơn hàng #${idInvoice}`
+            ]);
+
+            const updatePaymentStatusQuery = `
+                UPDATE Payment
+                SET Status = 'Refunded'
+                WHERE ID_Invoice = $1 AND Email = $2
+            `;
+            await client.query(updatePaymentStatusQuery, [idInvoice, email]);
+
+            // Commit transaction
+            await client.query('COMMIT');
+            console.log(`Refund processed successfully for email: ${email}, Amount: ${refundAmount}`);
+            return { success: true, message: 'Refund processed successfully.' };
+        } catch (error) {
+            // Rollback transaction nếu có lỗi
+            await client.query('ROLLBACK');
+            console.error('Error in refundPayment:', error.message);
+            throw new Error('Failed to process refund.');
+        } finally {
+            // Giải phóng client
+            client.release();
+        }
+    }
+
 
 }
 

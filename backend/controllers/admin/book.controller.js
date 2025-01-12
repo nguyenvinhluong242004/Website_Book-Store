@@ -9,7 +9,7 @@ class BookController {
             const result = await BookModel.getAllBooks(page, per_page);
             const categories =  await BookModel.getCategories();
             // Trả về dữ liệu JSON bao gồm cả danh mục và số lượng bán
-            res.json({
+            res.status(200).json({
                 success: true,
                 message: 'Thành công',
                 per_page: result.per_page,
@@ -32,7 +32,7 @@ class BookController {
             if (id) {
                 await BookModel.deleteBook(id);
             }
-            res.json({
+            res.status(200).json({
                 success: true,
                 message: 'Thành công'
             });
@@ -96,7 +96,7 @@ class BookController {
             // Gọi phương thức addBook từ model
             const result = await BookModel.addBook(bookDetails, fileUrls);
 
-            res.json({
+            res.status(200).json({
                 success: true,
                 message: 'Thành công',
                 result
@@ -175,7 +175,7 @@ class BookController {
                 parsedImagesToDelete   // Danh sách URL ảnh cần xóa
             );
 
-            res.json({
+            res.status(200).json({
                 success: true,
                 message: 'Thành công',
                 result

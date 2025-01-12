@@ -10,7 +10,7 @@ class StatisticalController {
             const productsSold = await StatisticalModel.getProductsSold();
 
             // Trả về dữ liệu JSON bao gồm cả danh mục và số lượng bán
-            res.json({
+            res.status(200).json({
                 stats,
                 revenueLabels,
                 revenueData,

@@ -2,7 +2,7 @@
   <div class="admin-complete-order-body">
     <div class="admin-complete-order-box">
       <div class="admin-complete-order-box-title fs-4 fw-bold text-primary mb-4">
-        ĐƠN HÀNG MỚI
+        ĐƠN HÀNG ĐÃ HOÀN THÀNH
       </div>
       <table class="table mx-auto border-dark-subtle" style="width: 95%">
         <thead class="border-bottom-0">
@@ -51,10 +51,7 @@
                 v-model="order.status"
                 @change="updateStatus(order.id_order, order.status)"
               >
-                <option value="Pending">Pending</option>
-                <option value="Approved">Approved</option>
                 <option value="Refused">Refused</option>
-                <option value="Delivering">Delivering</option>
                 <option value="Completed">Completed</option>
               </select>
             </td>
@@ -70,7 +67,7 @@
           </tr>
         </tbody>
       </table>
-      <nav v-if="total_page > 1" class="mx-auto mt-3" style="width: 95%">
+      <nav v-if="total_page > 1" class="mx-auto mt-4 d-flex justify-content-center" style="width: 95%">
         <ul class="pagination">
           <li class="page-item" :class="{ disabled: currentPage === 1 }">
             <a

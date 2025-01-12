@@ -32,6 +32,21 @@ class DashboardController {
         }
     }
 
+    async refund(req, res) {
+        const { email, id_invoice } = req.body;
+
+        console.log(email, id_invoice)
+
+        try {
+            await HandleModel.refundPayment(email, id_invoice);
+
+            res.status(200).send('Success');
+        } catch (error) {
+            console.error(error);
+            res.status(200).send('Server Error');
+        }
+    }
+
     async get(req, res) {
         const { email = '', page = 1 } = req.body;
         const perPage = 7;
