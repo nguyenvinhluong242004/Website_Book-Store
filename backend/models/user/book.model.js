@@ -197,7 +197,7 @@ class BookModel {
             ON 
                 b.id_book = ib.id_book
             WHERE 
-                b.id_book = $1
+                b.id_book = $1 AND b.status = 1
             GROUP BY 
                 b.id_book
             `,

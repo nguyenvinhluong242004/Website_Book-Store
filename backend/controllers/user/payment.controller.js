@@ -24,7 +24,7 @@ class PaymentController {
             if (!Array.isArray(cartItems)) {
                 return res
                     .status(400)
-                    .json({ error: 'Dữ liệu nhận không phải là mảng' });
+                    .json({ MessageChannel: 'Dữ liệu nhận không phải là mảng' });
             }
             const newIdOrder = await orderModel.getLastIdOrder() + 1;
 
@@ -32,8 +32,8 @@ class PaymentController {
             req.session.id_order = newIdOrder;
             req.session.selectedItem = cartItems;
 
-            console.log('SAVED CART ITEM INTO SESSION: ', req.session.selectedItem);
-            console.log('SESSION HERE: ', req.session);
+            // console.log('SAVED CART ITEM INTO SESSION: ', req.session.selectedItem);
+            // console.log('SESSION HERE: ', req.session);
 
             return res.status(200).json({
                 message: 'Sản phẩm được lưu vào session thành công',
@@ -42,7 +42,7 @@ class PaymentController {
             });
         } catch (error) {
             console.error('Lỗi trong quá trình lưu sản phẩm vào session', error);
-            return res.status(500).json({ error: 'Lỗi server' });
+            return res.status(500).json({ message: 'Lỗi server' });
         }
     }
 
@@ -52,7 +52,7 @@ class PaymentController {
             const selectedItems = req.session.selectedItem;
 
             if (!selectedItems || selectedItems.length === 0) {
-                return res.status(400).json({ error: 'Chưa chọn sản phẩm nào' });
+                return res.status(400).json({ message: 'Chưa chọn sản phẩm nào' });
             }
 
             const bookDetails = [];
@@ -77,7 +77,7 @@ class PaymentController {
             });
         } catch (error) {
             console.error('Lỗi trong quá trình lấy thông tin hiện ra payment', error);
-            return res.status(500).json({ error: 'Lỗi server' });
+            return res.status(500).json({ message: 'Lỗi server' });
         }
     }
 
@@ -93,7 +93,7 @@ class PaymentController {
             const status = 'Pending';
 
             if (!selectedItems || selectedItems.length === 0) {
-                return res.status(400).json({ error: 'Chưa chọn sản phẩm nào' });
+                return res.status(400).json({ message: 'Chưa chọn sản phẩm nào' });
             }
 
             const bookDetails = [];
@@ -151,22 +151,20 @@ class PaymentController {
                     saveIntoOrderDetail(id_order, bookDetails);
                     const newInvoice = await invoiceModel.create(id_order, total_amount);
                     updateQuantityOfBook(bookDetails);
-
-                    return res.status(200).json({
-                        message: 'Đã lưu các dữ liệu vào các bảng order, order_detail và invoice'
-                    });
                 } else {
                     console.error('Thanh toán không thành công');
-                    res.status(400).json({ error: 'Thanh toán không thành công' });
+                    return res.status(400).json({ message: 'Thanh toán không thành công' });
                 }
             }
+            await deleteFromCart(email, bookDetails);
             await client.query('COMMIT');
-
-
+            return res.status(200).json({
+                message: 'Đã lưu các dữ liệu vào các bảng order, order_detail và invoice'
+            });
         } catch (error) {
             console.error('Lỗi trong quá trình lấy thông tin hiện ra payment', error);
             await client.query('ROLLBACK');
-            return res.status(500).json({ error: 'Lỗi server' });
+            return res.status(500).json({ message: 'Lỗi server' });
         }
         finally {
             client.release();
@@ -182,7 +180,7 @@ async function saveIntoOrderDetail(id_order, bookDetails) {
             await orderDetailModel.create(id_order, id_book, quantity, list_price);
         }
 
-        console.log(`All order details for order ID ${id_order} have been saved.`);
+        console.log(`Toàn bộ đơn hàng chi tiết của đơn hàng ${id_order} đã được lưu. `);
     } catch (error) {
         console.error('Lỗi khi lưu chi tiết đơn hàng:', error);
         throw error;
@@ -200,6 +198,21 @@ async function updateQuantityOfBook(bookDetails) {
         console.log('Toàn bộ sách được cập nhật số lượng');
     } catch (error) {
         console.error('Lỗi khi cập nhật số lượng sách: ', error);
+        throw error;
+    }
+}
+
+async function deleteFromCart(email, bookDetails){
+    try {
+        for (const book of bookDetails) {
+            const { id_book } = book;
+
+            await cartModel.deleteProductFromCart(email, id_book);
+        }
+
+        console.log('Sách đã được mua đã bị xóa khỏi giỏ hàng');
+    } catch (error) {
+        console.error('Lỗi khi xóa sách: ', error);
         throw error;
     }
 }
