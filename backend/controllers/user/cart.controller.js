@@ -27,7 +27,6 @@ class CartController {
                 req.session.cart.push({ id_book, quantity: quantity });
             }
             const cart = req.session.cart;
-            console.log('SESSION HERE: ', req.session.cart);
             const detailedCart = await getDetailedCart(cart);
 
             return res.status(200).json({
@@ -294,14 +293,11 @@ class CartController {
 
     async mergeCartForGoogleAccount(req, res) {
         const authHeader = req.headers.authorization || req.headers.Authorization;
-        console.log('AUTH HEADER BEFORE :', authHeader);
         // Nếu có Authorization header, xác minh JWT và lấy giỏ hàng từ database
         const token = authHeader.split(' ')[1];
         try {
             const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
             const email = decoded.UserInfo.email;
-            console.log('EMAIL: ', email);
-            console.log('SESSION MERGE: ', req.session);
             if (req.session.cart && req.session.cart.length > 0) {
                 // Merge giỏ hàng từ session vào cơ sở dữ liệu
                 for (let item of req.session.cart) {

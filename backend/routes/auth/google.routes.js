@@ -4,13 +4,12 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
 const userModel = require('../../models/user.model');
-const cartModel = require('../../models/user/cart.model');
 
 let tempCart = [];
 
 router.get('/auth/google',
     (req, res, next) => {
-        if(req.session.cart){
+        if (req.session.cart) {
             tempCart = req.session.cart;
         }
         next();
@@ -49,24 +48,17 @@ router.get('/google/callback',
                     maxAge: 24 * 60 * 60 * 1000 // Thời gian sống của cookie (1 ngày)
                 });
                 // return res.status(200).json({ accessToken });
-                if(tempCart.length > 0){
+                if (tempCart.length > 0) {
                     req.session.cart = tempCart;
                     tempCart = [];
                 }
-                return res.redirect(`https://localhost:8080?accessToken=${accessToken}`);
+                return res.redirect(`https://localhost:8080?status=200&success=true&accessToken=${accessToken}`);
             } else {
-                res.status(401).json({
-                    success: false,
-                    message: 'Đăng nhập thất bại'
-                });
+                return res.redirect(`https://localhost:8080?status=401&success=false&message=Login failed`);
             }
         } catch (err) {
-            console.error(err); // Log lỗi chi tiết
-            // Trả về lỗi server nếu có bất kỳ lỗi nào xảy ra
-            res.status(500).json({
-                success: false,
-                message: 'Lỗi server, vui lòng thử lại sau!'
-            });
+            console.error(err); 
+            return res.redirect(`https://localhost:8080?status=500&success=false&message=Server error`);
         }
     }
 );
