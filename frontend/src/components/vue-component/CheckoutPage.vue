@@ -15,9 +15,8 @@
               type="radio"
               name="checkoutAddress"
               :id="'checkoutAddrrb' + index"
-              :value="address.id_address"
+              :value="address"
               v-model="checkoutAddress"
-              :checked="index === 0"
             />
             <label class="form-check-label" :for="'checkoutAddrrb' + index">
               {{ address.name }} | {{ address.address }}, {{ address.ward }},
@@ -92,9 +91,8 @@
             type="radio"
             name="checkoutPayment"
             id="checkoutPaymentrb1"
-            value="COD"
+            value="cod"
             v-model="checkoutPayment"
-            checked
           />
           <label class="form-check-label" for="checkoutPaymentrb1">
             <i class="fa-solid fa-money-bill-wave mx-2"></i> Thanh toán bằng
@@ -108,12 +106,11 @@
             type="radio"
             name="checkoutPayment"
             id="checkoutPaymentrb2"
-            value="Online"
+            value="online"
             v-model="checkoutPayment"
           />
           <label class="form-check-label" for="checkoutPaymentrb2">
-            <i class="fa-regular fa-credit-card mx-2"></i> ATM / Internet
-            Banking
+            <i class="fa-regular fa-credit-card mx-2"></i> Thanh toán online
           </label>
         </div>
       </div>
@@ -168,25 +165,15 @@
         </div>
       </div>
       <div class="row checkout-total-row p-0 pb-2">
-        <button type="button" class="btn w-100 btn-danger py-2 fs-5">
+        <button
+          type="button"
+          class="btn w-100 btn-danger py-2 fs-5"
+          @click="handleCheckout"
+        >
           Xác Nhận Đặt Hàng
         </button>
       </div>
     </div>
-
-    <!-- <div class="checkout-total-box">
-      <div class="row checkout-total-row p-0 py-2 fs-5 border-bottom">
-        <div class="col-10 d-flex justify-content-between text-end">
-            <div>XÁC NHẬN ĐẶT HÀNG</div>
-            <div>Thành tiền</div></div>
-        <div class="col-2 text-end text-danger">{{ formatPrice(totalPrice) }}</div>
-      </div>
-      <div class="row checkout-total-row p-0 pt-3 pb-2">
-        <button type="button" class="btn w-100 btn-danger fs-5">
-          Xác Nhận Đặt Hàng
-        </button>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -205,25 +192,10 @@ export default {
       totalAddress: 0,
 
       checkoutAddress: null,
-      checkoutPayment: null,
+      checkoutPayment: 'cod',
 
       listProduct: [
-        {
-          image: "/IMG/cam.jpg",
-          book_name:
-            "Có hai con mèo ngồi bên cửa sổ, một con ngồi yên, một con đổi chỗ cho ariana selena gomezzzzzzzzzzzzzzzzzzzzzzzzz",
-          discounted_price: 2000,
-          list_price: 3000,
-          quantity: 4,
-        },
-        {
-          image:
-            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fillustrations%2Fletter-letter-a-a-monogram-8009723%2F&psig=AOvVaw1dVvUojzii8M08ZshehVIW&ust=1736619536771000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJCtuobi64oDFQAAAAAdAAAAABAE",
-          book_name: "Không có hình nên nếu tên dài thì sẽ thụt vô",
-          discounted_price: 40000000,
-          list_price: 40000000,
-          quantity: 8,
-        },
+        
       ],
     };
   },
@@ -244,11 +216,16 @@ export default {
             alert("Hãy cập nhật địa chỉ trước.");
             this.$router.push("/profile/address");
           }
+          this.checkoutAddress = this.allAddress[0];
         }
       } catch (error) {
         console.log(error);
-        if (error.response.status === 401 || error.response.status === 403) {
-          // Không có accesstoken hoặc refreshtoken hết hạn
+        if (error.response.status === 401) {
+          // Không có accesstoken
+          this.$router.push("/login");
+        }
+        if (error.response.status === 403) {
+          alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
           this.$router.push("/login");
         }
         if (error.response.status === 500) {
@@ -256,7 +233,78 @@ export default {
           this.$router.push("/login");
         }
       }
+
+      // Lấy đơn hàng
+      try {
+        const response = await axiosInstance.get("/payment/form-payment");
+
+        if (response.status === 200) {
+          this.listProduct = response.data.books;
+        }
+      } catch (error) {
+        if (error.response) {
+          const status = error.response.status;
+          const message = error.response.data.message;
+
+          // Xử lý các mã lỗi cụ thể
+          if (status === 400) {
+            alert(message);
+            this.$router.push("/cart");
+          } else if (status === 401) {
+            this.$router.push("/login");
+          } else if (status === 403) {
+            alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+            this.$router.push("/login");
+          } else if (status === 500) {
+            alert(message);
+          }
+        } else {
+          // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
+          alert("Lỗi mạng: Không thể kết nối đến server.");
+        }
+      }
     },
+
+    async handleCheckout() {
+      try {
+        console.log(this.checkoutAddress);
+        console.log(this.checkoutPayment);
+        console.log(this.totalPrice);
+        const response = await axiosInstance.post("/payment/finish-payment", {
+          detail_address: `${this.checkoutAddress.address}, ${this.checkoutAddress.ward}, ${this.checkoutAddress.district}, ${this.checkoutAddress.city}, ${this.checkoutAddress.country}`,
+          method: this.checkoutPayment,
+          total_amount: this.totalPrice,
+        });
+
+        if (response.status === 200) {
+          alert('Đã đặt đơn hàng thành công');
+          this.$router.push("/");
+        }
+      } catch (error) {
+        alert(error);
+        if (error.response) {
+          const status = error.response.status;
+          const message = error.response.data.message;
+
+          // Xử lý các mã lỗi cụ thể
+          if (status === 400) {
+            alert(message);
+            this.$router.push("/");
+          } else if (status === 401) {
+            this.$router.push("/login");
+          } else if (status === 403) {
+            alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+            this.$router.push("/login");
+          } else if (status === 500) {
+            alert(message);
+          }
+        } else {
+          // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
+          alert("Lỗi mạng: Không thể kết nối đến server.");
+        }
+      }
+    },
+
     async goToPageAddress(page) {
       if (page >= 1 && page <= this.total_pageAddress) {
         try {
@@ -272,8 +320,12 @@ export default {
           }
         } catch (error) {
           console.log(error);
-          if (error.response.status === 401 || error.response.status === 403) {
-            // Không có accesstoken hoặc refreshtoken hết hạn
+          if (error.response.status === 401) {
+            // Không có accesstoken
+            this.$router.push("/login");
+          }
+          if (error.response.status === 403) {
+            alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
             this.$router.push("/login");
           }
           if (error.response.status === 500) {
@@ -325,6 +377,7 @@ export default {
 
       return pages;
     },
+
     totalPrice() {
       let total = 0;
       for (const product of this.listProduct) {
