@@ -37,7 +37,7 @@ const handleLogin = async (req, res) => {
             const refreshToken = jwt.sign(
                 { "email": foundUser.email },
                 process.env.REFRESH_TOKEN_SECRET,
-                { expiresIn: '3d' } // Hạn 1 ngày
+                { expiresIn: '1d' } // Hạn 1 ngày
             );
 
             await userModel.updateRefreshToken(foundUser.email, refreshToken);

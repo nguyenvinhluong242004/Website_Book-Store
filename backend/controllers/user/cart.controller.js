@@ -28,6 +28,7 @@ class CartController {
                 req.session.cart.push({ id_book, quantity: quantity });
             }
             const cart = req.session.cart;
+            console.log('SESSION HERE: ', req.session.cart);
             const detailedCart = await getDetailedCart(cart);
 
             return res.status(200).json({
@@ -288,6 +289,50 @@ class CartController {
             return res.status(500).json({
                 success: false,
                 message: "Đã xảy ra lỗi trong khi xóa sản phẩm",
+            });
+        }
+    }
+
+    async mergeCartForGoogleAccount(req, res){
+        const authHeader = req.headers.authorization || req.headers.Authorization;
+
+        // Nếu có Authorization header, xác minh JWT và lấy giỏ hàng từ database
+        const token = authHeader.split(' ')[1];
+        try {
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+            const email = decoded.UserInfo.email;
+
+            // Lấy giỏ hàng từ database
+            const cart = await cartModel.getAllProductInCart(email);
+            const detailedCart = await getDetailedCart(cart);
+            if (!cart || cart.length === 0) {
+                return res.status(200).json({
+                    success: true,
+                    message: "Giỏ hàng trống",
+                    cart: [],
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: "Lấy sản phẩm trong giỏ hàng thành công",
+                cart: detailedCart,
+            });
+        } catch (err) {
+            console.error(err);
+
+            // Kiểm tra lỗi token không hợp lệ
+            if (err.name === "TokenExpiredError") {
+                return res.status(403).json({
+                    success: false,
+                    message: "Sai token, từ chối truy cập giỏ hàng",
+                });
+            }
+
+            // Các lỗi khác
+            return res.status(500).json({
+                success: false,
+                message: "Đã xảy ra lỗi trong quá trình lấy sản phẩm trong giỏ hàng",
             });
         }
     }

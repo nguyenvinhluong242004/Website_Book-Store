@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const accountController = require('../../controllers/user/account.controller');
-
+const cartController = require('../../controllers/user/cart.controller');
 // account/...
+router.get('/merge-cart', cartController.mergeCartForGoogleAccount);
 router.put('/profile', accountController.updateProfile);
 router.get('/profile', accountController.getProfile);
 router.get('/address', accountController.getAllAddress);
