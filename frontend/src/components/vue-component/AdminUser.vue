@@ -43,7 +43,7 @@
           </tr>
         </tbody>
       </table>
-      <nav v-if="total_page > 1" class="mx-auto mt-3" style="width: 95%">
+      <nav v-if="total_page > 1" class="mx-auto mt-4 d-flex justify-content-center" style="width: 95%">
         <ul class="pagination">
           <li class="page-item" :class="{ disabled: currentPage === 1 }">
             <a

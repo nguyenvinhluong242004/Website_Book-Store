@@ -72,7 +72,7 @@ class AccountController {
                 total_page: totalPages,
                 per_page: perPageNum,
                 total: totalAddress,
-                orders: allAddress
+                allAddress: allAddress
             });
         } catch (error) {
             console.error('Lỗi trong quá trình lấy địa chỉ: ', error);

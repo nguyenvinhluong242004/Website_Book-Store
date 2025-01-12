@@ -6,7 +6,7 @@
         <div class="pt-3 pb-2 d-flex flex-column gap-2 col-10">
           <div
             class="form-check"
-            v-for="(address, index) in addressList"
+            v-for="(address, index) in allAddress"
             :key="index"
           >
             <input
@@ -26,6 +26,52 @@
               {{ address.phone }}
             </label>
           </div>
+          <nav v-if="total_pageAddress > 1" class="mt-2">
+            <ul class="pagination pagination-sm">
+              <li class="page-item" :class="{ disabled: currentPageAddress === 1 }">
+                <a
+                  class="page-link"
+                  href="#"
+                  aria-label="Previous"
+                  @click.prevent="goToPageAddress(currentPageAddress - 1)"
+                >
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+
+              <li
+                class="page-item"
+                v-for="page in pagesAddress"
+                :key="page"
+                :class="{
+                  active: page === currentPageAddress,
+                  disabled: page === '...',
+                }"
+              >
+                <a
+                  class="page-link"
+                  href="#"
+                  @click.prevent="page !== '...' && goToPageAddress(page)"
+                >
+                  {{ page }}
+                </a>
+              </li>
+
+              <li
+                class="page-item"
+                :class="{ disabled: currentPageAddress === total_pageAddress }"
+              >
+                <a
+                  class="page-link"
+                  href="#"
+                  aria-label="Next"
+                  @click.prevent="goToPageAddress(currentPageAddress + 1)"
+                >
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
         <div class="col-2 pt-3 text-end">
           <router-link to="/profile/address">Thay đổi địa chỉ</router-link>
@@ -147,7 +193,11 @@ export default {
   name: "CheckoutPage",
   data() {
     return {
-      addressList: [],
+      allAddress: [],
+      currentPageAddress: 1,
+      total_pageAddress: 0,
+      per_pageAddress: 3,
+      totalAddress: 0,
 
       checkoutAddress: null,
       checkoutPayment: null,
@@ -176,9 +226,19 @@ export default {
     async handleRouteChange() {
       // Lấy địa chỉ
       try {
-        const response = await axiosInstance.get("/account/address");
+        const response = await axiosInstance.get(
+          `/account/address?page=${this.currentPageAddress}&per_page=${this.per_pageAddress}`
+        );
         if (response.status === 200) {
-          this.addressList = response.data.allAddress;
+          this.allAddress = response.data.allAddress;
+          this.currentPageAddress = response.data.page;
+          this.total_pageAddress = response.data.total_page;
+          this.per_pageAddress = response.data.per_page;
+          this.totalAddress = response.data.total;
+          if (this.total_pageAddress === 0) {
+            alert("Hãy cập nhật địa chỉ trước.");
+            this.$router.push("/profile/address");
+          }
         }
       } catch (error) {
         console.log(error);
@@ -186,17 +246,39 @@ export default {
           // Không có accesstoken hoặc refreshtoken hết hạn
           this.$router.push("/login");
         }
-        if (error.response.status === 404) {
-          // Chưa có địa chỉ
-          alert("Hãy cập nhật địa chỉ trước.");
-          this.$router.push("/profile/address");
-        }
         if (error.response.status === 500) {
           // Lỗi server
           this.$router.push("/login");
         }
       }
     },
+    async goToPageAddress(page) {
+      if (page >= 1 && page <= this.total_pageAddress) {
+        try {
+          const response = await axiosInstance.get(
+            `/account/address?page=${page}&per_page=${this.per_pageAddress}`
+          );
+          if (response.status === 200) {
+            this.allAddress = response.data.allAddress;
+            this.currentPageAddress = response.data.page;
+            this.total_pageAddress = response.data.total_page;
+            this.per_pageAddress = response.data.per_page;
+            this.totalAddress = response.data.total;
+          }
+        } catch (error) {
+          console.log(error);
+          if (error.response.status === 401 || error.response.status === 403) {
+            // Không có accesstoken hoặc refreshtoken hết hạn
+            this.$router.push("/login");
+          }
+          if (error.response.status === 500) {
+            // Lỗi server
+            this.$router.push("/login");
+          }
+        }
+      }
+    },
+
     formatPrice(price) {
       return new Intl.NumberFormat("vi-VN").format(price) + " vnđ";
     },
@@ -210,6 +292,34 @@ export default {
     },
   },
   computed: {
+    pagesAddress() {
+      const maxVisiblePages = 5; // Số trang hiển thị tối đa
+      const total_page = this.total_pageAddress;
+      const currentPage = this.currentPageAddress;
+
+      const pages = [];
+      if (total_page <= maxVisiblePages) {
+        for (let i = 1; i <= total_page; i++) {
+          pages.push(i);
+        }
+        return pages;
+      }
+
+      const half = Math.floor(maxVisiblePages / 2);
+
+      const startPage = Math.max(1, currentPage - half);
+      const endPage = Math.min(total_page, currentPage + half);
+
+      if (startPage > 1) pages.push(1);
+      if (startPage > 2) pages.push("...");
+
+      for (let i = startPage; i <= endPage; i++) pages.push(i);
+
+      if (endPage < total_page - 1) pages.push("...");
+      if (endPage < total_page) pages.push(total_page);
+
+      return pages;
+    },
     totalPrice() {
       let total = 0;
       for (const product of this.listProduct) {
