@@ -25,16 +25,24 @@ class CategoriesController {
 
     async add(req, res) {
         const { name } = req.body;
-        console.log(name); 
+        console.log(name);
 
         try {
             const result = await CategoriesModel.addCategory(name);
 
-            res.json({
-                success: true,
-                message: 'Thành công',
-                result
+            if (result) {
+                return res.json({
+                    success: true,
+                    message: 'Thành công',
+                    result
+                });
+            }
+            console.log('fail')
+            return res.json({
+                success: false,
+                message: 'Thất bại'
             });
+
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Server Error' });
@@ -44,14 +52,22 @@ class CategoriesController {
     async change(req, res) {
         const { id, name } = req.body;
         console.log(id, name);
-        
+
+        console.log('fail')
         try {
             const result = await CategoriesModel.updateCategoryName(id, name);
 
-            res.json({
-                success: true,
-                message: 'Thành công',
-                result
+            if (result) {
+                return res.json({
+                    success: true,
+                    message: 'Thành công',
+                    result
+                });
+            }
+            console.log('fail')
+            return res.json({
+                success: false,
+                message: 'Thất bại'
             });
         } catch (error) {
             console.error(error);

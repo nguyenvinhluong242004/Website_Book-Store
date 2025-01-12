@@ -38,6 +38,14 @@ class CategoryModel {
     // Thêm danh mục mới
     async addCategory(categoryName) {
         try {
+            // Kiểm tra tên mới không trùng với các mục khác
+            const checkDuplicateQuery = `SELECT COUNT(*) AS count FROM Categories WHERE LOWER(Name) = LOWER($1)`;
+            const duplicateResult = await pool.query(checkDuplicateQuery, [categoryName]);
+
+            if (parseInt(duplicateResult.rows[0].count) > 0) {
+                return null;
+            }
+
             const query = `INSERT INTO Categories (Name) VALUES ($1) RETURNING *`;
             const result = await pool.query(query, [categoryName]);
             return result.rows[0];
@@ -70,6 +78,13 @@ class CategoryModel {
     // Sửa tên danh mục
     async updateCategoryName(categoryId, newName) {
         try {
+            // Kiểm tra tên mới không trùng với các mục khác
+            const checkDuplicateQuery = `SELECT COUNT(*) AS count FROM Categories WHERE LOWER(Name) = LOWER($1) AND ID_Category != $2`;
+            const duplicateResult = await pool.query(checkDuplicateQuery, [newName, categoryId]);
+
+            if (parseInt(duplicateResult.rows[0].count) > 0) {
+                return null;
+            }
             const query = `UPDATE Categories SET Name = $1 WHERE ID_Category = $2 RETURNING *`;
             const result = await pool.query(query, [newName, categoryId]);
             return result.rows[0];
