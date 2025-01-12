@@ -44,19 +44,7 @@
             </td>
             <td class="align-content-center text-center">{{ order.method }}</td>
             <td class="align-content-center text-center">
-              <select
-                class="form-select"
-                style="cursor: pointer"
-                aria-label="select status"
-                v-model="order.status"
-                @change="updateStatus(order.id_order, order.status)"
-              >
-                <option value="Pending">Pending</option>
-                <option value="Approved">Approved</option>
-                <option value="Refused">Refused</option>
-                <option value="Delivering">Delivering</option>
-                <option value="Completed">Completed</option>
-              </select>
+              {{ order.status }}
             </td>
             <td class="align-content-center">
               <div
@@ -70,7 +58,11 @@
           </tr>
         </tbody>
       </table>
-      <nav v-if="total_page > 1" class="mx-auto mt-3" style="width: 95%">
+      <nav
+        v-if="total_page > 1"
+        class="mx-auto mt-4 d-flex justify-content-center"
+        style="width: 95%"
+      >
         <ul class="pagination">
           <li class="page-item" :class="{ disabled: currentPage === 1 }">
             <a
@@ -297,41 +289,6 @@ export default {
 
     formatPrice(price) {
       return new Intl.NumberFormat("vi-VN").format(price) + " vnđ";
-    },
-
-    async updateStatus(id_order, status) {
-      try {
-        const response = await axiosInstance.patch(
-          "/admin/order/update-status",
-          {
-            id_order: id_order,
-            status: status,
-          }
-        );
-        if (response.status === 200) {
-          this.handleRouteChange();
-        }
-      } catch (error) {
-        if (error.response) {
-          const status = error.response.status;
-          const message = error.response.data.message;
-
-          // Xử lý các mã lỗi cụ thể
-          if (status === 400) {
-            alert(message);
-          } else if (status === 403) {
-            alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-            this.$router.push("/login");
-          } else if (status === 404) {
-            alert(message);
-          } else if (status === 500) {
-            alert(message);
-          }
-        } else {
-          // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
-          alert("Lỗi mạng: Không thể kết nối đến server.");
-        }
-      }
     },
 
     async showModal(id_order) {
