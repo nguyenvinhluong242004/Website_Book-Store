@@ -36,10 +36,11 @@
     padding: 20px 0px;
 }
 
-.cart-item-row img {
+.cart-item-row .img-container {
     width: 100px;
     height: 100px;
     object-fit: cover;
+    overflow: hidden;
 
     margin: 0px 20px;
 }

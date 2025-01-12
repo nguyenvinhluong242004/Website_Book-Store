@@ -34,7 +34,9 @@
                 :value="product.id_book"
                 v-model="selectedProducts"
               />
-              <img :src="product.image" alt="product image" />
+              <div class="img-container">
+                <img :src="product.image_links[0]" alt="product image" class="h-100"/>
+              </div>
               <div
                 class="cart-item-name-price h-100 d-flex flex-column justify-content-between"
               >
