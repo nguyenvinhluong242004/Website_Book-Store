@@ -329,6 +329,7 @@
 
 <script>
 import "../css-component/admin-category.css";
+import axiosInstance from "../../services/axiosInstance.js";
 
 export default {
   name: "AdminCategory",
@@ -463,94 +464,117 @@ export default {
 
       try {
         this.isLoadingAction = true;
-        const response = await fetch("/api/admin/categories/add", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer <your_token_here>", // Nếu có token
-          },
-          body: JSON.stringify({ name }),
+
+        const response = await axiosInstance.post("/admin/categories/add", {
+          name: name,
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        if (data.success) {
-          console.log(data);
+        if (response.status === 200) {
+          console.log(response.data);
           this.isLoadingAction = false;
           this.status = "Thêm thể loại thành công";
-        } else {
-          this.status = "Thất bại khi thêm thể loại!";
-        }
 
-        // Cập nhật lại danh sách sách sau khi thêm mới
-        this.fetchCategory(this.current_page);
+          // Cập nhật lại danh sách sách sau khi thêm mới
+          this.fetchCategory(this.current_page);
+        }
       } catch (error) {
-        this.status = "Lỗi khi thêm thể loại!!!";
+        console.log(error);
+        if (error.response.status === 400) {
+          this.isLoadingAction = false;
+          this.status = "Thể loại đã tồn tại";
+        }
+        if (error.response.status === 401) {
+          // Không có accesstoken
+          this.$router.push("/login");
+        }
+        if (error.response.status === 403) {
+          // refreshtoken hết hạn
+          alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          this.$router.push("/login");
+        }
+        if (error.response.status === 500) {
+          // Lỗi server
+          alert(error);
+          this.$router.push("/login");
+        }
       }
     },
 
     async fetchCategory(page) {
       this.isLoading = true;
       try {
-        const response = await fetch(`/api/admin/categories?page=${page}`, {
-          method: "GET", // Phương thức GET để lấy dữ liệu
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer <your_token_here>", // Nếu cần gửi token
-          },
-        });
+        const response = await axiosInstance.get(
+          `/admin/categories?page=${page}`
+        );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        if (response.status === 200) {
+          this.isLoading = false;
+
+          this.categorys = response.data.data;
+          console.log(this.categorys);
+
+          this.total_pages = response.data.total_pages;
+          this.current_page = parseInt(response.data.current_page, 10);
+
+          return response.data;
         }
-
-        const data = await response.json(); // Chuyển dữ liệu từ JSON thành đối tượng
-        this.isLoading = false;
-
-        this.categorys = data.data;
-        console.log(this.categorys);
-
-        this.total_pages = data.total_pages;
-        this.current_page = parseInt(data.current_page, 10);
-
-        return data; // Trả về dữ liệu để dùng ở nơi khác
       } catch (error) {
-        console.error("Fetch failed:", error); // Bắt lỗi và hiển thị trong console
+        console.log(error);
+        if (error.response.status === 401) {
+          // Không có accesstoken
+          this.$router.push("/login");
+        }
+        if (error.response.status === 403) {
+          // refreshtoken hết hạn
+          alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          this.$router.push("/login");
+        }
+        if (error.response.status === 500) {
+          // Lỗi server
+          alert(error);
+          this.$router.push("/login");
+        }
       }
     },
 
-    deleteCategory(id_book) {
+    async deleteCategory(id_book) {
       this.isLoadingAction = true;
-      const form = { id: id_book };
-      console.log(form);
 
-      const url = `/api/admin/categories/delete`;
-      fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer <your_token_here>", // Nếu có token
-        },
-        body: JSON.stringify(form),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`Failed to delete book with id ${id_book}.`);
+      console.log(id_book);
+
+      try {
+        this.isLoadingAction = true;
+
+        const response = await axiosInstance.delete(
+          "/admin/categories/delete",
+          {
+            data: {
+              id: id_book,
+            },
           }
-          return response.json();
-        })
-        .then((data) => {
-          if (data.success) {
-            this.isLoadingAction = false;
-            this.fetchCategory(1);
-          }
-        })
-        .catch((error) => {
-          console.error("Error deleting book:", error);
-        });
+        );
+
+        if (response.status === 200) {
+          this.isLoadingAction = false;
+          this.fetchCategory(1);
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response.status === 401) {
+          // Không có accesstoken
+          this.$router.push("/login");
+        }
+        if (error.response.status === 403) {
+          // refreshtoken hết hạn
+          alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          this.$router.push("/login");
+        }
+        if (error.response.status === 500) {
+          // Lỗi server
+          alert(error);
+          this.$router.push("/login");
+        }
+      }
     },
     confirmDelete() {
       console.log("vao hàm delete", this.idDelete);
@@ -570,24 +594,14 @@ export default {
 
     async editCategory() {
       this.isLoadingAction = true;
-      const formData = { id: this.id_category, name: this.category_name };
 
       try {
-        const response = await fetch(`/api/admin/categories/change?`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer <your_token_here>", // Nếu có token
-          },
-          body: JSON.stringify(formData), // Chỉ cần truyền formData, không cần thiết lập 'Content-Type'
+        const response = await axiosInstance.put("/admin/categories/change", {
+          id: this.id_category,
+          name: this.category_name,
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        if (data.success) {
+        if (response.status === 200) {
           this.isLoadingAction = false;
 
           this.fetchCategory(this.current_page);
@@ -597,15 +611,34 @@ export default {
           const status = "Lưu thay đổi";
           const color = "bg-warning";
           this.openNotice(status, color);
-        } else {
-          const status = "Vui lòng chọn mục thay đổi";
-          this.openNotice(status);
-        }
 
-        // Cập nhật lại danh sách sách sau khi thêm mới
-        this.fetchCategory(this.current_page);
+          // Cập nhật lại danh sách sách sau khi thêm mới
+          this.fetchCategory(this.current_page);
+        }
       } catch (error) {
-        this.status = "Thất bại khi thêm sách !!!";
+        console.log(error);
+        if (error.response.status === 400) {
+          this.isLoadingAction = false;
+          this.isEditCategory = false;
+
+          const status = "Tên thể loại mới đã tồn tại";
+          const color = "bg-warning";
+          this.openNotice(status, color);
+        }
+        if (error.response.status === 401) {
+          // Không có accesstoken
+          this.$router.push("/login");
+        }
+        if (error.response.status === 403) {
+          // refreshtoken hết hạn
+          alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          this.$router.push("/login");
+        }
+        if (error.response.status === 500) {
+          // Lỗi server
+          alert(error);
+          this.$router.push("/login");
+        }
       }
     },
     async callEditCategory() {

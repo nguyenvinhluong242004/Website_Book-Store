@@ -40,27 +40,32 @@ export default {
   methods: {
     async handleRouteChange() {
       const token = this.$route.query.accessToken;
-      if (token) {
-        console.log("Access Token:", token);
+      const status = this.$route.query.status;
+      if (status === '200') {
+        if (token) {
+          console.log("Access Token:", token);
 
-        // Lưu vào localStorage
-        localStorage.setItem("accessToken", token);
+          // Lưu vào localStorage
+          localStorage.setItem("accessToken", token);
 
-        // Xóa accessToken khỏi URL để tránh hiển thị dư thừa
-        this.$router.replace({ query: null });
+          // Xóa accessToken khỏi URL để tránh hiển thị dư thừa
+          this.$router.replace({ query: null });
 
-        try {
-          // Gửi yêu cầu để lấy xem người dùng có đang đăng nhập không
-          const response = await axiosInstance.get("/account/merge-cart");
-
-          if (response.status === 200) {
-            alert("haha");
+          try {
+            // Gửi yêu cầu để lấy xem người dùng có đang đăng nhập không
+            const response = await axiosInstance.get("/account/merge-cart");
             console.log(response);
+
+          } catch (error) {
+            console.log(error);
           }
-        } catch (error) {
-          alert('thatbai');
-          alert(error);
         }
+      } else if (status === '401') {
+        this.$router.replace({ query: null });
+        this.$router.push("/login");
+      } else if (status === '500') {
+        this.$router.replace({ query: null });
+        this.$router.push("/login");
       }
     },
   },
