@@ -28,7 +28,10 @@
           </div>
           <nav v-if="total_pageAddress > 1" class="mt-2">
             <ul class="pagination pagination-sm">
-              <li class="page-item" :class="{ disabled: currentPageAddress === 1 }">
+              <li
+                class="page-item"
+                :class="{ disabled: currentPageAddress === 1 }"
+              >
                 <a
                   class="page-link"
                   href="#"
@@ -130,7 +133,9 @@
           :key="index"
         >
           <div class="col-8 d-flex align-items-center">
-            <img :src="product.image" alt="product image" />
+            <div class="img-container">
+              <img :src="product.image" alt="product image" class="h-100" />
+            </div>
             <div class="h-100 d-flex flex-column justify-content-between">
               <div class="checkout-item-name">
                 {{ product.book_name }}

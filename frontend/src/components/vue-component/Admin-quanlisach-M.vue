@@ -1071,6 +1071,7 @@
 
 <script>
 import "../css-component/admin-category.css";
+import axiosInstance from "../../services/axiosInstance.js";
 
 export default {
   name: "AdminCategory",
@@ -1309,86 +1310,182 @@ export default {
 
       try {
         this.isLoadingAction = true;
-        const response = await fetch("/api/admin/books/add", {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer <your_token_here>", // Nếu có token
-          },
-          body: formData, // Chỉ cần truyền formData, không cần thiết lập 'Content-Type'
-        });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        const response = await axiosInstance.post(
+          "/admin/books/add",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data", // Quan trọng
+            },
+          }
+        );
 
-        const data = await response.json();
-        if (data.success) {
+        if (response.status === 200) {
           this.isLoadingAction = false;
           this.status = "Thêm sách thành công";
-        } else {
-          this.status = "Thất bại khi thêm sách !";
+          this.fetchBook(this.current_page);
         }
-
-        // Cập nhật lại danh sách sách sau khi thêm mới
-        this.fetchBook(this.current_page);
       } catch (error) {
-        this.status = "Thất bại khi thêm sách !!!";
+        console.log(error);
+        if (error.response.status === 401) {
+          // Không có accesstoken
+          this.$router.push("/login");
+        }
+        if (error.response.status === 403) {
+          // refreshtoken hết hạn
+          alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          this.$router.push("/login");
+        }
+        if (error.response.status === 500) {
+          // Lỗi server
+          alert(error);
+          this.$router.push("/login");
+        }
       }
+
+      // try {
+      //   this.isLoadingAction = true;
+
+      //   const response = await fetch("/api/admin/books/add", {
+      //     method: "POST",
+      //     headers: {
+      //       Authorization: "Bearer <your_token_here>", // Nếu có token
+      //     },
+      //     body: formData, // Chỉ cần truyền formData, không cần thiết lập 'Content-Type'
+      //   });
+
+      //   if (!response.ok) {
+      //     throw new Error(`HTTP error! status: ${response.status}`);
+      //   }
+
+      //   const data = await response.json();
+      //   if (data.success) {
+      //     this.isLoadingAction = false;
+      //     this.status = "Thêm sách thành công";
+      //   } else {
+      //     this.status = "Thất bại khi thêm sách !";
+      //   }
+
+      //   // Cập nhật lại danh sách sách sau khi thêm mới
+      //   this.fetchBook(this.current_page);
+      // } catch (error) {
+      //   this.status = "Thất bại khi thêm sách !!!";
+      // }
     },
 
     async fetchBook(page) {
       this.isLoading = true;
       try {
-        const response = await fetch(`/api/admin/books?page=${page}`, {
-          method: "GET", // Phương thức GET để lấy dữ liệu
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer <your_token_here>", // Nếu cần gửi token
-          },
-        });
+        const response = await axiosInstance.get(`/admin/books?page=${page}`);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        if (response.status === 200) {
+          this.isLoading = false;
+
+          this.books = response.data.data;
+
+          this.total_pages = response.data.total_pages;
+          this.current_page = parseInt(response.data.current_page, 10);
+
+          this.category = response.data.categories.data;
+
+          return response.data;
         }
-
-        const data = await response.json(); // Chuyển dữ liệu từ JSON thành đối tượng
-        this.isLoading = false;
-
-        this.books = data.data;
-
-        this.total_pages = data.total_pages;
-        this.current_page = parseInt(data.current_page, 10);
-
-        this.category = data.categories.data;
-        // this.calculatePageNumbers();
-        return data; // Trả về dữ liệu để dùng ở nơi khác
       } catch (error) {
-        console.error("Fetch failed:", error); // Bắt lỗi và hiển thị trong console
+        console.log(error);
+        if (error.response.status === 401) {
+          // Không có accesstoken
+          this.$router.push("/login");
+        }
+        if (error.response.status === 403) {
+          // refreshtoken hết hạn
+          alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          this.$router.push("/login");
+        }
+        if (error.response.status === 500) {
+          // Lỗi server
+          alert(error);
+          this.$router.push("/login");
+        }
       }
+
+      // try {
+      //   const response = await fetch(`/api/admin/books?page=${page}`, {
+      //     method: "GET", // Phương thức GET để lấy dữ liệu
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: "Bearer <your_token_here>", // Nếu cần gửi token
+      //     },
+      //   });
+
+      //   if (!response.ok) {
+      //     throw new Error(`HTTP error! status: ${response.status}`);
+      //   }
+
+      //   const data = await response.json(); // Chuyển dữ liệu từ JSON thành đối tượng
+      //   this.isLoading = false;
+
+      //   this.books = data.data;
+
+      //   this.total_pages = data.total_pages;
+      //   this.current_page = parseInt(data.current_page, 10);
+
+      //   this.category = data.categories.data;
+      //   // this.calculatePageNumbers();
+      //   return data; // Trả về dữ liệu để dùng ở nơi khác
+      // } catch (error) {
+      //   console.error("Fetch failed:", error); // Bắt lỗi và hiển thị trong console
+      // }
     },
     getCategoryName(id) {
       const category = this.category.find((cat) => cat.id_category === id);
       return category ? category.name : "Không có";
     },
-    deleteBook(id_book) {
-      const url = `/api/admin/books/delete?id=${id_book}`;
-      fetch(url, {
-        method: "DELETE",
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`Failed to delete book with id ${id_book}.`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data.success) {
-            this.fetchBook(1);
-          }
-        })
-        .catch((error) => {
-          console.error("Error deleting book:", error);
-        });
+    async deleteBook(id_book) {
+      try {
+        const response = await axiosInstance.delete(
+          `/admin/books/delete?id=${id_book}`
+        );
+
+        if (response.status === 200) {
+          this.fetchBook(1);
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response.status === 401) {
+          // Không có accesstoken
+          this.$router.push("/login");
+        }
+        if (error.response.status === 403) {
+          // refreshtoken hết hạn
+          alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          this.$router.push("/login");
+        }
+        if (error.response.status === 500) {
+          // Lỗi server
+          alert(error);
+          this.$router.push("/login");
+        }
+      }
+
+      // const url = `/api/admin/books/delete?id=${id_book}`;
+      // fetch(url, {
+      //   method: "DELETE",
+      // })
+      //   .then((response) => {
+      //     if (!response.ok) {
+      //       throw new Error(`Failed to delete book with id ${id_book}.`);
+      //     }
+      //     return response.json();
+      //   })
+      //   .then((data) => {
+      //     if (data.success) {
+      //       this.fetchBook(1);
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error deleting book:", error);
+      //   });
     },
     confirmDelete() {
       this.deleteBook(this.idDelete);
@@ -1406,7 +1503,6 @@ export default {
     },
 
     async editBook(id_book) {
-      this.isLoadingAction = true;
       const formData = new FormData();
 
       // Thêm dữ liệu vào FormData
@@ -1438,37 +1534,77 @@ export default {
       }
 
       try {
-        const response = await fetch(`/api/admin/books/change?id=${id_book}`, {
-          method: "PUT",
-          headers: {
-            Authorization: "Bearer <your_token_here>", // Nếu có token
-          },
-          body: formData, // Chỉ cần truyền formData, không cần thiết lập 'Content-Type'
-        });
+        this.isLoadingAction = true;
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        const response = await axiosInstance.put(
+          `admin/books/change?id=${id_book}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data", // Quan trọng
+            },
+          }
+        );
 
-        const data = await response.json();
-        if (data.success) {
-          console.log(data);
+        if (response.status === 200) {
           this.isLoadingAction = false;
           this.fetchBook(this.current_page);
           this.isEditBook = false;
           const status = "Lưu thay đổi";
           const color = "bg-warning";
           this.openNotice(status, color);
-        } else {
-          const status = "Vui lòng chọn mục thay đổi";
-          this.openNotice(status);
         }
-
-        // Cập nhật lại danh sách sách sau khi thêm mới
-        this.fetchBook(this.current_page);
       } catch (error) {
-        this.status = "Thất bại khi thêm sách !!!";
+        console.log(error);
+        if (error.response.status === 401) {
+          // Không có accesstoken
+          this.$router.push("/login");
+        }
+        if (error.response.status === 403) {
+          // refreshtoken hết hạn
+          alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          this.$router.push("/login");
+        }
+        if (error.response.status === 500) {
+          // Lỗi server
+          alert(error);
+          this.$router.push("/login");
+        }
       }
+
+      // try {
+      //   this.isLoadingAction = true;
+      //   const response = await fetch(`/api/admin/books/change?id=${id_book}`, {
+      //     method: "PUT",
+      //     headers: {
+      //       Authorization: "Bearer <your_token_here>", // Nếu có token
+      //     },
+      //     body: formData, // Chỉ cần truyền formData, không cần thiết lập 'Content-Type'
+      //   });
+
+      //   if (!response.ok) {
+      //     throw new Error(`HTTP error! status: ${response.status}`);
+      //   }
+
+      //   const data = await response.json();
+      //   if (data.success) {
+      //     console.log(data);
+      //     this.isLoadingAction = false;
+      //     this.fetchBook(this.current_page);
+      //     this.isEditBook = false;
+      //     const status = "Lưu thay đổi";
+      //     const color = "bg-warning";
+      //     this.openNotice(status, color);
+      //   } else {
+      //     const status = "Vui lòng chọn mục thay đổi";
+      //     this.openNotice(status);
+      //   }
+
+      //   // Cập nhật lại danh sách sách sau khi thêm mới
+      //   this.fetchBook(this.current_page);
+      // } catch (error) {
+      //   this.status = "Thất bại khi thêm sách !!!";
+      // }
     },
     fetchDetailBook(id) {
       console.log("fasdfffdffffffff", this.edit_Book);
