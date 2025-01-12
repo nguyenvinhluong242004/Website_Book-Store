@@ -40,26 +40,6 @@ router.get('/google/callback',
                     sameSite: 'None', // Cho phép cookie được gửi trong các yêu cầu cross-origin
                     maxAge: 24 * 60 * 60 * 1000 // Thời gian sống của cookie (1 ngày)
                 });
-
-                if (req.session.cart && req.session.cart.length > 0) {
-                    // Merge giỏ hàng từ session vào cơ sở dữ liệu
-                    for (let item of req.session.cart) {
-                        const existingProduct = await cartModel.getBookByIDBook(foundUser.email, item.id_book);
-
-                        if (!existingProduct) {
-                            // Nếu sản phẩm chưa có trong giỏ hàng của người dùng, thêm mới vào
-                            await cartModel.addBookIntoCart(foundUser.email, item.id_book, item.quantity);
-                        } else {
-                            // Nếu sản phẩm đã có, cập nhật số lượng
-                            await cartModel.updateQuantity(foundUser.email, item.id_book, item.quantity);
-                        }
-                    }
-                    // Xóa giỏ hàng tạm thời trong session sau khi đã merge
-                    req.session.cart = [];
-
-                    console.log('Dữ liệu giỏ hàng tạm được thêm vào database');
-                }
-
                 // return res.status(200).json({ accessToken });
                 return res.redirect(`https://localhost:8080?accessToken=${accessToken}`);
             } else {
@@ -78,5 +58,7 @@ router.get('/google/callback',
         }
     }
 );
+
+
 
 module.exports = router;
