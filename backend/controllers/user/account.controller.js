@@ -11,7 +11,7 @@ class AccountController {
         try {
             const email = req.email;
             const userProfile = await userModel.getProfileByEmail(email);
-            console.log('USER PROFILE', userProfile);
+            // console.log('USER PROFILE', userProfile);
             if (!userProfile) {
                 return res.status(404).json({ message: 'Người dùng không tồn tại' });
             }
@@ -249,7 +249,7 @@ class AccountController {
     }
 
     // [PATCH]: account/my-order/cancel
-    
+    // Placeholder
 }
 
 module.exports = new AccountController();
