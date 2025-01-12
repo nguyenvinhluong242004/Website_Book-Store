@@ -24,7 +24,7 @@ app.use(credentials);
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(session({ 
-    secret: 'cats', 
+    secret: process.env.SESSION_SECRET, 
     resave: false, 
     saveUninitialized: true 
 }));

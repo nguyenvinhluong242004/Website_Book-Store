@@ -5,7 +5,7 @@ class CartModel {
         this.pool = pool;
     }
 
-    // 1. Get all product in cart by ID Book
+    // 1. Get product in cart by ID Book
     async getBookByIDBook(email, id_book) {
         const result = await this.pool.query('SELECT * FROM cart WHERE email = $1 and id_book = $2',
             [email, id_book]

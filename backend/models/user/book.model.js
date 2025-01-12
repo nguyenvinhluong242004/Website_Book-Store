@@ -186,7 +186,21 @@ class BookModel {
 
     static async getBookByID(id_book) {
         const result = await pool.query(
-            'SELECT * FROM book WHERE id_book = $1',
+            `
+            SELECT 
+                b.*, 
+                COALESCE(array_agg(ib.image_link) FILTER (WHERE ib.image_link IS NOT NULL), '{}') AS image_links
+            FROM 
+                book b
+            LEFT JOIN 
+                img_book ib 
+            ON 
+                b.id_book = ib.id_book
+            WHERE 
+                b.id_book = $1
+            GROUP BY 
+                b.id_book
+            `,
             [id_book]
         );
         return result.rows[0];
