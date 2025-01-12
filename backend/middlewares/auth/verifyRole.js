@@ -9,7 +9,7 @@ const verifyRole = (role) => {
         const userRoleValue = req.role;
         const requiredRoleValue = ROLES_LIST[role];
 
-        if (!userRoleValue || userRoleValue < requiredRoleValue) {
+        if (userRoleValue !== requiredRoleValue) {
             return res.sendStatus(403); // 403: Forbidden
         }
         next();
