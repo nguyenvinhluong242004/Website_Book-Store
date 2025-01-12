@@ -9,7 +9,6 @@ class CartController {
         const { id_book, quantity } = req.body;
 
         const authHeader = req.headers.authorization || req.headers.Authorization;
-        // console.log('AUTH HEADER:', authHeader);
 
         // Nếu không có Authorization header, lưu vào session
         if (!authHeader?.startsWith('Bearer ')) {
@@ -295,18 +294,15 @@ class CartController {
 
     async mergeCartForGoogleAccount(req, res) {
         const authHeader = req.headers.authorization || req.headers.Authorization;
-        console.log('MERGEAUTHHEADERRRRRRRRRR',authHeader);
-
+        console.log('AUTH HEADER BEFORE :', authHeader);
         // Nếu có Authorization header, xác minh JWT và lấy giỏ hàng từ database
         const token = authHeader.split(' ')[1];
         try {
             const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
             const email = decoded.UserInfo.email;
-            console.log('EMAILLLLLLLLLLLLLLLLLLL',email);
-            console.log('CARTTTTTTTTTT',req.session.cart);
-
+            console.log('EMAIL: ', email);
+            console.log('SESSION MERGE: ', req.session);
             if (req.session.cart && req.session.cart.length > 0) {
-                console.log('test 1');
                 // Merge giỏ hàng từ session vào cơ sở dữ liệu
                 for (let item of req.session.cart) {
                     const existingProduct = await cartModel.getBookByIDBook(email, item.id_book);
@@ -319,12 +315,14 @@ class CartController {
                         await cartModel.updateQuantity(email, item.id_book, item.quantity);
                     }
                 }
-                console.log('test 2');
-
                 // Xóa giỏ hàng tạm thời trong session sau khi đã merge
                 req.session.cart = [];
 
                 console.log('Dữ liệu giỏ hàng tạm được thêm vào database');
+                return res.status(200).json({
+                    success: true,
+                    message: "Thêm thành công sản phẩm vào giỏ hàng database",
+                })
             }
         } catch (err) {
             console.error(err);

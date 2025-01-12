@@ -30,8 +30,12 @@ passport.serializeUser(function (user, done) {
     done(null, user.email);
 });
 
-passport.deserializeUser(function (email, done) {
-    userModel.getUserByEmail(email)
-        .then(user => done(null, user))
-        .catch(err => done(err, null));
+passport.deserializeUser(async function (email, done) {
+    try {
+        // Lấy lại thông tin user từ database bằng email
+        const user = await userModel.getUserByEmail(email);
+        done(null, user);
+    } catch (err) {
+        done(err, null);
+    }
 });

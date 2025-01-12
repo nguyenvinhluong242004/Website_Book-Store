@@ -1,6 +1,6 @@
 const path = require('path'); 
 const express = require('express');
-const morgan = require('morgan');
+// const morgan = require('morgan');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -32,7 +32,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
