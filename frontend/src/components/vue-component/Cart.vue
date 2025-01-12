@@ -35,7 +35,11 @@
                 v-model="selectedProducts"
               />
               <div class="img-container">
-                <img :src="product.image_links[0]" alt="product image" class="h-100"/>
+                <img
+                  :src="product.image_links[0]"
+                  alt="product image"
+                  class="h-100"
+                />
               </div>
               <div
                 class="cart-item-name-price h-100 d-flex flex-column justify-content-between"
@@ -239,8 +243,7 @@ export default {
 
           // Xử lý các mã lỗi cụ thể
           if (status === 403) {
-            alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-            this.$router.push("/login");
+            alert("Phiên đăng nhập đã hết hạn.");
           } else if (status === 500) {
             alert(message);
           }
@@ -255,20 +258,54 @@ export default {
       if (this.selectAll) {
         // Nếu "Chọn tất cả", gán selectedItems cho tất cả ID sản phẩm
         this.selectedProducts = this.listProduct.map((item) => item.id_book);
+        console.log(this.selectedProducts);
       } else {
         // Nếu "Bỏ chọn tất cả", xóa hết các mục trong selectedItems
         this.selectedProducts = [];
       }
     },
 
-    handleCheckout() {
-      if (this.selectedProducts.length === 0) {
-        alert("Vui lòng chọn sản phẩm để thanh toán.");
-        return;
-      }
+    async handleCheckout() {
+      // Lấy id từ selected chiếu qua listProduct để lấy id và số lượng xong bỏ vô cart
+      const cart = this.selectedProducts
+        .map((id) => {
+          const foundProduct = this.listProduct.find(
+            (product) => product.id_book === id
+          );
+          return foundProduct
+            ? { id_book: foundProduct.id_book, quantity: foundProduct.quantity }
+            : null;
+        })
+        .filter((item) => item !== null);
 
-      // Chuyển hướng sang trang thanh toán
-      this.$router.push("/checkout");
+      console.log(cart);
+
+      try {
+        const response = await axiosInstance.post("/payment/pre-payment", {
+          cart: cart,
+        });
+
+        if (response.status === 200) {
+          // Chuyển hướng sang trang thanh toán
+          this.$router.push("/checkout");
+        }
+      } catch (error) {
+        if (error.response) {
+          const status = error.response.status;
+          const message = error.response.data.message;
+
+          // Xử lý các mã lỗi cụ thể
+          if (status === 403 || status === 401) {
+            alert("Vui lòng đăng nhập để tiếp tục.");
+            this.$router.push("/login");
+          } else if (status === 500) {
+            alert(message);
+          }
+        } else {
+          // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
+          alert("Lỗi mạng: Không thể kết nối đến server.");
+        }
+      }
     },
   },
   computed: {
