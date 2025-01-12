@@ -191,7 +191,7 @@ class StatisticalModel {
                 email,
                 adminEmail, // Email của admin thực hiện thay đổi
                 'Balance Update', // Loại giao dịch
-                balance - currentBalance, // Số tiền giao dịch (sự thay đổi giữa số dư mới và cũ)
+                Math.abs(balance - currentBalance), // Số tiền giao dịch (sự thay đổi giữa số dư mới và cũ)
                 currentBalance, // Số dư trước khi cập nhật
                 balance, // Số dư sau khi cập nhật
                 'Admin cập nhật số dư mới' // Mô tả giao dịch
