@@ -44,7 +44,7 @@
         </div>
       </div>
 
-      <nav v-if="total_page > 1" class="mx-4 mt-3">
+      <nav v-if="total_page > 1" class="mx-4 mt-4 d-flex justify-content-center">
         <ul class="pagination">
           <li class="page-item" :class="{ disabled: currentPage === 1 }">
             <a
@@ -226,7 +226,7 @@ export default {
       posterList: [],
       currentPage: 1,
       total_page: 0,
-      per_page: 2,
+      per_page: 3,
       total: 0,
 
       isModalVisible: false,

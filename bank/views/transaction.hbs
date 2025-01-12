@@ -23,6 +23,7 @@
                         <th>Người giao dịch</th>
                         <th>Số tiền</th>
                         <th>Thời gian</th>
+                        <th>Trạng thái</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -58,9 +59,11 @@
                 <p><strong>ID Đơn hàng:</strong> <span id="modal-id-invoice"></span></p>
                 <p><strong>ID Giao dịch:</strong> <span id="modal-id-payment"></span></p>
                 <p><strong>Người giao dịch:</strong> <span id="modal-full-name"></span></p>
+                <p><strong>Email:</strong> <span id="modal-email"></span></p>
                 <p><strong>Loại giao dịch:</strong> <span id="modal-loai-gd"></span></p>
                 <p><strong>Số tiền:</strong> <span id="modal-so-tien"></span> VND</p>
                 <p><strong>Thời gian:</strong> <span id="modal-thoi-gian"></span></p>
+                <p><strong>Trạng thái:</strong> <span id="modal-status"></span></p>
                 <hr>
                 <p><strong>Tài khoản số:</strong> <span id="modal-account-number"></span></p>
                 <p><strong>Số dư còn lại:</strong> <span id="modal-so-du"></span> VND</p>
@@ -102,12 +105,13 @@
                 tbody.append(`
                     <tr data-toggle="modal" data-target="#transactionModal" class="clickable-row"
                         style="cursor: pointer;" data-id="${transaction.id_payment}" data-nguoigd="${transaction.full_name}"
-                        data-loaigd="Ngân hàng" data-sotien="${transaction.amount}" data-taikhoan="${transaction.account_number}" data-sodu="${transaction.balance}" data-idinvoice="${transaction.id_invoice}"
-                        data-thoigian="${transaction.payment_date}">
+                        data-loaigd="Ngân hàng" data-sotien="${transaction.amount}" data-taikhoan="${transaction.account_number}" data-sodu="${transaction.balance}" data-idinvoice="${transaction.id_invoice}" data-email="${transaction.email}"
+                        data-thoigian="${transaction.payment_date}" data-status="${transaction.status}">
                         <td>${transaction.id_payment}</td>
                         <td>${transaction.full_name}</td>
                         <td>${transaction.amount} VND</td>
                         <td>${transaction.payment_date}</td>
+                        <td><span class="badge bg-info">${transaction.status}</span></td>
                         <td>
                             <button type="button" class="btn btn-primary">Xem chi tiết</button>
                         </td>
@@ -118,20 +122,24 @@
                 var id_invoice = $(this).data('idinvoice');
                 var id_payment = $(this).data('id');
                 var full_name = $(this).data('nguoigd');
+                var email = $(this).data('email');
                 var loaiGiaoDich = $(this).data('loaigd');
                 var soTien = $(this).data('sotien');
                 var thoiGian = $(this).data('thoigian');
                 var taiKhoan = $(this).data('taikhoan');
                 var soDu = $(this).data('sodu');
+                var status = $(this).data('status');
 
                 $('#modal-id-invoice').text(id_invoice);
                 $('#modal-id-payment').text(id_payment);
                 $('#modal-full-name').text(full_name);
+                $('#modal-email').text(email);
                 $('#modal-loai-gd').text(loaiGiaoDich);
                 $('#modal-so-tien').text(soTien);
                 $('#modal-thoi-gian').text(thoiGian);
                 $('#modal-account-number').text(taiKhoan);
                 $('#modal-so-du').text(soDu);
+                $('#modal-status').text(status);
 
                 $('#transactionModal').modal('show');
             });

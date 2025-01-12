@@ -18,6 +18,7 @@ router.post('/generate-token', (req, res) => {
     res.json({ token });  // Gửi token cho client
 });
 router.post('/register', authenticateToken, handleController.register);
+router.post('/refund', authenticateToken, handleController.refund);
 router.post('/get', authenticateToken, handleController.get);
 router.post('/pay', authenticateToken, handleController.pay);
 

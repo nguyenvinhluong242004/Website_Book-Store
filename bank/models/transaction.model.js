@@ -13,7 +13,8 @@ class StatisticalModel {
                     TRIM(TO_CHAR(p.Amount, '999G999G999G990')) AS Amount,
                     TO_CHAR(p.Payment_Date AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Ho_Chi_Minh', 'HH24:MI:SS - DD-MM-YYYY') AS Payment_Date,
                     ab.Account_ID,
-                    TRIM(TO_CHAR(ab.Balance, '999G999G999G990')) AS Balance
+                    TRIM(TO_CHAR(ab.Balance, '999G999G999G990')) AS Balance,
+                    p.status
                 FROM Payment p
                 JOIN Account_Bank ab ON p.Email = ab.Email
             `;
@@ -67,6 +68,7 @@ class StatisticalModel {
                     payment_date: transaction.payment_date,
                     account_number: transaction.account_id,
                     balance: transaction.balance,
+                    status: transaction.status
                 };
             });
 
