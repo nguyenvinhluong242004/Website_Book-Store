@@ -23,7 +23,11 @@ const port = process.env.PORT || 8888;
 app.use(credentials);
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }));
+app.use(session({ 
+    secret: 'cats', 
+    resave: false, 
+    saveUninitialized: true 
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.json());

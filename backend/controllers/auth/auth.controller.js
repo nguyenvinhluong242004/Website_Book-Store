@@ -32,12 +32,12 @@ const handleLogin = async (req, res) => {
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '1d' } // Hạn 1 tiếng
+                { expiresIn: '1h' } // Hạn 1 tiếng
             );
             const refreshToken = jwt.sign(
                 { "email": foundUser.email },
                 process.env.REFRESH_TOKEN_SECRET,
-                { expiresIn: '3d' } // Hạn 1 ngày
+                { expiresIn: '1d' } // Hạn 1 ngày
             );
 
             await userModel.updateRefreshToken(foundUser.email, refreshToken);
