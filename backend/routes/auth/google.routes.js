@@ -52,7 +52,7 @@ router.get('/google/callback',
                     req.session.cart = tempCart;
                     tempCart = [];
                 }
-                return res.redirect(`https://localhost:8080?status=200&success=true&accessToken=${accessToken}`);
+                return res.redirect(`https://localhost:8080?status=200&success=true&accessToken=${accessToken}&role=1`);
             } else {
                 return res.redirect(`https://localhost:8080?status=401&success=false&message=Login failed`);
             }
