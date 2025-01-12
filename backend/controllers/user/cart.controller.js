@@ -319,6 +319,11 @@ class CartController {
                     success: true,
                     message: "Thêm thành công sản phẩm vào giỏ hàng database",
                 })
+            } else {
+                return res.status(200).json({
+                    success: true,
+                    message: "Giỏ hàng của bạn đã được đồng bộ, không có sản phẩm mới.",
+                });
             }
         } catch (err) {
             console.error(err);
