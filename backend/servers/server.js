@@ -1,4 +1,4 @@
-const path = require('path'); 
+const path = require('path');
 const express = require('express');
 // const morgan = require('morgan');
 const session = require('express-session');
@@ -16,17 +16,17 @@ const options = { key: privateKey, cert: certificate };
 const app = express();
 
 require('dotenv').config({ path: '../.env' });
-const bodyParser = require('body-parser'); 
+const bodyParser = require('body-parser');
 const route = require('../routes/app.routes');
 const pool = require('../config/database');
 const port = process.env.PORT || 8888;
 app.use(credentials);
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(session({ 
-    secret: process.env.SESSION_SECRET, 
-    resave: false, 
-    saveUninitialized: true 
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -35,7 +35,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 
 pool.connect((err, client, release) => {
     if (err) {

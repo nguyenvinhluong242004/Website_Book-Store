@@ -62,7 +62,7 @@ class OrderModel {
             const result = await this.pool.query(query, [id_order]);
             return result.rows;
         } catch (error) {
-            console.error("Error fetching order details:", error);
+            console.error("Lỗi khi lấy dữ liệu bảng DETAIL_ORDER:", error);
             throw error;
         }
     }
@@ -78,7 +78,7 @@ class OrderModel {
             const result = await pool.query(query);
 
             if (result.rows.length > 0) {
-                const lastOrderId = parseInt(result.rows[0].id_order, 10); 
+                const lastOrderId = parseInt(result.rows[0].id_order, 10);
                 console.log('Last order ID:', lastOrderId);
                 return lastOrderId;
             } else {
@@ -86,7 +86,21 @@ class OrderModel {
                 return null;
             }
         } catch (error) {
-            console.error('Error fetching last order ID:', error);
+            console.error('Lỗi khi lấy ID cuối cùng của bảng order:', error);
+            throw error;
+        }
+    }
+
+    async create(id_order, email, total_amount, status, method, detail_address) {
+        try {
+            const query = `
+            INSERT INTO "orders" (id_order, email, total_amount, status, method, detail_address)
+            VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;
+            `;
+            const result = await pool.query(query, [id_order, email, total_amount, status, method, detail_address]);
+            return result.rows[0];
+        } catch (error) {
+            console.error('Lỗi khi thêm vào bảng ORDER: ', error);
             throw error;
         }
     }

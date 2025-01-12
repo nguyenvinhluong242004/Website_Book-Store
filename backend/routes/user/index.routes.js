@@ -16,7 +16,7 @@ const homeRoutes = require('./home.routes');
 // Protected routes
 router.use('/account', verifyJWT, verifyRole('user'), accountRoutes);
 router.use('/cart', cartRoutes);
-router.use('/payment', paymentRoutes);
+router.use('/payment', verifyJWT, verifyRole('user'), paymentRoutes);
 
 // Non-protected routes
 router.use('/detail-book', detailBookRoutes); 

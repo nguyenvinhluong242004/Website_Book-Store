@@ -10,10 +10,14 @@ class DashboardController {
         try {
             await HandleModel.createRequest(email);
 
-            res.status(200).send('Success');
+            res.status(200).json({
+                success: true,
+            });
         } catch (error) {
             console.error(error);
-            res.status(200).send('Server Error');
+            res.status(500).json({
+                success: false,
+            });
         }
     }
 
@@ -25,10 +29,14 @@ class DashboardController {
         try {
             await HandleModel.processPayment(email, id_invoice, amount);
 
-            res.status(200).send('Success');
+            res.status(200).json({
+                success: true,
+            });
         } catch (error) {
             console.error(error);
-            res.status(200).send('Server Error');
+            res.status(500).json({
+                success: false,
+            });
         }
     }
 
@@ -40,10 +48,14 @@ class DashboardController {
         try {
             await HandleModel.refundPayment(email, id_invoice);
 
-            res.status(200).send('Success');
+            res.status(200).json({
+                success: true,
+            });
         } catch (error) {
             console.error(error);
-            res.status(200).send('Server Error');
+            res.status(500).json({
+                success: false,
+            });
         }
     }
 
