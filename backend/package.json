@@ -4,11 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "serverBackend": "nodemon --inspect ./servers/server.js",
-    "serverFrontend": "cd ../frontend && npm run serve",
-    "serverBank": "cd ../bank && nodemon --inspect server.js",
-    "start": "concurrently \"npm run serverBackend\" \"npm run serverBank\" \"npm run serverFrontend\""
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
