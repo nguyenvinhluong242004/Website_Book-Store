@@ -14,9 +14,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  
+    cursor: pointer;
     color: white;
     font-weight: bold;
+  }
+  .nav-tab:hover {
+    color: rgb(16, 24, 39);
   }
   .fa-bars {
     margin-right: 10px;
