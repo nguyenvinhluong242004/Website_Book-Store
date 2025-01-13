@@ -236,7 +236,11 @@
                 >
                   -
                 </div>
-                <div>{{ this.quantityOfBook }}</div>
+                <input
+                  type="number"
+                  class="book-quantity-input text-center"
+                  v-model="quantityOfBook"
+                />
                 <div
                   type="button"
                   class="book-quantity-btn"
@@ -733,8 +737,8 @@ export default {
       isloadingsame: false,
       showNotice: false,
       statusString: "",
-      isLoadingCart:false,
-      type_money:'đ',
+      isLoadingCart: false,
+      type_money: "đ",
 
       //reviews
       images: [],
@@ -833,12 +837,22 @@ export default {
 
   methods: {
     async actionCart() {
-      await this.addToCart();
-      this.openNotice(this.statusString, "bg-success", "text-white");
+      if (this.quantityOfBook > parseInt(this.book.available_quantity)) {
+        this.statusString = "Vượt quá số lượng hiện có";
+        this.openNotice(this.statusString);
+      } else {
+        await this.addToCart();
+        this.openNotice(this.statusString, "bg-success", "text-white");
+      }
     },
     async actionBuy() {
-      await this.addToCart();
-      this.$router.push("/cart");
+      if (this.quantityOfBook > parseInt(this.book.available_quantity)) {
+        this.statusString = "Vượt quá số lượng hiện có";
+        this.openNotice(this.statusString);
+      } else {
+        await this.addToCart();
+        this.$router.push("/cart");
+      }
     },
     openNotice(
       statusString,
@@ -889,11 +903,10 @@ export default {
           if (response.status === 200) {
             this.isLoadingSendReview = false;
             this.toastMessage = "Cảm ơn vì review của bạn";
-            console.log('them review thanh cong');
+            console.log("them review thanh cong");
             await this.showToast("bg-success");
             this.resetForm();
             this.getReview(this.id_book, this.current_page);
-           
           }
         } catch (error) {
           if (error.response) {
@@ -971,6 +984,7 @@ export default {
         const response = await axios.get(`/api/detail-book?id=${id}`); // Lấy API qua proxy
         if (response.data.success) {
           this.book = response.data.data;
+          console.log(this.book);
           this.sameBook = response.data.relatedBooks;
 
           this.images = this.book.images;
@@ -1057,16 +1071,20 @@ export default {
       console.log(bgClass);
       const toastElement = this.$refs.successToast;
 
-      toastElement.classList.remove("bg-success", "bg-danger", "bg-warning", "bg-info");
+      toastElement.classList.remove(
+        "bg-success",
+        "bg-danger",
+        "bg-warning",
+        "bg-info"
+      );
 
       toastElement.classList.add(bgClass);
-         
+
       toastElement.classList.add("fadeIn");
-      
+
       toastElement.style.display = "block"; // Hiển thị toast
 
       // Thêm lớp màu (bgClass) vào toast
-  
 
       // Tự động ẩn toast sau 3 giây
       setTimeout(() => {
@@ -1141,7 +1159,7 @@ export default {
   display: block;
   background-color: rgb(0, 0, 0, 0);
 }
-.spinner{
+.spinner {
   display: block;
   display: block;
   position: fixed; /* Đặt spinner cố định trong màn hình */
