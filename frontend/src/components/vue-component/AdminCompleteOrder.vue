@@ -58,7 +58,7 @@
                 v-model="order.status"
                 @change="updateStatus(order.id_order, order.status)"
               >
-                <option value="Refused">Refused</option>
+                <option value="Cancelled">Cancelled</option>
                 <option value="Completed">Completed</option>
               </select>
             </td>
