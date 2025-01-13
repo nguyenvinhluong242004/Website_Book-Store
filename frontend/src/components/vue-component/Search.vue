@@ -8,19 +8,19 @@
 
         <div
           v-for="category in categories"
-          :key="category.id"
+          :key="category.id_category"
           class="form-check"
         >
           <input
             class="form-check-input"
             type="checkbox"
-            :value="category.id"
-            :id="'cb' + category.id"
-            :data-id="category.id"
+            :value="category.id_category"
+            :id="'cb' + category.id_category"
+            :data-id="category.id_category"
             v-model="selectedCategories"
             @change="handleFillter"
           />
-          <label class="form-check-label" :for="'cb' + category.id">
+          <label class="form-check-label" :for="'cb' + category.id_category">
             {{ category.name }}
           </label>
         </div>
@@ -85,7 +85,7 @@
 
     <div class="search-result-box">
       <div class="search-result-title">
-        Kết quả tìm kiếm
+        Kết quả tìm kiếm :
         <span class="text-primary">{{ this.searchQuery }}</span>
       </div>
 
@@ -303,6 +303,7 @@ export default {
     this.fetchProducts();
     console.log("start price", this.startPrice);
     console.log("end price", this.endPrice);
+    this.fetchGenres();
   },
 
   watch: {
@@ -414,6 +415,15 @@ export default {
         .finally(() => {
           this.isLoading = false;
         });
+    },
+    async fetchGenres() {
+      try {
+        const response = await axios.get('/api/genres'); // Thực hiện GET request
+        this.categories = response.data.genres;
+        console.log('FASDFASDFASFASDFASDFASDGFGHFGHDFG',this.categories);
+      } catch (error) {
+        console.error('Error fetching genres:', error);
+      }
     },
     toggleFilter(value) {
       // Kiểm tra nếu giá trị đã chọn thì hủy chọn
