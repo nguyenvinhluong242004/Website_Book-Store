@@ -6,7 +6,9 @@
     <HeaderApp @user-loaded="setUser" @toggle-dark-mode="setDarkMode" />
     <NavApp :categories="categories" :subcategories="subcategories" />
     
-    <router-view :user="user"/>
+    <main class="content">
+      <router-view :user="user"/>
+    </main>
 
     <FooterApp :dark-mode="darkMode" />
     <!-- <ChatBox /> -->

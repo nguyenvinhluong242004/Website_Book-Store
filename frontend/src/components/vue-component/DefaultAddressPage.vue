@@ -1,5 +1,15 @@
 <template>
   <div class="address-default-tab-body">
+    <div v-if="isLoading" class="loading-overlay">
+      <div
+        class="spinner-border text-primary"
+        style="width: 3rem; height: 3rem"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
     <div
       v-if="total_page === 0"
       class="text-body-tertiary fs-1 p-4 text-center"
@@ -106,6 +116,8 @@ export default {
       total_page: 0,
       per_page: 3,
       total: 0,
+
+      isLoading: false,
     };
   },
   computed: {
@@ -141,6 +153,8 @@ export default {
   methods: {
     async handleRouteChange() {
       try {
+        this.isLoading = true;
+
         const response = await axiosInstance.get(
           `/account/address?page=${this.currentPage}&per_page=${this.per_page}`
         );
@@ -150,8 +164,12 @@ export default {
           this.total_page = response.data.total_page;
           this.per_page = response.data.per_page;
           this.total = response.data.total;
+
+          this.isLoading = false;
         }
       } catch (error) {
+        this.isLoading = false;
+
         console.log(error);
         if (error.response.status === 401 || error.response.status === 403) {
           // Không có accesstoken hoặc refreshtoken hết hạn
@@ -166,6 +184,8 @@ export default {
     async goToPage(page) {
       if (page >= 1 && page <= this.total_page) {
         try {
+          this.isLoading = true;
+
           const response = await axiosInstance.get(
             `/account/address?page=${page}&per_page=${this.per_page}`
           );
@@ -175,8 +195,12 @@ export default {
             this.total_page = response.data.total_page;
             this.per_page = response.data.per_page;
             this.total = response.data.total;
+
+            this.isLoading = false;
           }
         } catch (error) {
+          this.isLoading = false;
+
           console.log(error);
           if (error.response.status === 401 || error.response.status === 403) {
             // Không có accesstoken hoặc refreshtoken hết hạn
@@ -197,6 +221,8 @@ export default {
     },
     async deleteAddress(id) {
       try {
+        this.isLoading = true;
+
         const response = await axiosInstance.delete("/account/delete-address", {
           data: {
             id_address: id,
@@ -204,9 +230,13 @@ export default {
         });
 
         if (response.status === 200) {
+          this.isLoading = false;
+
           this.handleRouteChange();
         }
       } catch (error) {
+        this.isLoading = false;
+
         if (error.response) {
           const status = error.response.status;
           const message = error.response.data.message;

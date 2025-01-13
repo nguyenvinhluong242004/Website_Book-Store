@@ -299,7 +299,7 @@ class AccountController {
                 const id_invoice = await invoiceModel.getIdByIdOrder(id_order);
                 console.log('ID Invoice:', id_invoice);
                 try {
-                    const tokenResponse = await axios.post('https://localhost:6868/request-server/generate-token',
+                    const tokenResponse = await axios.post(`${process.env.DOMAIN_BANK}/request-server/generate-token`,
                         { email },
                         {
                             headers:
@@ -311,7 +311,7 @@ class AccountController {
 
                     const data = { email, id_invoice };
 
-                    await axios.post('https://localhost:6868/request-server/refund',
+                    await axios.post(`${process.env.DOMAIN_BANK}/request-server/refund`,
                         data,
                         {
                             headers: {
@@ -345,7 +345,7 @@ class AccountController {
 
             let tokenResponse;
             try {
-                tokenResponse = await axios.post('https://localhost:6868/request-server/generate-token',
+                tokenResponse = await axios.post(`${process.env.DOMAIN_BANK}/request-server/generate-token`,
                     { email },
                     {
                         headers: { 'Content-Type': 'application/json' },
@@ -362,7 +362,7 @@ class AccountController {
 
             let bankAccountResponse;
             try {
-                bankAccountResponse = await axios.post('https://localhost:6868/request-server/get',
+                bankAccountResponse = await axios.post(`${process.env.DOMAIN_BANK}/request-server/get`,
                     data,
                     {
                         headers: {

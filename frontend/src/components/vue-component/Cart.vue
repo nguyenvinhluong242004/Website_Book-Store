@@ -1,5 +1,11 @@
 <template>
   <div class="cart-container">
+    <div v-if="isLoading" class="loading-overlay">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
     <div class="cart-detail">
       <div class="row cart-detail-header">
         <div class="col-7">
@@ -145,6 +151,8 @@ export default {
       selectAll: false,
 
       selectedProducts: [],
+
+      isLoading: false,
     };
   },
   mounted() {
@@ -163,6 +171,8 @@ export default {
     async updateQuantity(id_book, newQuantity, available_quantity) {
       if (newQuantity > 0 && newQuantity <= available_quantity) {
         try {
+          this.isLoading = true;
+
           const response = await axiosInstance.patch("/cart/update", {
             id_book: String(id_book),
             quantity: newQuantity,
@@ -170,11 +180,15 @@ export default {
 
           if (response.status === 200) {
             this.listProduct = response.data.cart;
+
+            this.isLoading = false;
             // this.$router.push("/").then(() => {
             //   this.$router.push("/cart");
             // });
           }
         } catch (error) {
+          this.isLoading = false;
+
           if (error.response) {
             const status = error.response.status;
             const message = error.response.data.message;
@@ -182,13 +196,15 @@ export default {
             // Xử lý các mã lỗi cụ thể
             if (status === 403) {
               alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-              this.$router.push("/login");
+              this.handleRouteChange();
             } else if (status === 500) {
               alert(message);
+              this.handleRouteChange();
             }
           } else {
             // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
             alert("Lỗi mạng: Không thể kết nối đến server.");
+            this.handleRouteChange();
           }
         }
       }
@@ -198,6 +214,8 @@ export default {
     },
     async deleteProduct(id_book) {
       try {
+        this.isLoading = true;
+
         const response = await axiosInstance.delete("/cart/delete", {
           data: {
             id_book: String(id_book),
@@ -206,11 +224,15 @@ export default {
 
         if (response.status === 200) {
           this.listProduct = response.data.cart;
+
+          this.isLoading = false;
           // this.$router.push("/").then(() => {
           //   this.$router.push("/cart");
           // });
         }
       } catch (error) {
+        this.isLoading = false;
+
         if (error.response) {
           const status = error.response.status;
           const message = error.response.data.message;
@@ -218,25 +240,33 @@ export default {
           // Xử lý các mã lỗi cụ thể
           if (status === 403) {
             alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-            this.$router.push("/login");
+            this.handleRouteChange();
           } else if (status === 500) {
             alert(message);
+            this.handleRouteChange();
           }
         } else {
           // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
           alert("Lỗi mạng: Không thể kết nối đến server.");
+          this.handleRouteChange();
         }
       }
     },
     async handleRouteChange() {
       try {
+        this.isLoading = true;
+
         const response = await axiosInstance.get("/cart");
 
         if (response.status === 200) {
           this.listProduct = response.data.cart;
           console.log(this.listProduct);
+
+          this.isLoading = false;
         }
       } catch (error) {
+        this.isLoading = false;
+
         if (error.response) {
           const status = error.response.status;
           const message = error.response.data.message;
@@ -244,12 +274,15 @@ export default {
           // Xử lý các mã lỗi cụ thể
           if (status === 403) {
             alert("Phiên đăng nhập đã hết hạn.");
+            this.handleRouteChange();
           } else if (status === 500) {
             alert(message);
+            this.handleRouteChange();
           }
         } else {
           // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
           alert("Lỗi mạng: Không thể kết nối đến server.");
+          this.handleRouteChange();
         }
       }
     },
@@ -267,6 +300,8 @@ export default {
 
     async handleCheckout() {
       // Lấy id từ selected chiếu qua listProduct để lấy id và số lượng xong bỏ vô cart
+      this.isLoading = true;
+
       const cart = this.selectedProducts
         .map((id) => {
           const foundProduct = this.listProduct.find(
@@ -287,9 +322,12 @@ export default {
 
         if (response.status === 200) {
           // Chuyển hướng sang trang thanh toán
+          this.isLoading = false;
           this.$router.push("/checkout");
         }
       } catch (error) {
+        this.isLoading = false;
+        
         if (error.response) {
           const status = error.response.status;
           const message = error.response.data.message;
@@ -300,10 +338,12 @@ export default {
             this.$router.push("/login");
           } else if (status === 500) {
             alert(message);
+            this.handleRouteChange();
           }
         } else {
           // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
           alert("Lỗi mạng: Không thể kết nối đến server.");
+          this.handleRouteChange();
         }
       }
     },

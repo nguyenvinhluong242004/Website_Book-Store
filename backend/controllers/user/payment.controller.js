@@ -123,7 +123,7 @@ class PaymentController {
                 updateQuantityOfBook(bookDetails);
             } else if (method === 'online') {
                 const tokenResponse = await axios.post(
-                    'https://localhost:6868/request-server/generate-token',
+                    `${process.env.DOMAIN_BANK}/request-server/generate-token`,
                     { email }, // Dữ liệu gửi đi
                     {
                         headers: { 'Content-Type': 'application/json' },
@@ -138,7 +138,7 @@ class PaymentController {
                 const data = { email, id_invoice, amount };
                 console.log('DATE SEND: ', data);
                 const paymentResponse = await axios.post(
-                    'https://localhost:6868/request-server/pay',
+                    `${process.env.DOMAIN_BANK}/request-server/pay`,
                     data, // Dữ liệu thanh toán
                     {
                         headers: {

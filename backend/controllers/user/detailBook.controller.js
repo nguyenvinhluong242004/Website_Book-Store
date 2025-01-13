@@ -1,5 +1,5 @@
-const BookModel = require('../../models/User/book.model');
-const ReviewModel = require('../../models/User/review.model');
+const BookModel = require('../../models/user/book.model');
+const ReviewModel = require('../../models/user/review.model');
 
 class DetailBookController {
 
