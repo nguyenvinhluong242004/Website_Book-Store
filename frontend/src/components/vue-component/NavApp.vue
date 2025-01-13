@@ -20,7 +20,7 @@
     <div class="nav-news nav-tab">TIN TỨC</div>
     <div class="nav-review nav-tab">REVIEW</div>
     <div class="nav-colab nav-tab">HỢP TÁC</div>
-    <!-- <div class="nav-lookUp nav-tab">TRA CỨU ĐƠN</div> -->
+    <div class="nav-lookUp nav-tab">TRA CỨU ĐƠN</div>
   </div>
 </template>
 
