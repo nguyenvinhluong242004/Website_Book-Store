@@ -226,7 +226,7 @@ class BookModel {
         }
     }
 
-    static async reverseQuantity(id_book, quantity){
+    static async reverseQuantity(client, id_book, quantity){
         try {
             const query = `
                 UPDATE book
@@ -236,7 +236,7 @@ class BookModel {
                 WHERE id_book = $2;
             `;
     
-            const result = await pool.query(query, [quantity, id_book]);
+            const result = await client.query(query, [quantity, id_book]);
     
             console.log(`Cập nhật book ID ${id_book}: giảm số lượng hiện có ${quantity}, tăng số lương đã bán ${quantity}`);
             return result.rowCount; 

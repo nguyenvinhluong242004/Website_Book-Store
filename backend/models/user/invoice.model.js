@@ -39,7 +39,7 @@ class InvoiceModel {
         }
     }
 
-    async getIdByIdOrder(id_order) {
+    async getIdByIdOrder(client, id_order) {
         try {
             const query = `
                 SELECT id_invoice
@@ -47,7 +47,7 @@ class InvoiceModel {
                 WHERE id_order = $1;
             `;
 
-            const result = await pool.query(query, [id_order]);
+            const result = await client.query(query, [id_order]);
 
             if (result.rows.length > 0) {
                 return result.rows[0].id_invoice; 

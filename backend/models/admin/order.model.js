@@ -83,8 +83,8 @@ class OrderModel {
     }
 
     // Update status of product
-    async updateStatus(id_order, status) {
-        const result = await this.pool.query(
+    async updateStatus(client, id_order, status) {
+        const result = await client.query(
             `UPDATE orders
             SET status = $1
             WHERE id_order = $2
