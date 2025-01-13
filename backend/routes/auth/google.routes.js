@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const https = require('https');
+const axios = require('axios');
 
 const userModel = require('../../models/user.model');
 

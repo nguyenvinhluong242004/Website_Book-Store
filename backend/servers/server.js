@@ -19,7 +19,7 @@ require('dotenv').config({ path: '../.env' });
 const bodyParser = require('body-parser');
 const route = require('../routes/app.routes');
 const pool = require('../config/database');
-const port = process.env.PORT || 8888;
+const port = process.env.PORT_BACK || 8888;
 app.use(credentials);
 app.use(cors(corsOptions));
 app.use(cookieParser());

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Tạo instance Axios
 const axiosInstance = axios.create({
-    baseURL: process.env.DOMAIN_BACKEND,
+    baseURL: 'https://localhost:8888',
     timeout: 10000, // Thời gian timeout của các yêu cầu
 });
 

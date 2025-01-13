@@ -16,7 +16,7 @@ class OrderModel {
         const offset = (page - 1) * per_page;
 
         const result = await this.pool.query(
-            "SELECT * FROM orders LIMIT $1 OFFSET $2",
+            "SELECT * FROM orders ORDER BY created_at DESC LIMIT $1 OFFSET $2",
             [per_page, offset]
         );
         return result.rows;
@@ -26,7 +26,7 @@ class OrderModel {
         const offset = (page - 1) * per_page;
 
         const result = await this.pool.query(
-            "SELECT * FROM orders WHERE status = $3 LIMIT $1 OFFSET $2",
+            "SELECT * FROM orders WHERE status = $3 ORDER BY created_at DESC LIMIT $1 OFFSET $2",
             [per_page, offset, status]
         );
         return result.rows;
