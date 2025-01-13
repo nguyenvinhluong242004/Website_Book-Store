@@ -2,16 +2,8 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const https = require('https');
-const axios = require('axios');
 
 const userModel = require('../../models/user.model');
-
-// Public thì bỏ đi
-const agent =
-    process.env.NODE_ENV === 'development'
-        ? new https.Agent({ rejectUnauthorized: false })
-        : undefined;
 
 let tempCart = [];
 
