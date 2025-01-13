@@ -1,22 +1,26 @@
 <template>
-  <div class="header">
+  <div class="header" :class="{ dark: darkMode, light: !darkMode }">
     <div class="grid-item-logo">
       <router-link to="/"><i class="fas fa-book"></i></router-link>
 
       <div class="header-logo">BÁCH KHOA SÁCH</div>
     </div>
-    <div class="grid-item-search">
-      <input
-        class="input"
-        type="text"
-        id="myInput"
-        name="myInput"
-        placeholder="Bạn muốn đọc sách gì..."
-        v-model="searchQuery"
-        @keyup.enter="search"
-      />
-      <div class="glass" @click="search"><i class="fas fa-search"></i></div>
+
+    <div style="display: flex;flex-direction: column;justify-content: center;">
+      <div class="grid-item-search">
+        <input
+          class="input"
+          type="text"
+          id="myInput"
+          name="myInput"
+          placeholder="Bạn muốn đọc sách gì..."
+          v-model="searchQuery"
+          @keyup.enter="search"
+        />
+        <div class="glass" @click="search"><i class="fas fa-search"></i></div>
+      </div>
     </div>
+
     <div class="grid-item-icon">
       <div
         class="iconNoti"
@@ -169,6 +173,9 @@ import axiosInstance from "../../services/axiosInstance.js";
 
 export default {
   name: "HeaderApp",
+  props: {
+    darkMode: Boolean, // Nhận trạng thái từ UserApp
+  },
   data() {
     return {
       searchQuery: "", // Lưu trữ giá trị tìm kiếm
