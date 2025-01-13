@@ -1,5 +1,36 @@
 <template>
   <div class="book-container">
+    <!-- Modal hiển thị thông báo chung cho các hành động -->
+    <div
+      class="modal fade"
+      :class="{ show: showNotice }"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="showNotice"
+      aria-hidden="true"
+      v-if="showNotice"
+    >
+      <div
+        class="modal-dialog text-center modal-dialog-centered modal-sm"
+        role="document"
+      >
+        <div class="modal-content" :class="modalColor">
+          <div class="modal-body" :class="modalColorText">
+            {{ statusString }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spinner loading -->
+    <div
+      v-if="isLoadingCart"
+      class="spinner-border spinner text-primary mb-3"
+      role="status"
+    >
+      <span class="sr-only">Loading...</span>
+    </div>
+
     <div v-if="isModalVisible" class="modal" @click.self="closeModal">
       <div class="modal-content">
         <span class="close" @click="closeModal">&times;</span>
@@ -130,11 +161,11 @@
         </div>
 
         <div class="book-cart-buy">
-          <div class="book-add-cart" @click="addToCart">
+          <div class="book-add-cart" @click="actionCart">
             <i class="fas fa-cart-plus"></i>
             Thêm vào giỏ hàng
           </div>
-          <div class="book-buy-now">Mua ngay</div>
+          <div class="book-buy-now" @click="actionBuy">Mua ngay</div>
         </div>
         <div class="mt-2"><b>Chính sách ưu đãi của BKS</b></div>
         <div class="book-thoigiangiao mt-2">
@@ -143,7 +174,7 @@
             Giao nhanh và uy tín
           </div>
 
-          <i class="fas fa-angle-right" @click="showModal"></i>
+          <i class="fas fa-angle-right h" @click="showModal"></i>
         </div>
         <div class="book-thoigiangiao mt-2">
           <div>
@@ -151,7 +182,7 @@
             miễn phí toàn quốc
           </div>
 
-          <i class="fas fa-angle-right" @click="showModal_1"></i>
+          <i class="fas fa-angle-right h" @click="showModal_1"></i>
         </div>
 
         <div class="book-thoigiangiao mt-2">
@@ -159,7 +190,7 @@
             <i class="fas fa-store"></i>
             <b> Chính sách khách sỉ</b>: Ưu đãi khi mua số lượng lớn
           </div>
-          <i class="fas fa-angle-right" @click="showModal_2"></i>
+          <i class="fas fa-angle-right h" @click="showModal_2"></i>
         </div>
       </div>
 
@@ -273,18 +304,21 @@
           </div>
         </div>
 
-        <div class="book-spec mt-3">
+        <div class="book-spec p-3 mt-3">
           <span v-bind:class="{ expanded: isExpanded }">
             {{ book.description }}
           </span>
-          <div class="book-btn-see-more-des" @click="toggleDescription">
+          <div
+            class="book-btn-see-more-des text-center"
+            @click="toggleDescription"
+          >
             {{ isExpanded ? "Thu gọn" : "Xem thêm" }}
           </div>
         </div>
       </div>
     </div>
-    
-  <!-- Sản phẩm tương tự -->
+
+    <!-- Sản phẩm tương tự -->
     <div class="book-recommend mt-3">
       <h3>Sản phẩm tương tự</h3>
 
@@ -573,13 +607,12 @@
               {{ review.content }}
             </div>
 
-            <div v-if="isImageLoaded" class="review-content-images">
+            <div v-if="review.image_link" class="review-content-images">
               <div class="image-ctn">
                 <img
                   :src="review.image_link"
                   class="image-review"
                   alt="image review"
-                   @error="handleImageError"
                 />
               </div>
             </div>
@@ -591,7 +624,10 @@
           <nav>
             <ul class="pagination pagination-sm">
               <li class="page-item" :class="{ disabled: current_page === 1 }">
-                <button class="page-link" @click="goToPage(id_book,current_page - 1)">
+                <button
+                  class="page-link"
+                  @click="goToPage(id_book, current_page - 1)"
+                >
                   «
                 </button>
               </li>
@@ -602,7 +638,9 @@
                 :class="{ disabled: current_page === 1 }"
                 v-if="visiblePages[0] > 1"
               >
-                <button class="page-link" @click="goToPage(id_book,1)">1</button>
+                <button class="page-link" @click="goToPage(id_book, 1)">
+                  1
+                </button>
               </li>
 
               <!-- Hiển thị dấu ba chấm nếu có nhiều trang -->
@@ -617,7 +655,10 @@
                 :key="pageNumber"
                 :class="{ active: pageNumber === current_page }"
               >
-                <button class="page-link" @click="goToPage(id_book,pageNumber)">
+                <button
+                  class="page-link"
+                  @click="goToPage(id_book, pageNumber)"
+                >
                   {{ pageNumber }}
                 </button>
               </li>
@@ -628,12 +669,15 @@
               </li>
 
               <!-- Hiển thị số trang cuối cùng -->
-             <li
+              <li
                 class="page-item"
                 :class="{ disabled: current_page === total_pages }"
                 v-if="visiblePages[visiblePages.length - 1] < total_pages"
               >
-                <button class="page-link" @click="goToPage(id_book,total_pages)">
+                <button
+                  class="page-link"
+                  @click="goToPage(id_book, total_pages)"
+                >
                   {{ total_pages }}
                 </button>
               </li>
@@ -642,7 +686,10 @@
                 class="page-item"
                 :class="{ disabled: current_page === total_pages }"
               >
-                <button class="page-link" @click="goToPage(id_book,current_page + 1)">
+                <button
+                  class="page-link"
+                  @click="goToPage(id_book, current_page + 1)"
+                >
                   »
                 </button>
               </li>
@@ -684,6 +731,10 @@ export default {
       isLoadingImage: true,
       sameBook: [],
       isloadingsame: false,
+      showNotice: false,
+      statusString: "",
+      isLoadingCart:false,
+      type_money:'đ',
 
       //reviews
       images: [],
@@ -781,6 +832,29 @@ export default {
   },
 
   methods: {
+    async actionCart() {
+      await this.addToCart();
+      this.openNotice(this.statusString, "bg-success", "text-white");
+    },
+    async actionBuy() {
+      await this.addToCart();
+      this.$router.push("/cart");
+    },
+    openNotice(
+      statusString,
+      modalColor = "bg-secondary",
+      modalColorText = "text-white"
+    ) {
+      this.status = statusString;
+      this.showNotice = true;
+      this.modalColor = modalColor; // Màu nền của modal
+      this.modalColorText = modalColorText; // Màu chữ của modal
+
+      // Đặt thời gian đóng modal tự động sau 1 giây
+      setTimeout(() => {
+        this.showNotice = false;
+      }, 1000); // 1000ms = 1 giây
+    },
     handleImageError() {
       this.isImageLoaded = false; // Ẩn ảnh khi không tải được
     },
@@ -814,10 +888,12 @@ export default {
 
           if (response.status === 200) {
             this.isLoadingSendReview = false;
-            this.toastMessage = "Cảm ơn vì review của bạn ";
-          await this.showToast("bg-success"); // Màu đỏ cho thông báo lỗi
+            this.toastMessage = "Cảm ơn vì review của bạn";
+            console.log('them review thanh cong');
+            await this.showToast("bg-success");
             this.resetForm();
-            //this.resetForm(this.id_book);
+            this.getReview(this.id_book, this.current_page);
+           
           }
         } catch (error) {
           if (error.response) {
@@ -947,6 +1023,7 @@ export default {
     },
 
     async addToCart() {
+      this.isLoadingCart = true;
       try {
         const response = await axiosInstance.post("/cart/add", {
           id_book: `${this.$route.query.id_book}`,
@@ -954,7 +1031,8 @@ export default {
         });
 
         if (response.status === 200) {
-          alert(response.data.message);
+          this.statusString = response.data.message;
+          //alert(response.data.message);
         }
       } catch (error) {
         if (error.response) {
@@ -973,14 +1051,22 @@ export default {
           alert("Lỗi mạng: Không thể kết nối đến server.");
         }
       }
+      this.isLoadingCart = false;
     },
     async showToast(bgClass) {
+      console.log(bgClass);
       const toastElement = this.$refs.successToast;
+
+      toastElement.classList.remove("bg-success", "bg-danger", "bg-warning", "bg-info");
+
+      toastElement.classList.add(bgClass);
+         
+      toastElement.classList.add("fadeIn");
+      
       toastElement.style.display = "block"; // Hiển thị toast
 
       // Thêm lớp màu (bgClass) vào toast
-      toastElement.classList.add(bgClass);
-      toastElement.classList.add("fadeIn");
+  
 
       // Tự động ẩn toast sau 3 giây
       setTimeout(() => {
@@ -1014,7 +1100,6 @@ export default {
       this.imagePreview = null;
       this.$refs.fileInput.value = ""; // Đặt lại input file
       this.rating = 0;
-      this.isToggleForm = false;
     },
     goDetail(id_book) {
       window.location.href = `/book?id_book=${id_book}`;
@@ -1044,9 +1129,25 @@ export default {
         console.error(error);
       }
     },
-    goToPage(id,page) {
-      this.getReview(id,page);
+    goToPage(id, page) {
+      this.getReview(id, page);
     },
   },
 };
 </script>
+
+<style scoped>
+.modal.show {
+  display: block;
+  background-color: rgb(0, 0, 0, 0);
+}
+.spinner{
+  display: block;
+  display: block;
+  position: fixed; /* Đặt spinner cố định trong màn hình */
+  top: 50%; /* Căn giữa theo chiều dọc */
+  left: 50%; /* Căn giữa theo chiều ngang */
+  transform: translate(-50%, -50%); /* Dịch chuyển để chính giữa */
+  z-index: 1050; /* Đảm bảo nó nổi lên trên các phần tử khác */
+}
+</style>
