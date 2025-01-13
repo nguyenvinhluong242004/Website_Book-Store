@@ -116,7 +116,7 @@
             v-model="checkoutPayment"
           />
           <label class="form-check-label" for="checkoutPaymentrb2">
-            <i class="fa-regular fa-credit-card mx-2"></i> Thanh toán online
+            <i class="fa-regular fa-credit-card mx-2"></i> Thanh toán ví điện tử
           </label>
         </div>
       </div>
