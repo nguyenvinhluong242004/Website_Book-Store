@@ -266,6 +266,8 @@ class AccountController {
             const { id_order } = req.body;
             const email = req.email;
 
+            const order = await orderModel.getOrderById(id_order);
+            const method = order.method;
             // 1. Cập nhật lại trạng thái đơn hàng
             const updatedOrder = await orderModel.cancelOrder(id_order);
             console.log('UPDATED ORDER: ', updatedOrder);
@@ -293,38 +295,40 @@ class AccountController {
             }
 
             // 3. Hoàn tiền
-            const id_invoice = await invoiceModel.getIdByIdOrder(id_order);
-            console.log('ID Invoice:', id_invoice);
-            try {
-                const tokenResponse = await axios.post('https://localhost:6868/request-server/generate-token',
-                    { email },
-                    {
-                        headers:
-                            { 'Content-Type': 'application/json' },
-                        httpsAgent: agent
-                    }
-                );
-                const token = tokenResponse.data.token;
+            if (method === 'online') {
+                const id_invoice = await invoiceModel.getIdByIdOrder(id_order);
+                console.log('ID Invoice:', id_invoice);
+                try {
+                    const tokenResponse = await axios.post(`${process.env.DOMAIN_BANK}/request-server/generate-token`,
+                        { email },
+                        {
+                            headers:
+                                { 'Content-Type': 'application/json' },
+                            httpsAgent: agent
+                        }
+                    );
+                    const token = tokenResponse.data.token;
 
-                const data = { email, id_invoice };
+                    const data = { email, id_invoice };
 
-                await axios.post('https://localhost:6868/request-server/refund',
-                    data,
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        httpsAgent: agent
-                    });
+                    await axios.post(`${process.env.DOMAIN_BANK}/request-server/refund`,
+                        data,
+                        {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            httpsAgent: agent
+                        });
 
-                console.log('Hoàn tiền thành công');
-            } catch (error) {
-                console.error('Lỗi khi gửi yêu cầu hoàn tiền:', error);
-                throw new Error('Gửi yêu cầu hoàn tiền thất bại');
+                    console.log('Hoàn tiền thành công');
+                } catch (error) {
+                    console.error('Lỗi khi gửi yêu cầu hoàn tiền:', error);
+                    throw new Error('Gửi yêu cầu hoàn tiền thất bại');
+                }
             }
             await client.query('COMMIT');
-            return res.status(200).json({ message: 'Đơn hàng đã bị hủy và hoàn tiền thành công' });
+            return res.status(200).json({ message: 'Đơn hàng đã bị hủy thành công' });
         } catch (err) {
             await client.query('ROLLBACK');
             console.error('Lỗi trong quá trình xử lý đơn hàng:', err);
@@ -341,7 +345,7 @@ class AccountController {
 
             let tokenResponse;
             try {
-                tokenResponse = await axios.post('https://localhost:6868/request-server/generate-token',
+                tokenResponse = await axios.post(`${process.env.DOMAIN_BANK}/request-server/generate-token`,
                     { email },
                     {
                         headers: { 'Content-Type': 'application/json' },
@@ -358,7 +362,7 @@ class AccountController {
 
             let bankAccountResponse;
             try {
-                bankAccountResponse = await axios.post('https://localhost:6868/request-server/get',
+                bankAccountResponse = await axios.post(`${process.env.DOMAIN_BANK}/request-server/get`,
                     data,
                     {
                         headers: {

@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --inspect ./servers/server.js",
     "start": "nodemon --inspect ./servers/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,6 +21,7 @@
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "cloudinary": "^1.41.3",
+    "concurrently": "^9.1.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
