@@ -815,9 +815,9 @@ export default {
           if (response.status === 200) {
             this.isLoadingSendReview = false;
             this.toastMessage = "Cảm ơn vì review của bạn ";
-            this.showToast("bg-success"); // Màu đỏ cho thông báo lỗi
-            //this.resetForm();
-            this.resetForm(this.id_book);
+          await this.showToast("bg-success"); // Màu đỏ cho thông báo lỗi
+            this.resetForm();
+            //this.resetForm(this.id_book);
           }
         } catch (error) {
           if (error.response) {
@@ -974,7 +974,7 @@ export default {
         }
       }
     },
-    showToast(bgClass) {
+    async showToast(bgClass) {
       const toastElement = this.$refs.successToast;
       toastElement.style.display = "block"; // Hiển thị toast
 

@@ -7,7 +7,14 @@
   display: grid;
   grid-template-columns: 30% 58% 12%;
 }
-
+.header.light {
+  color: rgb(29, 90, 143);
+  background-color: #ffffff;
+}
+.header.dark {
+  color:white;
+  background-color: #000000;
+}
 .grid-item-logo {
   display: flex;
   align-items: center;
@@ -16,48 +23,49 @@
 
 .header .fa-book {
   font-size: 30px;
-  color: rgb(29, 90, 143);
   margin-right: 20px;
+  color: rgb(29, 90, 143);
 }
 
 .header-logo {
   font-size: 30px;
   font-weight: bold;
-  color: rgb(29, 90, 143);
+  
   font-style: italic;
 }
 
 .grid-item-search {
+  width: 70%;
+  height: 50%;
   justify-content: start;
   display: flex;
   align-items: center;
   text-align: center;
-  padding-left: 40px;
+  justify-content:space-between;
+  padding-left: 2%;
+  padding-right: 2%;
+  border-radius: 5px;
+  background-color: white;
+  border: 1px solid rgb(29, 90, 143);
 }
 
 .input {
-  width: 70%;
-  height: 60%;
-  padding-left: 10px;
+  width: 85%;
+  height: 80%;
   padding-right: 10px;
-  margin-right: 20px;
-  color: rgb(29, 90, 143);
   border-radius: 5px;
-  border: 1px solid rgb(29, 90, 143);
+  border: none;
+  outline: none;
 }
 
 .glass {
   border-radius: 5px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 38px;
-  height: 60%;
-  color: rgb(0, 0, 0);
-  background-color: rgb(105, 162, 211);
   margin-left: 5px;
   font-size: 22px;
   cursor: pointer;
+  color: rgb(29, 90, 143);
 }
 
 .grid-item-icon {
@@ -74,7 +82,6 @@
 .iconNoti {
   width: 50px;
   height: 100%;
-  color: rgb(10, 57, 98);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -135,7 +142,6 @@
 .iconCart {
   width: 50px;
   height: 100%;
-  color: rgb(10, 57, 98);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -145,7 +151,6 @@
 .iconUser {
   width: 50px;
   height: 100%;
-  color: rgb(10, 57, 98);
   display: flex;
   flex-direction: column;
   justify-content: center;
