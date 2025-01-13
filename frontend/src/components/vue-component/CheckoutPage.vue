@@ -137,7 +137,7 @@
         >
           <div class="col-8 d-flex align-items-center">
             <div class="img-container">
-              <img :src="product.image" alt="product image" class="h-100" />
+              <img :src="product.image_links[0]" alt="product image" class="h-100" />
             </div>
             <div class="h-100 d-flex flex-column justify-content-between">
               <div class="checkout-item-name">

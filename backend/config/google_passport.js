@@ -3,6 +3,14 @@ const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const axios = require('axios');
 const userModel = require('../models/user.model');
 
+const https = require('https');
+
+// Public thì bỏ đi
+const agent =
+    process.env.NODE_ENV === 'development'
+        ? new https.Agent({ rejectUnauthorized: false })
+        : undefined;
+
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -19,6 +27,7 @@ passport.use(new GoogleStrategy({
             } else {
                 const name = profile.given_name + " " + profile.family_name;
                 const newUser = await userModel.createUserWithGoogle(profile.email, name, 1, profile.id)
+                const email = profile.email;
 
                 const tokenResponse = await axios.post('https://localhost:6868/request-server/generate-token', {
                     email: email
