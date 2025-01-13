@@ -273,11 +273,11 @@
           </div>
         </div>
 
-        <div class="book-spec mt-3">
+        <div class="book-spec p-3 mt-3">
           <span v-bind:class="{ expanded: isExpanded }">
             {{ book.description }}
           </span>
-          <div class="book-btn-see-more-des" @click="toggleDescription">
+          <div class="book-btn-see-more-des text-center" @click="toggleDescription">
             {{ isExpanded ? "Thu gọn" : "Xem thêm" }}
           </div>
         </div>
