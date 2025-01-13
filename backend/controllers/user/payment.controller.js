@@ -68,7 +68,8 @@ class PaymentController {
                     book_name: book.book_name,
                     list_price: book.list_price,
                     discounted_price: book.discounted_price,
-                    quantity: quantity
+                    quantity: quantity,
+                    image_links: book.image_links
                 });
             }
 
@@ -109,7 +110,7 @@ class PaymentController {
                     discounted_price: book.discounted_price,
                     available_quantity: book.available_quantity,
                     sold_quantity: book.sold_quantity,
-                    quantity: quantity
+                    quantity: quantity,
                 });
             }
 
