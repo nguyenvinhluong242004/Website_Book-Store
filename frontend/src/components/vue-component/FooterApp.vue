@@ -1,21 +1,5 @@
 <template>
   <div class="footer" :class="{ dark: isDarkMode, light: !isDarkMode }">
-    <div class="header-bottom">
-      <div class="new-register col-2">
-        <i class="fas fa-envelope"></i>
-        <div class="news">ĐĂNG KÍ NHẬN TIN</div>
-      </div>
-      <div class="col-4 d-flex">
-        <input
-          type="text"
-          class="form-control me-2"
-          style="border-radius: 5px; height: 50%; width: 80%"
-          placeholder="Nhập địa chỉ của bạn"
-        />
-        <button class="btn btn-warning">Đăng ký</button>
-      </div>
-      <button class="btn btn-primary" @click="toggleDarkMode">Dark Mode</button>
-    </div>
 
     <div class="body-bottom">
       <div class="address row">
@@ -51,10 +35,8 @@
             <i class="fab fa-pinterest"></i>
           </div>
 
-          <!-- <div class="certificate">
-            <i class="fas fa-certificate"></i>
-            CHỨNG NHẬN
-          </div> -->
+          <button class="btn btn-primary" @click="toggleDarkMode">Dark Mode</button>
+          
         </div>
 
       </div>
@@ -101,9 +83,6 @@
           </div>
         </div>
 
-        <!-- <div class="ship">
-          <img src="/IMG/ship.jpg" alt="ship" />
-        </div> -->
       </div>
     </div>
   </div>
