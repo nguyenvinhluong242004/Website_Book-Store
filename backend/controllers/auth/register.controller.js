@@ -40,24 +40,34 @@ const handleNewUser = async (req, res) => {
         const newUser = await userModel.createUser(email, name, phone, userRole, hashedPassword);
 
         // XỬ LÝ TẠO TÀI KHOẢN NGÂN HÀNG TẠI ĐÂY 
-        const tokenResponse = await axios.post('https://localhost:6868/request-server/generate-token', {
-            email: email
-        }, { httpsAgent: agent }); // Public thì bỏ đi
-        // Lấy token từ response
-        const token = tokenResponse.data.token;
+        let token;
+        try {
+            const tokenResponse = await axios.post('https://localhost:6868/request-server/generate-token', {
+                email: email
+            }, { httpsAgent: agent }); // Public thì bỏ đi
+
+            token = tokenResponse.data.token;
+        } catch (axiosError) {
+            console.error('Error generating token:', axiosError.message);
+            throw new Error('Không thể tạo token cho tài khoản ngân hàng');
+        }
 
         const data = { email };
 
-        // Gửi dữ liệu kèm token đến server khác
-        const response = await axios.post('https://localhost:6868/request-server/register', data, {
-            headers: {
-                'Authorization': `Bearer ${token}`,  // Thêm token vào header
-                'Content-Type': 'application/json'
-            },
-            httpsAgent: agent // Public thì bỏ đi
-        });
+        try {
+            const response = await axios.post('https://localhost:6868/request-server/register', data, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,  // Thêm token vào header
+                    'Content-Type': 'application/json'
+                },
+                httpsAgent: agent // Public thì bỏ đi
+            });
 
-        if (!response.data.success) {
+            if (!response.data.success) {
+                throw new Error('Không thể tạo tài khoản ngân hàng');
+            }
+        } catch (axiosError) {
+            console.error('Error registering bank account:', axiosError.message);
             throw new Error('Không thể tạo tài khoản ngân hàng');
         }
 
@@ -66,13 +76,13 @@ const handleNewUser = async (req, res) => {
     } catch (error) {
         await client.query('ROLLBACK');
         console.error('Error: ', error.message);
-        if (error.message === 'Không thể tạo tài khoản ngân hàng') {
+        if (error.message.includes('token') || error.message.includes('ngân hàng')) {
             res.status(502).json({ message: error.message }); 
         } else {
             res.status(500).json({ message: 'Đã xảy ra lỗi, vui lòng thử lại sau' }); 
         }
     } finally {
-        client.release(); 
+        client.release();
     }
 }
 
