@@ -5,6 +5,10 @@ const https = require('https');
 const userModel = require('../../models/user.model');
 const addressModel = require('../../models/user/address.model');
 const orderModel = require('../../models/user/order.model');
+const order_detailModel = require('../../models/user/order_detail.model');
+const bookModel = require('../../models/user/book.model');
+const pool = require('../../config/database');
+const invoiceModel = require('../../models/user/invoice.model');
 
 const agent =
     process.env.NODE_ENV === 'development'
@@ -255,7 +259,80 @@ class AccountController {
     }
 
     // [PATCH]: account/my-order/cancel
-    // Placeholder
+    async cancelOrder(req, res) {
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
+            const { id_order } = req.body;
+            const email = req.email;
+
+            // 1. Cập nhật lại trạng thái đơn hàng
+            const updatedOrder = await orderModel.cancelOrder(id_order);
+            console.log('UPDATED ORDER: ', updatedOrder);
+            // 2. Cập nhật lại số lượng sách
+            const orderDetails = await order_detailModel.getByIdOrder(id_order);
+            console.log('ORDER DETAILS: ', orderDetails);
+
+            const bookQuantities = orderDetails.map(detail => ({
+                id_book: detail.id_book,
+                quantity: detail.quantity
+            }));
+            console.log('BOOK QUANTITIES: ', bookQuantities);
+
+            for (const { id_book, quantity } of bookQuantities) {
+                try {
+                    const updatedCount = await bookModel.reverseQuantity(id_book, quantity);
+                    if (updatedCount > 0) {
+                        console.log(`Số lượng cho sách ID ${id_book} đã được cập nhật thành công`);
+                    } else {
+                        console.log(`Không có thay đổi cho sách ID ${id_book}`);
+                    }
+                } catch (error) {
+                    console.error(`Lỗi khi cập nhật số lượng cho sách ID ${id_book}:`, error);
+                }
+            }
+
+            // 3. Hoàn tiền
+            const id_invoice = await invoiceModel.getIdByIdOrder(id_order);
+            console.log('ID Invoice:', id_invoice);
+            try {
+                const tokenResponse = await axios.post('https://localhost:6868/request-server/generate-token',
+                    { email },
+                    {
+                        headers:
+                            { 'Content-Type': 'application/json' },
+                        httpsAgent: agent
+                    }
+                );
+                const token = tokenResponse.data.token;
+
+                const data = { email, id_invoice };
+
+                await axios.post('https://localhost:6868/request-server/refund',
+                    data,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        httpsAgent: agent
+                    });
+
+                console.log('Hoàn tiền thành công');
+            } catch (error) {
+                console.error('Lỗi khi gửi yêu cầu hoàn tiền:', error);
+                throw new Error('Gửi yêu cầu hoàn tiền thất bại');
+            }
+            await client.query('COMMIT');
+            return res.status(200).json({ message: 'Đơn hàng đã bị hủy và hoàn tiền thành công' });
+        } catch (err) {
+            await client.query('ROLLBACK');
+            console.error('Lỗi trong quá trình xử lý đơn hàng:', err);
+            return res.status(500).json({ message: 'Đã có lỗi trong quá trình xử lý đơn hàng' });
+        } finally {
+            client.release();
+        }
+    }
 
     // [GET]: account/bank-account
     async getDetailBankAccount(req, res) {

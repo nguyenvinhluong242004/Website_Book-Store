@@ -38,6 +38,27 @@ class InvoiceModel {
             throw error;
         }
     }
+
+    async getIdByIdOrder(id_order) {
+        try {
+            const query = `
+                SELECT id_invoice
+                FROM invoice
+                WHERE id_order = $1;
+            `;
+
+            const result = await pool.query(query, [id_order]);
+
+            if (result.rows.length > 0) {
+                return result.rows[0].id_invoice; 
+            } else {
+                throw new Error('Không tìm thấy id_order');
+            }
+        } catch (error) {
+            console.error(`Lỗi khi lấy id_invoice bằng id_order ${id_order}:`, error);
+            throw error;
+        }
+    }
 }
 
 module.exports = new InvoiceModel(); 

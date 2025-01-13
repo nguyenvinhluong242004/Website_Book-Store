@@ -18,6 +18,15 @@ class OrderDetailModel {
             throw error;
         }
     }
+
+    async getByIdOrder(id_order) {
+        const result = await this.pool.query(
+            `SELECT * FROM order_detail
+            WHERE id_order = $1`,
+            [id_order]
+        );
+        return result.rows;
+    }
 }
 
 module.exports = new OrderDetailModel(); 
