@@ -10,6 +10,7 @@
 
     <FooterApp :dark-mode="darkMode" />
     <!-- <ChatBox /> -->
+     
   </div>
 </template>
 
