@@ -250,6 +250,8 @@ class AccountController {
 
     // [PATCH]: account/my-order/cancel
     // Placeholder
+
+    // [GET]: 
 }
 
 module.exports = new AccountController();

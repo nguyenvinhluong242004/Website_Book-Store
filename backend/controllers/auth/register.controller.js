@@ -26,6 +26,7 @@ const handleNewUser = async (req, res) => {
     }
 
     try {
+        await client.query('BEGIN');
         // Kiểm tra xem email đã tồn tại chưa
         const existingUser = await userModel.getUserByEmail(email);
         if (existingUser) {
@@ -64,11 +65,9 @@ const handleNewUser = async (req, res) => {
         res.status(201).json({ success: 'Tài khoản và tài khoản ngân hàng đã được tạo thành công' });
     } catch (error) {
         await client.query('ROLLBACK');
-        console.error('Error: ', err.message);
-        if (err.message === 'Email đã được đăng ký') {
-            res.status(409).json({ message: err.message }); 
-        } else if (err.message === 'Không thể tạo tài khoản ngân hàng') {
-            res.status(502).json({ message: err.message }); 
+        console.error('Error: ', error.message);
+        if (error.message === 'Không thể tạo tài khoản ngân hàng') {
+            res.status(502).json({ message: error.message }); 
         } else {
             res.status(500).json({ message: 'Đã xảy ra lỗi, vui lòng thử lại sau' }); 
         }
