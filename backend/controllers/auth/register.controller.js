@@ -4,10 +4,10 @@ const bcrypt = require('bcrypt');
 const https = require('https');
 
 // Public thì bỏ đi
-const agent = new https.Agent({
-    rejectUnauthorized: false 
-});
-
+const agent =
+    process.env.NODE_ENV === 'development'
+        ? new https.Agent({ rejectUnauthorized: false })
+        : undefined;
 
 // [POST]: /register
 const handleNewUser = async (req, res) => {
@@ -41,9 +41,9 @@ const handleNewUser = async (req, res) => {
                 email: email
             }, { httpsAgent: agent }); // Public thì bỏ đi
             // Lấy token từ response
-            const token = tokenResponse.data.token;  
+            const token = tokenResponse.data.token;
 
-            const data = { email }; 
+            const data = { email };
 
             // Gửi dữ liệu kèm token đến server khác
             const response = await axios.post('https://localhost:6868/request-server/register', data, {
@@ -54,13 +54,16 @@ const handleNewUser = async (req, res) => {
                 httpsAgent: agent // Public thì bỏ đi
             });
 
-            console.log('Dữ liệu đã gửi thành công: ', response.data);
-            // Mã 201: Tạo thành công
-            res.status(201).json({ 'success': `Tài khoản và tài khoản ngân hàng đã được tạo thành công` });
-
+            if (response.data.success) {
+                console.log('Dữ liệu đã gửi thành công: ', response.data);
+                // Mã 201: Tạo thành công
+                res.status(201).json({ 'success': `Tài khoản và tài khoản ngân hàng đã được tạo thành công` });
+            } else {
+                res.status(500).json({ 'message': 'Không thể tạo tài khoản ngân hàng hoặc tạo token' });
+            }
         } catch (error) {
             console.error('Error khi gọi server tạo token hoặc đăng ký: ', error);
-            res.status(500).json({ 'message': 'Không thể tạo tài khoản ngân hàng hoặc tạo token' });
+            res.status(502).json({ 'message': 'Không thể tạo tài khoản ngân hàng hoặc tạo token' });
         }
     } catch (err) {
         res.status(500).json({ 'message': err.message });
