@@ -26,18 +26,11 @@ const handleNewUser = async (req, res) => {
     }
 
     try {
-        await client.query('BEGIN');
         // Kiểm tra xem email đã tồn tại chưa
         const existingUser = await userModel.getUserByEmail(email);
         if (existingUser) {
-            return res.status(409).json({ 'message': 'Email đã được đăng ký' }); // Mã 409: Conflict
+            return res.status(409).json({ 'message': 'Email đã được đăng ký' });
         }
-
-        // Mã hóa mật khẩu
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const userRole = 1;
-        const newUser = await userModel.createUser(email, name, phone, userRole, hashedPassword);
 
         // XỬ LÝ TẠO TÀI KHOẢN NGÂN HÀNG TẠI ĐÂY 
         let token;
@@ -49,7 +42,7 @@ const handleNewUser = async (req, res) => {
             token = tokenResponse.data.token;
         } catch (axiosError) {
             console.error('Error generating token:', axiosError.message);
-            throw new Error('Không thể tạo token cho tài khoản ngân hàng');
+            return res.status(502).json({ message: 'Không thể tạo token cho tài khoản ngân hàng' });
         }
 
         const data = { email };
@@ -64,25 +57,20 @@ const handleNewUser = async (req, res) => {
             });
 
             if (!response.data.success) {
-                throw new Error('Không thể tạo tài khoản ngân hàng');
+                console.error('Bank account registration failed');
+                return res.status(502).json({ message: 'Không thể tạo tài khoản ngân hàng' });
             }
         } catch (axiosError) {
             console.error('Error registering bank account:', axiosError.message);
-            throw new Error('Không thể tạo tài khoản ngân hàng');
+            return res.status(502).json({ message: 'Không thể tạo tài khoản ngân hàng' });
         }
 
-        await client.query('COMMIT');
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const userRole = 1;
+        const newUser = await userModel.createUser(email, name, phone, userRole, hashedPassword);
         res.status(201).json({ success: 'Tài khoản và tài khoản ngân hàng đã được tạo thành công' });
     } catch (error) {
-        await client.query('ROLLBACK');
         console.error('Error: ', error.message);
-        if (error.message.includes('token') || error.message.includes('ngân hàng')) {
-            res.status(502).json({ message: error.message }); 
-        } else {
-            res.status(500).json({ message: 'Đã xảy ra lỗi, vui lòng thử lại sau' }); 
-        }
-    } finally {
-        client.release();
     }
 }
 
