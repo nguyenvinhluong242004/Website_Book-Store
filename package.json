@@ -75,7 +75,7 @@
     "serverBackend": "cd backend && nodemon --inspect ./servers/server.js",
     "serverFrontend": "cd frontend && npm run serve",
     "serverBank": "cd bank && nodemon --inspect server.js",
-    "start": "concurrently \"npm run serverBackend\" \"npm run serverBank\" \"npm run serverFrontend\""
+    "start": "cd frontend && npm run serve"
   },
   "repository": {
     "type": "git",
