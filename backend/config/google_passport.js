@@ -20,12 +20,12 @@ passport.use(new GoogleStrategy({
         try {
             const userByEmail = await userModel.getUserByEmail(profile.email);
             // console.log('PROFILE: ', profile);
-            const email = profile.email;
             if (userByEmail) {
                 return done(null, userByEmail);
             } else {
                 const name = profile.given_name + " " + profile.family_name;
                 const newUser = await userModel.createUserWithGoogle(profile.email, name, 1, profile.id)
+                const email = profile.email;
 
                 const tokenResponse = await axios.post('https://localhost:6868/request-server/generate-token', {
                     email: email
