@@ -22,8 +22,9 @@
       >
         <img
           :src="poster.image_link"
-          class="d-block w-100 h-100"
+          class="d-block w-100 h-100 hover-effect"
           alt="poster"
+          @click="linkTo(poster.product_link)"
         />
       </div>
     </div>
@@ -75,10 +76,26 @@ export default {
     selectTab(tab) {
       this.selectedTab = tab;
     },
+    linkTo(path){
+      console.log(path);
+      this.$router.push(`${path}`);
+    }
   },
   mounted() {
     this.getApi();
   },
 };
 </script>
+<style scoped>
+/* Lớp CSS khi hover */
+.hover-effect {
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Thêm hiệu ứng chuyển động mượt mà */
+}
+
+.hover-effect:hover {
+  transform: scale(1.05); /* Phóng to ảnh khi hover */
+  opacity: 0.8; /* Giảm độ sáng của ảnh khi hover */
+  cursor: pointer;
+}
+</style>
 

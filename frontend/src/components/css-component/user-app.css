@@ -7,8 +7,14 @@
 #user-app-root {
   width: 100%;
   transition: background-color 0.3s, color 0.3s;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-
+/* Nội dung chính của trang */
+.content {
+  flex: 1; /* Tự động co giãn chiếm không gian còn lại */
+}
 #user-app-root.light-mode {
   background-color: rgb(255, 255, 255);
   color: black;
