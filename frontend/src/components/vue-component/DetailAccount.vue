@@ -125,10 +125,12 @@ export default {
           email: this.email,
           password: this.password,
         });
+        console.log('RESPONSE: ', response.data);
 
         // Kiểm tra token từ phản hồi và lưu vào localStorage
         const token = response.data.accessToken; // Giả sử bạn trả về accessToken trong body response
         // console.log(token);
+        const role = response.data.role;
 
         // Lưu token vào LocalStorage
         localStorage.setItem("accessToken", token);
@@ -137,8 +139,11 @@ export default {
           localStorage.getItem("accessToken")
         );
 
-        // Sau khi đăng nhập thành công, điều hướng tới một trang khác nếu cần
-        this.$router.push("/");
+        if(role === '1'){
+          this.$router.push("/");
+        }else if(role === '2'){
+          this.$router.push("/admin/dashboard");
+        }        
       } catch (error) {
         // Xử lý lỗi khi đăng nhập
         if (error.response) {

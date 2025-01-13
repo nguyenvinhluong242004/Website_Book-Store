@@ -72,6 +72,7 @@ const routes = [
     path: "/admin",
     component: AdminApp, // Layout cho admin
     children: [
+      { path: "", redirect: "admin/dashboard" },
       { path: "dashboard", component: AdminThongKe, name: "AdminDashboard" },
       { path: "user", component: AdminUser, name: "AdminUser" },
       { path: "product", component: AdminQuanLiSach, name: "AdminProduct" },

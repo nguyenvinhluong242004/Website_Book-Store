@@ -98,7 +98,7 @@ class UserModel {
     // Get profile user 
     async getProfileByEmail(email) {
         const result = await this.pool.query(
-            'SELECT name, phone, email, gender, birth_date FROM Users WHERE email = $1',
+            'SELECT name, phone, email, gender, birth_date, role FROM Users WHERE email = $1',
             [email]
         );
         return result.rows[0];

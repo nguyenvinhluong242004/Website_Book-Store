@@ -225,6 +225,26 @@ class BookModel {
             throw error;
         }
     }
+
+    static async reverseQuantity(id_book, quantity){
+        try {
+            const query = `
+                UPDATE book
+                SET 
+                    available_quantity = available_quantity + $1,
+                    sold_quantity = sold_quantity - $1
+                WHERE id_book = $2;
+            `;
+    
+            const result = await pool.query(query, [quantity, id_book]);
+    
+            console.log(`Cập nhật book ID ${id_book}: giảm số lượng hiện có ${quantity}, tăng số lương đã bán ${quantity}`);
+            return result.rowCount; 
+        } catch (error) {
+            console.error(`Lỗi khi cập nhật số lương sách có ID ${id_book}:`, error);
+            throw error;
+        }
+    }
 }
 
 module.exports = BookModel;
