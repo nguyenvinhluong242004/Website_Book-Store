@@ -243,29 +243,6 @@ export default {
 
       this.activeTab = paths[basePathIndex + 1] || "dashboard"; // Tab
       this.activeSubTab = paths[basePathIndex + 2] || null;
-
-      // try {
-      //   // Gửi yêu cầu để lấy thông tin người dùng
-      //   const response = await axiosInstance.get("/account/profile");
-      //   if (response.status === 200) {
-      //     const user = response.data.user;
-      //     this.savedName = user.name;
-      //   }
-      // } catch (error) {
-      //   console.log(error);
-      //   if (error.response.status === 401 || error.response.status === 403) {
-      //     // Không có accesstoken hoặc refreshtoken hết hạn
-      //     this.$router.push("/login");
-      //   }
-      //   if (error.response.status === 404) {
-      //     // Không tìm thấy người dùng
-      //     this.$router.push("/login");
-      //   }
-      //   if (error.response.status === 500) {
-      //     // Có lỗi trong quá trình lấy thông tin người dùng
-      //     alert(error.response.data.message);
-      //   }
-      // }
     },
   },
 };
