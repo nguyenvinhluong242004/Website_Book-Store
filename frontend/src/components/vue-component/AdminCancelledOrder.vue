@@ -1,76 +1,20 @@
 <template>
-  <div class="order-tab-body">
+  <div class="admin-cancelled-order-body">
     <div v-if="isLoading" class="loading-overlay">
-      <div
-        class="spinner-border text-primary"
-        style="width: 3rem; height: 3rem"
-        role="status"
-      >
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
         <span class="sr-only">Loading...</span>
       </div>
     </div>
 
-    <!-- <div class="order-tab-single-order">
-      <div class="single-order-info">
-        <img
-          src="../../../public/IMG/cam.jpg"
-          class="single-order-img"
-          alt="product image"
-        />
-        <div class="col single-order-name-amount">
-          <div class="single-order-name mb-3">
-            Phá vỡ giới hạn - sách bán chạy nhất năm, đoạt giải nobel hòa bình
-            của nguyễn thúc thùy tiên, đặt dấu chấm hết cho sự nghiệp của con
-            mén Ariana Grande
-          </div>
-          <div class="single-order-amount">Số lượng: 20</div>
-        </div>
-        <div class="single-order-price">5.250.300 vnđ</div>
-      </div>
-      <div class="single-order-total">
-        Thành tiền:<span class="fs-5 text-primary ms-3">100.060.000 vnđ</span>
-      </div>
-      <div class="single-order-more-action">
-        <div class="singe-order-status text-muted ms-2">Đã hủy</div>
-      </div>
-    </div>
 
-    <div class="order-tab-single-order">
-      <div class="single-order-info">
-        <img
-          src="../../../public/IMG/cam.jpg"
-          class="single-order-img"
-          alt="product image"
-        />
-        <div class="col single-order-name-amount">
-          <div class="single-order-name mb-3">
-            Phá vỡ giới hạn - sách bán chạy nhất năm, đoạt giải nobel hòa bình
-            của nguyễn thúc thùy tiên, đặt dấu chấm hết cho sự nghiệp của con
-            mén Ariana Grande
-          </div>
-          <div class="single-order-amount">Số lượng: 20</div>
-        </div>
-        <div class="single-order-price">5.250.300 vnđ</div>
+    <div class="admin-cancelled-order-box">
+      <div class="admin-cancelled-order-box-title fs-4 fw-bold text-primary mb-4">
+        ĐƠN HÀNG BỊ HỦY
       </div>
-      <div class="single-order-total">
-        Thành tiền:<span class="fs-5 text-primary ms-3">100.060.000 vnđ</span>
-      </div>
-      <div class="single-order-more-action">
-        <div class="singe-order-status text-muted ms-2">Đã hủy</div>
-      </div>
-    </div> -->
-    
-    <div
-      v-if="total_page === 0"
-      class="text-body-tertiary fs-1 p-4 text-center"
-    >
-      Không có đơn hàng nào
-    </div>
-    <div v-else>
-      <table class="table mx-auto border-dark-subtle">
+      <table class="table mx-auto border-dark-subtle" style="width: 95%">
         <thead class="border-bottom-0">
           <tr>
-            <th scope="col" class="text-bg-primary text-center rounded-start-5 ps-4">
+            <th scope="col" class="text-bg-primary rounded-start-5 ps-4">
               Email
             </th>
             <th scope="col" class="text-bg-primary text-center">
@@ -106,22 +50,16 @@
               }}
             </td>
             <td class="align-content-center text-center">{{ order.method }}</td>
-            <td class="align-content-center text-center">{{ order.status }}</td>
-            <td class="d-flex flex-column gap-1">
+            <td class="align-content-center text-center">
+              {{ order.status }}
+            </td>
+            <td class="align-content-center">
               <div
                 type="button"
-                class="btn btn-primary"
+                class="text-primary text-center fw-bold"
                 @click="showModal(order.id_order)"
               >
                 Chi tiết
-              </div>
-              <div
-                type="button"
-                class="btn btn-danger"
-                @click="cancelOrder(order.id_order)"
-                v-if="order.status === 'Pending' || order.status === 'Approved'"
-              >
-                Hủy đơn
               </div>
             </td>
           </tr>
@@ -130,6 +68,7 @@
       <nav
         v-if="total_page > 1"
         class="mx-auto mt-4 d-flex justify-content-center"
+        style="width: 95%"
       >
         <ul class="pagination">
           <li class="page-item" :class="{ disabled: currentPage === 1 }">
@@ -177,13 +116,13 @@
 
     <div
       class="modal d-block"
-      id="modalProfileOrder"
+      id="modalAdminCancelledOrder"
       tabindex="-1"
-      aria-labelledby="modalProfileOrderLabel"
+      aria-labelledby="modalAdminCancelledOrderLabel"
       v-if="isModalVisible"
       @click.self="closeModal"
     >
-      <!-- @click.self="closeModal" là khi nhấn vào vùng tối bên ngoài (là cái modalProfileOrder) thay vì nhấn vào modal là div con thì sẽ tắt -->
+      <!-- @click.self="closeModal" là khi nhấn vào vùng tối bên ngoài (là cái modalAdminCancelledOrder) thay vì nhấn vào modal là div con thì sẽ tắt -->
       <div
         class="modal-dialog d-flex justify-content-center modal-dialog-centered"
       >
@@ -191,7 +130,7 @@
           <div class="modal-header">
             <h1
               class="modal-title fs-3 text-primary"
-              id="modalProfileOrderLabel"
+              id="modalAdminCancelledOrderLabel"
             >
               Thông tin chi tiết
             </h1>
@@ -263,9 +202,7 @@
                   :key="index"
                 >
                   <td class="ps-4 align-content-center">
-                    <a :href="'/book?id_book=' + book.id_book">{{
-                      book.book_name
-                    }}</a>
+                    {{ book.book_name }}
                   </td>
                   <td class="align-content-center text-center">
                     {{ formatPrice(book.price) }}
@@ -299,11 +236,11 @@
 </template>
 
 <script>
-import "../css-component/order-tab.css";
+import "../css-component/admin-cancelled-order.css";
 import axiosInstance from "../../services/axiosInstance.js";
 
 export default {
-  name: "OrderTab",
+  name: "AdminCancelledOrder",
   data() {
     return {
       orderList: [],
@@ -316,7 +253,7 @@ export default {
 
       selectedOrderDetail: null,
 
-      isLoading: false
+      isLoading: false,
     };
   },
   mounted() {
@@ -333,7 +270,7 @@ export default {
         this.isLoading = true;
 
         const response = await axiosInstance.get(
-          `/account/my-order?page=${this.currentPage}&per_page=${this.per_page}`
+          `/admin/order/status-order?status=Cancelled&page=${this.currentPage}&per_page=${this.per_page}`
         );
         if (response.status === 200) {
           this.orderList = response.data.orders;
@@ -374,7 +311,7 @@ export default {
         this.isLoading = true;
 
         const response = await axiosInstance.get(
-          `/account/my-order/detail/${id_order}`
+          `/admin/order/detail/${id_order}`
         );
         if (response.status === 200) {
           this.selectedOrderDetail = response.data.detail[0];
@@ -410,47 +347,13 @@ export default {
       this.isModalVisible = false;
     },
 
-    async cancelOrder(id_order) {
-      try {
-        this.isLoading = true;
-
-        const response = await axiosInstance.patch("/account/my-order/cancel", {
-          id_order: id_order,
-        });
-        if (response.status === 200) {
-          
-          this.isLoading = false;
-
-          this.handleRouteChange();
-        }
-      } catch (error) {
-        this.isLoading = false;
-
-        console.log(error);
-        if (error.response.status === 401) {
-          // Không có accesstoken
-          this.$router.push("/login");
-        }
-        if (error.response.status === 403) {
-          // refreshtoken hết hạn
-          alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-          this.$router.push("/login");
-        }
-        if (error.response.status === 500) {
-          // Lỗi server
-          alert(error);
-          this.$router.push("/login");
-        }
-      }
-    },
-
     async goToPage(page) {
       if (page >= 1 && page <= this.total_page) {
         try {
           this.isLoading = true;
 
           const response = await axiosInstance.get(
-            `/account/my-order?page=${this.currentPage}&per_page=${this.per_page}`
+            `/admin/order/status-order?status=Cancelled&page=${page}&per_page=${this.per_page}`
           );
           if (response.status === 200) {
             this.orderList = response.data.orders;

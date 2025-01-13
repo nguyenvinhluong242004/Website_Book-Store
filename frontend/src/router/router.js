@@ -34,6 +34,7 @@ import AdminQuanLiTheLoai from "../components/vue-component/Admin-quanlitheloai-
 import AdminNewOrder from "../components/vue-component/AdminNewOrder.vue"
 import AdminApprovedOrder from "../components/vue-component/AdminApprovedOrder.vue"
 import AdminRefuseOrder from "../components/vue-component/AdminRefuseOrder.vue"
+import AdminCancelledOrder from "../components/vue-component/AdminCancelledOrder.vue"
 import AdminDeliveryOrder from "../components/vue-component/AdminDeliveryOrder.vue"
 import AdminCompleteOrder from "../components/vue-component/AdminCompleteOrder.vue"
 import axiosInstance from "../services/axiosInstance.js";
@@ -118,6 +119,7 @@ const routes = [
           { path: "neworder", component: AdminNewOrder, name: "AdminNewOrder" },
           { path: "approved", component: AdminApprovedOrder, name: "AdminApprovedOrder" },
           { path: "refuse", component: AdminRefuseOrder, name: "AdminRefuseOrder" },
+          { path: "cancelled", component: AdminCancelledOrder, name: "AdminCancelledOrder" },
           { path: "delivery", component: AdminDeliveryOrder, name: "AdminDeliveryOrder" },
           { path: "complete", component: AdminCompleteOrder, name: "AdminCompleteOrder" },
         ],

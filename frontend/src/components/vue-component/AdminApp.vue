@@ -86,7 +86,7 @@
               'text-secondary border-secondary-subtle border-top-0':
                 activeSubTab !== 'refuse' && hoverTab !== 'refuse',
               'border-bottom-0':
-                activeSubTab === 'delivery' || hoverTab === 'delivery',
+                activeSubTab === 'cancelled' || hoverTab === 'cancelled',
             }"
             @mouseenter="hoverTab = 'refuse'"
             @mouseleave="hoverTab = null"
@@ -95,6 +95,24 @@
           >
             <i class="fa-solid fa-ban me-2 col-sm-1 text-center"></i> Từ Chối
             Đơn Hàng
+          </div>
+
+          <div
+            class="admin-side-tab my-0 border"
+            :class="{
+              'text-primary border-primary':
+                activeSubTab === 'cancelled' || hoverTab === 'cancelled',
+              'text-secondary border-secondary-subtle border-top-0':
+                activeSubTab !== 'cancelled' && hoverTab !== 'cancelled',
+              'border-bottom-0':
+                activeSubTab === 'delivery' || hoverTab === 'delivery',
+            }"
+            @mouseenter="hoverTab = 'cancelled'"
+            @mouseleave="hoverTab = null"
+            @click="switchOrderTab('cancelled')"
+            v-if="activeTab === 'order'"
+          >
+            <i class="fa-solid fa-xmark me-2 col-sm-1 text-center"></i> Đơn Hàng Bị Hủy
           </div>
 
           <div

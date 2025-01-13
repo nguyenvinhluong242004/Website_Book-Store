@@ -350,11 +350,11 @@ export default {
   },
   computed: {
     totalPrice() {
-      let total = 0;
-      for (const product of this.listProduct) {
-        total += product.discounted_price * product.quantity;
-      }
-      return total;
+      return this.listProduct
+      .filter(product => this.selectedProducts.includes(product.id_book)) // lọc các sản phẩm theo id_book
+      .reduce((total, product) => {
+        return total + (product.discounted_price * product.quantity); // tính tổng giá
+      }, 0); // giá trị khởi tạo cho total là 0
     },
   },
 };
