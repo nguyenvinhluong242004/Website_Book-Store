@@ -48,5 +48,12 @@ pool.connect((err, client, release) => {
 // Route init
 route(app);
 
+const http = require('http');
+
+http.createServer(app).listen(port, '0.0.0.0', () => {
+    console.log(`HTTP server is running at http://0.0.0.0:${port}`);
+});
+
+
 // Lắng nghe trên localhost
-https.createServer(options, app).listen(port, '0.0.0.0', () => console.log(`Example at: ${process.env.DOMAIN_BACKEND}`));
+https.createServer(options, app).listen(port, () => console.log(`Example at: ${process.env.DOMAIN_BACKEND}`));
