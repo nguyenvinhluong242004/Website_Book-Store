@@ -69,7 +69,14 @@ class OrderModel {
 
     // Cancel order with status "Pending"
     async cancelOrder(id_order) {
-
+        const result = await this.pool.query(
+            `UPDATE orders
+            SET status = $1
+            WHERE id_order = $2
+            RETURNING *`,
+            ['Cancelled', id_order]
+        );
+        return result.rows[0];
     }
 
     async getLastIdOrder() {
