@@ -57,12 +57,12 @@ const handleNewUser = async (req, res) => {
             });
 
             if (!response.data.success) {
-                console.error('Bank account registration failed');
+                console.error('Lỗi khi đăng ký tài khoản thanh toán');
                 return res.status(502).json({ message: 'Không thể tạo tài khoản ngân hàng' });
             }
         } catch (axiosError) {
-            console.error('Error registering bank account:', axiosError.message);
-            return res.status(502).json({ message: 'Không thể tạo tài khoản ngân hàng' });
+            console.error('Lỗi khi đăng ký tài khoản thanh toán:', axiosError.message);
+            return res.status(502).json({ message: 'Không thể tạo tài khoản thanh toán' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
