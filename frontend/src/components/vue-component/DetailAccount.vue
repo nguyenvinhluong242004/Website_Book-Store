@@ -142,7 +142,7 @@ export default {
         if(role === '1'){
           this.$router.push("/");
         }else if(role === '2'){
-          window.location.href = "https://localhost:8080/admin"; 
+          this.$router.push("/admin/dashboard");
         }        
       } catch (error) {
         // Xử lý lỗi khi đăng nhập
