@@ -1,14 +1,15 @@
 <template>
   <div id="user-app-root" style="cursor: default" :class="{ 'dark-mode': darkMode, 'light-mode': !darkMode }">
+
     <div v-if="notification" class="notification">{{ notification }}</div>
     
-    <HeaderApp @user-loaded="setUser" :dark-mode="darkMode"/>
+    <HeaderApp @user-loaded="setUser" @toggle-dark-mode="setDarkMode" />
     <NavApp :categories="categories" :subcategories="subcategories" />
     
     <router-view :user="user"/>
 
-    <FooterApp @toggle-dark-mode="setDarkMode"/>
-    <ChatBox />
+    <FooterApp :dark-mode="darkMode" />
+    <!-- <ChatBox /> -->
   </div>
 </template>
 
@@ -19,7 +20,7 @@ import "../css-component/user-app.css";
 import HeaderApp from "./HeaderApp.vue";
 import NavApp from "./NavApp.vue";
 import FooterApp from "./FooterApp.vue";
-import ChatBox from "./ChatBox.vue";
+//import ChatBox from "./ChatBox.vue";
 
 export default {
   name: "UserApp",
@@ -27,7 +28,7 @@ export default {
     HeaderApp,
     NavApp,
     FooterApp,
-    ChatBox,
+    // ChatBox,
   },
   data() {
     return {
@@ -36,7 +37,7 @@ export default {
       subcategories: [],
       user: null,
       // Trạng thái darkmode
-      darkMode: true,
+      darkMode: false,
     };
   },
   methods: {
@@ -44,7 +45,7 @@ export default {
       this.user = user; // Nhận user từ HeaderApp
     },
     setDarkMode(is) {
-      console.log('fadsfasdf');
+      console.log('fadsfasdf:', this.darkMode);
       this.darkMode = is; // Cập nhật trạng thái Dark Mode từ FooterApp
     },
   },

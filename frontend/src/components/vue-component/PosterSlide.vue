@@ -59,7 +59,7 @@ export default {
     async getApi() {
       this.loading = true;
       try {
-        const response = await axios.get(`/api`); // Lấy API qua proxy
+        const response = await axios.get(`/api/poster`); // Lấy API qua proxy
 
         if (response.data.success) {
           this.poster = response.data.posters;

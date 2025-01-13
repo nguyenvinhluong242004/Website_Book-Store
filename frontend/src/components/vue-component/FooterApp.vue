@@ -1,5 +1,5 @@
 <template>
-  <div class="footer" :class="{ dark: isDarkMode, light: !isDarkMode }">
+  <div class="footer" :class="{ dark: darkMode, light: !darkMode }">
 
     <div class="body-bottom">
       <div class="address row">
@@ -34,8 +34,6 @@
             <i class="fab fa-tiktok"></i>
             <i class="fab fa-pinterest"></i>
           </div>
-
-          <button class="btn btn-primary" @click="toggleDarkMode">Dark Mode</button>
           
         </div>
 
@@ -65,7 +63,7 @@
             <li>CSKH:</li>
             <div class="care">
               <i class="fas fa-phone"></i>
-              <span> cskh@fahasa.com.vn</span>
+              <span> cskh@bks.com.vn</span>
             </div>
           </div>
 
@@ -93,16 +91,16 @@ import "../css-component/footer-app.css";
 
 export default {
   name: "FooterApp",
+  props: {
+    darkMode: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       isDarkMode: false, // Trạng thái dark mode, mặc định là false (light mode)
     };
-  },
-  methods: {
-    toggleDarkMode() {
-      this.isDarkMode = !this.isDarkMode;
-      this.$emit("toggle-dark-mode", this.isDarkMode); // Truyền trạng thái lên UserApp
-    },
   },
 };
 </script>
