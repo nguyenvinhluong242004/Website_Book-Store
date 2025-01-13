@@ -172,14 +172,17 @@
         />
       </div>
 
-      <div class="pagination d-flex justify-content-center align-items-center">
+      <div
+        v-if="arrayBook.length"
+        class="pagination d-flex justify-content-center align-items-center"
+      >
         <!-- Nút Previous -->
         <button
           class="btn btn-secondary me-2"
           @click="goToPage(page - 1)"
           :disabled="page === 1"
         >
-        «
+          «
         </button>
 
         <!-- Hiển thị các trang với logic -->
@@ -225,8 +228,20 @@
           @click="goToPage(page + 1)"
           :disabled="page === totalPage"
         >
-        »
+          »
         </button>
+      </div>
+
+      <div
+        v-else
+        class="d-flex flex-column align-items-center justify-content-center text-center py-5"
+      >
+        <h4 class="text-danger font-weight-bold">Không tìm thấy kết quả!</h4>
+        <p class="text-muted">
+          Xin lỗi, không có dữ liệu nào phù hợp với tìm kiếm của bạn. <br />
+          Hãy thử lại với thể loại khác.
+        </p>
+
       </div>
     </div>
   </div>
@@ -257,22 +272,8 @@ export default {
       ],
       isLoading: false,
 
-      categories: [
-        { id: 1, name: "Thiếu nhi" },
-        { id: 2, name: "Giáo khoa" },
-        { id: 3, name: "Kinh tế" },
-        { id: 4, name: "Tâm lý" },
-        { id: 5, name: "Ngoại ngữ" },
-        { id: 6, name: "Văn học" },
-        { id: 7, name: "Tiểu thuyết" },
-      ],
-      ages: [
-        "Teen, Adult",
-        "Teen",
-        "Adult",
-        "Child, Teen, Adult",
-        "Child, Teen",
-      ],
+      categories: [],
+      ages: ["Child", "Teen", "Adult"],
       selectedCategories: [],
       selectGenre: null,
       selectAge: null,
@@ -418,11 +419,10 @@ export default {
     },
     async fetchGenres() {
       try {
-        const response = await axios.get('/api/genres'); // Thực hiện GET request
+        const response = await axios.get("/api/genres"); // Thực hiện GET request
         this.categories = response.data.genres;
-        console.log('FASDFASDFASFASDFASDFASDGFGHFGHDFG',this.categories);
       } catch (error) {
-        console.error('Error fetching genres:', error);
+        console.error("Error fetching genres:", error);
       }
     },
     toggleFilter(value) {
@@ -490,30 +490,30 @@ export default {
       this.allCurrentBook();
     },
   },
-  computed:{
+  computed: {
     pageRange() {
-    const range = [];
-    const delta = 2; // Số lượng trang hiển thị trước và sau trang hiện tại
+      const range = [];
+      const delta = 2; // Số lượng trang hiển thị trước và sau trang hiện tại
 
-    let start = Math.max(this.page - delta, 1);
-    let end = Math.min(this.page + delta, this.totalPage);
+      let start = Math.max(this.page - delta, 1);
+      let end = Math.min(this.page + delta, this.totalPage);
 
-    // Điều chỉnh nếu đầu hoặc cuối vượt giới hạn
-    if (start <= 2) {
-      start = 1;
-      end = Math.min(delta * 2 + 1, this.totalPage);
-    }
+      // Điều chỉnh nếu đầu hoặc cuối vượt giới hạn
+      if (start <= 2) {
+        start = 1;
+        end = Math.min(delta * 2 + 1, this.totalPage);
+      }
 
-    if (end >= this.totalPage - 1) {
-      start = Math.max(this.totalPage - delta * 2, 1);
-      end = this.totalPage;
-    }
+      if (end >= this.totalPage - 1) {
+        start = Math.max(this.totalPage - delta * 2, 1);
+        end = this.totalPage;
+      }
 
-    for (let i = start; i <= end; i++) {
-      range.push(i);
-    }
-    return range;
+      for (let i = start; i <= end; i++) {
+        range.push(i);
+      }
+      return range;
+    },
   },
-  }
 };
 </script>
