@@ -1,4 +1,4 @@
-const BookModel = require('../../models/User/book.model');
+const BookModel = require('../../models/user/book.model');
 
 class BookTypeController {
 

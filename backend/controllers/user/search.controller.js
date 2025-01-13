@@ -1,5 +1,5 @@
-const SearchModel = require('../../models/User/search.model');
-const HomeModel = require('../../models/User/home.model');
+const SearchModel = require('../../models/user/search.model');
+const HomeModel = require('../../models/user/home.model');
 
 class SearchController {
 
