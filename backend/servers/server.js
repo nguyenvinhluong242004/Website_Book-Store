@@ -19,7 +19,7 @@ require('dotenv').config({ path: '../.env' });
 const bodyParser = require('body-parser');
 const route = require('../routes/app.routes');
 const pool = require('../config/database');
-const port = process.env.PORT || 8888;
+const port = process.env.PORT_BACK || 8888;
 app.use(credentials);
 app.use(cors(corsOptions));
 app.use(cookieParser());
@@ -48,5 +48,12 @@ pool.connect((err, client, release) => {
 // Route init
 route(app);
 
+// const http = require('http');
+
+// http.createServer(app).listen(port, '0.0.0.0', () => {
+//     console.log(`HTTP server is running at http://0.0.0.0:${port}`);
+// });
+
+
 // Lắng nghe trên localhost
-https.createServer(options, app).listen(port, () => console.log(`Example at: https://localhost:${port}`));
+https.createServer(options, app).listen(port, () => console.log(`Example at: ${process.env.DOMAIN_BACKEND}`));

@@ -1,5 +1,12 @@
 <template>
   <div class="admin-refuse-order-body">
+    <div v-if="isLoading" class="loading-overlay">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+
     <div class="admin-refuse-order-box">
       <div class="admin-refuse-order-box-title fs-4 fw-bold text-primary mb-4">
         ĐƠN HÀNG ĐÃ TỪ CHỐI
@@ -245,6 +252,8 @@ export default {
       isModalVisible: false,
 
       selectedOrderDetail: null,
+
+      isLoading: false,
     };
   },
   mounted() {
@@ -258,6 +267,8 @@ export default {
   methods: {
     async handleRouteChange() {
       try {
+        this.isLoading = true;
+
         const response = await axiosInstance.get(
           `/admin/order/status-order?status=Refused&page=${this.currentPage}&per_page=${this.per_page}`
         );
@@ -267,8 +278,12 @@ export default {
           this.total_page = response.data.total_page;
           this.per_page = response.data.per_page;
           this.total = response.data.total;
+
+          this.isLoading = false;
         }
       } catch (error) {
+        this.isLoading = false;
+
         console.log(error);
         if (error.response.status === 401) {
           // Không có accesstoken
@@ -293,14 +308,20 @@ export default {
 
     async showModal(id_order) {
       try {
+        this.isLoading = true;
+
         const response = await axiosInstance.get(
           `/admin/order/detail/${id_order}`
         );
         if (response.status === 200) {
           this.selectedOrderDetail = response.data.detail[0];
           console.log(this.selectedOrderDetail);
+
+          this.isLoading = false;
         }
       } catch (error) {
+        this.isLoading = false;
+
         console.log(error);
         if (error.response.status === 401) {
           // Không có accesstoken
@@ -329,6 +350,8 @@ export default {
     async goToPage(page) {
       if (page >= 1 && page <= this.total_page) {
         try {
+          this.isLoading = true;
+
           const response = await axiosInstance.get(
             `/admin/order/status-order?status=Refused&page=${page}&per_page=${this.per_page}`
           );
@@ -338,8 +361,12 @@ export default {
             this.total_page = response.data.total_page;
             this.per_page = response.data.per_page;
             this.total = response.data.total;
+
+            this.isLoading = false;
           }
         } catch (error) {
+          this.isLoading = false;
+          
           console.log(error);
           if (error.response.status === 401) {
             // Không có accesstoken

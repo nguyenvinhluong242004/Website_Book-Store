@@ -1,5 +1,15 @@
 <template>
-    <form class="address-edit-tab-body" @submit="validateAndSubmitUpdateAddress">
+  <form class="address-edit-tab-body" @submit="validateAndSubmitUpdateAddress">
+    <div v-if="isLoading" class="loading-overlay">
+      <div
+        class="spinner-border text-primary"
+        style="width: 3rem; height: 3rem"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
     <div class="row mb-4 mx-5">
       <label for="address-edit-name" class="col-sm-3 col-form-label">Tên</label>
       <div class="col-sm-9">
@@ -145,10 +155,7 @@
     <div class="row mb-2 mx-5">
       <div class="col-sm-3">
         <router-link to="/profile/address">
-        <button
-            type="button"
-            class="btn btn-primary btn-block rounded-3"
-          >
+          <button type="button" class="btn btn-primary btn-block rounded-3">
             ◄ Quay lại
           </button>
         </router-link>
@@ -191,10 +198,14 @@ export default {
       wardErr: "",
       stAddressErr: "",
       errMsg: null,
+
+      isLoading: false,
     };
   },
   methods: {
     async validateAndSubmitUpdateAddress(event) {
+      this.isLoading = true;
+
       event.preventDefault();
 
       // Validate
@@ -256,24 +267,32 @@ export default {
 
       //Nếu không có lỗi thì submit form
       if (!formValid) {
+        this.isLoading = false;
         return;
       }
 
       try {
-        const response = await axiosInstance.put(`/account/update-address/${this.id_address}`, {
-          name: this.name,
-          phone: this.phone,
-          country: this.country,
-          city: this.city,
-          district: this.district,
-          ward: this.ward,
-          address: this.stAddress,
-        });
+        const response = await axiosInstance.put(
+          `/account/update-address/${this.id_address}`,
+          {
+            name: this.name,
+            phone: this.phone,
+            country: this.country,
+            city: this.city,
+            district: this.district,
+            ward: this.ward,
+            address: this.stAddress,
+          }
+        );
 
         if (response.status === 200) {
+          this.isLoading = false;
+
           this.$router.push("/profile/address");
         }
       } catch (error) {
+        this.isLoading = false;
+
         if (error.response) {
           const status = error.response.status;
           const message = error.response.data.message;

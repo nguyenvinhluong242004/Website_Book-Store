@@ -1,5 +1,15 @@
 <template>
   <div class="register-body">
+    <div v-if="isLoading" class="loading-overlay">
+      <div
+        class="spinner-border text-primary"
+        style="width: 3rem; height: 3rem"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
     <form class="register-container" @submit="validateAndSubmit">
       <h3 class="text-primary mb-4">ĐĂNG KÝ</h3>
 
@@ -139,10 +149,14 @@ export default {
       confirmPasswordErr: "",
 
       errMsg: null,
+
+      isLoading: false,
     };
   },
   methods: {
     async validateAndSubmit(event) {
+      this.isLoading = true;
+
       event.preventDefault();
 
       // Validate
@@ -203,6 +217,7 @@ export default {
 
       //Nếu không có lỗi thì submit form
       if (!formValid) {
+        this.isLoading = false;
         return;
       }
 
@@ -236,10 +251,17 @@ export default {
         } else if (response.status === 500) {
           // Nếu có lỗi server
           this.errMsg = data.message;
+        } else if (response.status === 502) {
+          // Nếu có lỗi server
+          this.errMsg = data.message;
         }
+
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
+
         console.error("Error:", error);
-        alert('Lỗi mạng: Không thể kết nối đến server.');
+        alert("Lỗi mạng: Không thể kết nối đến server.");
       }
     },
   },

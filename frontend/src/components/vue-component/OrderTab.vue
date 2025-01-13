@@ -1,5 +1,15 @@
 <template>
   <div class="order-tab-body">
+    <div v-if="isLoading" class="loading-overlay">
+      <div
+        class="spinner-border text-primary"
+        style="width: 3rem; height: 3rem"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
     <!-- <div class="order-tab-single-order">
       <div class="single-order-info">
         <img
@@ -49,6 +59,7 @@
         <div class="singe-order-status text-muted ms-2">Đã hủy</div>
       </div>
     </div> -->
+    
     <div
       v-if="total_page === 0"
       class="text-body-tertiary fs-1 p-4 text-center"
@@ -56,7 +67,7 @@
       Không có đơn hàng nào
     </div>
     <div v-else>
-      <table class="table mx-auto border-dark-subtle" style="width: 95%">
+      <table class="table mx-auto border-dark-subtle">
         <thead class="border-bottom-0">
           <tr>
             <th scope="col" class="text-bg-primary rounded-start-5 ps-4">
@@ -103,6 +114,14 @@
                 @click="showModal(order.id_order)"
               >
                 Chi tiết
+              </div>
+              <div
+                type="button"
+                class="text-danger text-center fw-bold"
+                @click="cancelOrder(order.id_order)"
+                v-if="order.status === 'Pending' || order.status === 'Approved'"
+              >
+                Hủy đơn
               </div>
             </td>
           </tr>
@@ -297,6 +316,8 @@ export default {
       isModalVisible: false,
 
       selectedOrderDetail: null,
+
+      isLoading: false
     };
   },
   mounted() {
@@ -310,6 +331,8 @@ export default {
   methods: {
     async handleRouteChange() {
       try {
+        this.isLoading = true;
+
         const response = await axiosInstance.get(
           `/account/my-order?page=${this.currentPage}&per_page=${this.per_page}`
         );
@@ -319,8 +342,12 @@ export default {
           this.total_page = response.data.total_page;
           this.per_page = response.data.per_page;
           this.total = response.data.total;
+
+          this.isLoading = false;
         }
       } catch (error) {
+        this.isLoading = false;
+
         console.log(error);
         if (error.response.status === 401) {
           // Không có accesstoken
@@ -345,14 +372,20 @@ export default {
 
     async showModal(id_order) {
       try {
+        this.isLoading = true;
+
         const response = await axiosInstance.get(
           `/account/my-order/detail/${id_order}`
         );
         if (response.status === 200) {
           this.selectedOrderDetail = response.data.detail[0];
           console.log(this.selectedOrderDetail);
+
+          this.isLoading = false;
         }
       } catch (error) {
+        this.isLoading = false;
+
         console.log(error);
         if (error.response.status === 401) {
           // Không có accesstoken
@@ -378,9 +411,45 @@ export default {
       this.isModalVisible = false;
     },
 
+    async cancelOrder(id_order) {
+      try {
+        this.isLoading = true;
+
+        const response = await axiosInstance.patch("/account/my-order/cancel", {
+          id_order: id_order,
+        });
+        if (response.status === 200) {
+          
+          this.isLoading = false;
+
+          this.handleRouteChange();
+        }
+      } catch (error) {
+        this.isLoading = false;
+
+        console.log(error);
+        if (error.response.status === 401) {
+          // Không có accesstoken
+          this.$router.push("/login");
+        }
+        if (error.response.status === 403) {
+          // refreshtoken hết hạn
+          alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+          this.$router.push("/login");
+        }
+        if (error.response.status === 500) {
+          // Lỗi server
+          alert(error);
+          this.$router.push("/login");
+        }
+      }
+    },
+
     async goToPage(page) {
       if (page >= 1 && page <= this.total_page) {
         try {
+          this.isLoading = true;
+
           const response = await axiosInstance.get(
             `/account/my-order?page=${this.currentPage}&per_page=${this.per_page}`
           );
@@ -390,8 +459,12 @@ export default {
             this.total_page = response.data.total_page;
             this.per_page = response.data.per_page;
             this.total = response.data.total;
+
+            this.isLoading = false;
           }
         } catch (error) {
+          this.isLoading = false;
+          
           console.log(error);
           if (error.response.status === 401) {
             // Không có accesstoken

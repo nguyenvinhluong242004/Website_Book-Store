@@ -1,7 +1,22 @@
 <template>
   <div class="header" :class="{ dark: darkMode, light: !darkMode }">
+    <div v-if="isLoading" class="loading-overlay">
+      <div
+        class="spinner-border text-primary"
+        style="width: 3rem; height: 3rem"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
     <div class="grid-item-logo">
-      <router-link to="/"><i class="fas fa-book" :class="{ dark: darkMode, light: !darkMode }" ></i></router-link>
+      <router-link to="/"
+        ><i
+          class="fas fa-book"
+          :class="{ dark: darkMode, light: !darkMode }"
+        ></i
+      ></router-link>
 
       <div class="header-logo">BÁCH KHOA SÁCH</div>
     </div>
@@ -66,7 +81,11 @@
       </div> -->
 
       <div id="theme-toggle" @click="toggleDarkMode" class="iconDarkMode">
-        <i class="fas" id="icon" :class="{ 'fa-sun': !darkMode, 'fa-moon': darkMode }"></i>
+        <i
+          class="fas"
+          id="icon"
+          :class="{ 'fa-sun': !darkMode, 'fa-moon': darkMode }"
+        ></i>
       </div>
 
       <div class="iconCart">
@@ -180,12 +199,14 @@ export default {
   name: "HeaderApp",
   data() {
     return {
-      darkMode:false,
+      darkMode: false,
       searchQuery: "", // Lưu trữ giá trị tìm kiếm
       notiVisible: false,
       userVisible: false,
       name: null,
       userHoverOption: null,
+
+      isLoading: false,
     };
   },
   mounted() {
@@ -214,13 +235,16 @@ export default {
     },
     async handleLogOut() {
       try {
+        this.isLoading = true;
         const response = await axiosInstance.post("/logout");
         if (response.status === 204) {
           this.name = null;
           localStorage.removeItem("accessToken");
+          this.isLoading = false;
           this.$router.push("/login");
         }
       } catch (error) {
+        this.isLoading = false;
         // Nếu lỗi là ko có người dùng hoặc không hợp lệ thì không gán name, header sẽ không hiện người dùng
         alert(error);
         return;
