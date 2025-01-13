@@ -10,9 +10,10 @@ const pool = require('../../config/database');
 const https = require('https');
 
 // Public thì bỏ đi
-const agent = new https.Agent({
-    rejectUnauthorized: false
-});
+const agent =
+    process.env.NODE_ENV === 'development'
+        ? new https.Agent({ rejectUnauthorized: false }) 
+        : undefined;
 
 
 class PaymentController {

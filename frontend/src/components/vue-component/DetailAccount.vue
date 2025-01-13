@@ -143,9 +143,7 @@ export default {
           this.$router.push("/");
         }else if(role === '2'){
           window.location.href = "https://localhost:8080/admin"; 
-        }
-        // Sau khi đăng nhập thành công, điều hướng tới một trang khác nếu cần
-        
+        }        
       } catch (error) {
         // Xử lý lỗi khi đăng nhập
         if (error.response) {
