@@ -19,8 +19,8 @@ class OrderDetailModel {
         }
     }
 
-    async getByIdOrder(id_order) {
-        const result = await this.pool.query(
+    async getByIdOrder(client, id_order) {
+        const result = await client.query(
             `SELECT * FROM order_detail
             WHERE id_order = $1`,
             [id_order]

@@ -68,8 +68,8 @@ class OrderModel {
     }
 
     // Cancel order with status "Pending"
-    async cancelOrder(id_order) {
-        const result = await this.pool.query(
+    async cancelOrder(client, id_order) {
+        const result = await client.query(
             `UPDATE orders
             SET status = $1
             WHERE id_order = $2
@@ -112,7 +112,7 @@ class OrderModel {
         }
     }
 
-    async getOrderById(id_order) {
+    async getOrderById(client, id_order) {
         try {
             const query = `
                 SELECT *
@@ -120,7 +120,7 @@ class OrderModel {
                 WHERE id_order = $1;
             `;
 
-            const result = await this.pool.query(query, [id_order]);
+            const result = await client.query(query, [id_order]);
 
             if (result.rows.length > 0) {
                 return result.rows[0]; // Return the first matching order

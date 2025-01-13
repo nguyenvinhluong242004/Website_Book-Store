@@ -266,13 +266,13 @@ class AccountController {
             const { id_order } = req.body;
             const email = req.email;
 
-            const order = await orderModel.getOrderById(id_order);
+            const order = await orderModel.getOrderById(client, id_order);
             const method = order.method;
             // 1. Cập nhật lại trạng thái đơn hàng
-            const updatedOrder = await orderModel.cancelOrder(id_order);
+            const updatedOrder = await orderModel.cancelOrder(client, id_order);
             console.log('UPDATED ORDER: ', updatedOrder);
             // 2. Cập nhật lại số lượng sách
-            const orderDetails = await order_detailModel.getByIdOrder(id_order);
+            const orderDetails = await order_detailModel.getByIdOrder(client, id_order);
             console.log('ORDER DETAILS: ', orderDetails);
 
             const bookQuantities = orderDetails.map(detail => ({
@@ -283,7 +283,7 @@ class AccountController {
 
             for (const { id_book, quantity } of bookQuantities) {
                 try {
-                    const updatedCount = await bookModel.reverseQuantity(id_book, quantity);
+                    const updatedCount = await bookModel.reverseQuantity(client, id_book, quantity);
                     if (updatedCount > 0) {
                         console.log(`Số lượng cho sách ID ${id_book} đã được cập nhật thành công`);
                     } else {
@@ -296,7 +296,7 @@ class AccountController {
 
             // 3. Hoàn tiền
             if (method === 'online') {
-                const id_invoice = await invoiceModel.getIdByIdOrder(id_order);
+                const id_invoice = await invoiceModel.getIdByIdOrder(client, id_order);
                 console.log('ID Invoice:', id_invoice);
                 try {
                     const tokenResponse = await axios.post(`${process.env.DOMAIN_BANK}/request-server/generate-token`,
