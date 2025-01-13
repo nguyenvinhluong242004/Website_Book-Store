@@ -35,7 +35,7 @@ const handleNewUser = async (req, res) => {
         // XỬ LÝ TẠO TÀI KHOẢN NGÂN HÀNG TẠI ĐÂY 
         let token;
         try {
-            const tokenResponse = await axios.post('https://localhost:6868/request-server/generate-token', {
+            const tokenResponse = await axios.post(`${process.env.DOMAIN_BANK}/request-server/generate-token`, {
                 email: email
             }, { httpsAgent: agent }); // Public thì bỏ đi
 
@@ -48,7 +48,7 @@ const handleNewUser = async (req, res) => {
         const data = { email };
 
         try {
-            const response = await axios.post('https://localhost:6868/request-server/register', data, {
+            const response = await axios.post(`${process.env.DOMAIN_BANK}/request-server/register`, data, {
                 headers: {
                     'Authorization': `Bearer ${token}`,  // Thêm token vào header
                     'Content-Type': 'application/json'
@@ -57,12 +57,12 @@ const handleNewUser = async (req, res) => {
             });
 
             if (!response.data.success) {
-                console.error('Bank account registration failed');
+                console.error('Lỗi khi đăng ký tài khoản thanh toán');
                 return res.status(502).json({ message: 'Không thể tạo tài khoản ngân hàng' });
             }
         } catch (axiosError) {
-            console.error('Error registering bank account:', axiosError.message);
-            return res.status(502).json({ message: 'Không thể tạo tài khoản ngân hàng' });
+            console.error('Lỗi khi đăng ký tài khoản thanh toán:', axiosError.message);
+            return res.status(502).json({ message: 'Không thể tạo tài khoản thanh toán' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);

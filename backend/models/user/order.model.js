@@ -111,6 +111,27 @@ class OrderModel {
             throw error;
         }
     }
+
+    async getOrderById(id_order) {
+        try {
+            const query = `
+                SELECT *
+                FROM orders
+                WHERE id_order = $1;
+            `;
+
+            const result = await this.pool.query(query, [id_order]);
+
+            if (result.rows.length > 0) {
+                return result.rows[0]; // Return the first matching order
+            } else {
+                return null; // No order found with the given id
+            }
+        } catch (error) {
+            console.error(`Lỗi khi lấy đơn hàng có ID ${id_order}:`, error);
+            throw new Error('Không thể lấy đơn hàng');
+        }
+    }
 }
 
 module.exports = new OrderModel(); 

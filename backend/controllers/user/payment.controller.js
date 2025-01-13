@@ -68,7 +68,8 @@ class PaymentController {
                     book_name: book.book_name,
                     list_price: book.list_price,
                     discounted_price: book.discounted_price,
-                    quantity: quantity
+                    quantity: quantity,
+                    image_links: book.image_links
                 });
             }
 
@@ -109,7 +110,7 @@ class PaymentController {
                     discounted_price: book.discounted_price,
                     available_quantity: book.available_quantity,
                     sold_quantity: book.sold_quantity,
-                    quantity: quantity
+                    quantity: quantity,
                 });
             }
 
@@ -122,7 +123,7 @@ class PaymentController {
                 updateQuantityOfBook(bookDetails);
             } else if (method === 'online') {
                 const tokenResponse = await axios.post(
-                    'https://localhost:6868/request-server/generate-token',
+                    `${process.env.DOMAIN_BANK}/request-server/generate-token`,
                     { email }, // Dữ liệu gửi đi
                     {
                         headers: { 'Content-Type': 'application/json' },
@@ -137,7 +138,7 @@ class PaymentController {
                 const data = { email, id_invoice, amount };
                 console.log('DATE SEND: ', data);
                 const paymentResponse = await axios.post(
-                    'https://localhost:6868/request-server/pay',
+                    `${process.env.DOMAIN_BANK}/request-server/pay`,
                     data, // Dữ liệu thanh toán
                     {
                         headers: {
