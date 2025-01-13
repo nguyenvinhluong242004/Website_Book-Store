@@ -1,5 +1,11 @@
 <template>
   <div class="checkout-container">
+    <div v-if="isLoading" class="loading-overlay">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
     <div class="checkout-address-box">
       <div class="pb-2 fs-5 border-bottom">ĐỊA CHỈ GIAO HÀNG</div>
       <div class="row">
@@ -192,15 +198,17 @@ export default {
       totalAddress: 0,
 
       checkoutAddress: null,
-      checkoutPayment: 'cod',
+      checkoutPayment: "cod",
 
-      listProduct: [
-        
-      ],
+      listProduct: [],
+
+      isLoading: false,
     };
   },
   methods: {
     async handleRouteChange() {
+      this.isLoading = true;
+
       // Lấy địa chỉ
       try {
         const response = await axiosInstance.get(
@@ -219,6 +227,8 @@ export default {
           this.checkoutAddress = this.allAddress[0];
         }
       } catch (error) {
+        this.isLoading = false;
+
         console.log(error);
         if (error.response.status === 401) {
           // Không có accesstoken
@@ -242,6 +252,8 @@ export default {
           this.listProduct = response.data.books;
         }
       } catch (error) {
+        this.isLoading = false;
+
         if (error.response) {
           const status = error.response.status;
           const message = error.response.data.message;
@@ -257,19 +269,26 @@ export default {
             this.$router.push("/login");
           } else if (status === 500) {
             alert(message);
+            this.$router.push("/login");
           }
         } else {
           // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
           alert("Lỗi mạng: Không thể kết nối đến server.");
+          this.$router.push("/login");
         }
       }
+
+      this.isLoading = false;
     },
 
     async handleCheckout() {
       try {
+        this.isLoading = true;
+
         console.log(this.checkoutAddress);
         console.log(this.checkoutPayment);
         console.log(this.totalPrice);
+        
         const response = await axiosInstance.post("/payment/finish-payment", {
           detail_address: `${this.checkoutAddress.address}, ${this.checkoutAddress.ward}, ${this.checkoutAddress.district}, ${this.checkoutAddress.city}, ${this.checkoutAddress.country}`,
           method: this.checkoutPayment,
@@ -277,10 +296,13 @@ export default {
         });
 
         if (response.status === 200) {
-          alert('Đã đặt đơn hàng thành công');
+          this.isLoading = false;
+          alert("Đã đặt đơn hàng thành công");
           this.$router.push("/");
         }
       } catch (error) {
+        this.isLoading = false;
+
         alert(error);
         if (error.response) {
           const status = error.response.status;
@@ -297,10 +319,12 @@ export default {
             this.$router.push("/login");
           } else if (status === 500) {
             alert(message);
+            this.$router.push("/login");
           }
         } else {
           // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
           alert("Lỗi mạng: Không thể kết nối đến server.");
+          this.$router.push("/login");
         }
       }
     },
@@ -308,6 +332,8 @@ export default {
     async goToPageAddress(page) {
       if (page >= 1 && page <= this.total_pageAddress) {
         try {
+          this.isLoading = true;
+
           const response = await axiosInstance.get(
             `/account/address?page=${page}&per_page=${this.per_pageAddress}`
           );
@@ -317,8 +343,12 @@ export default {
             this.total_pageAddress = response.data.total_page;
             this.per_pageAddress = response.data.per_page;
             this.totalAddress = response.data.total;
+
+            this.isLoading = false;
           }
         } catch (error) {
+          this.isLoading = false;
+          
           console.log(error);
           if (error.response.status === 401) {
             // Không có accesstoken

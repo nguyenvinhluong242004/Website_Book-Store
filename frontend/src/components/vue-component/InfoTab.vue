@@ -1,5 +1,15 @@
 <template>
   <form class="info-tab-body" @submit="validateAndSubmitInfo">
+    <div v-if="isLoading" class="loading-overlay">
+      <div
+        class="spinner-border text-primary"
+        style="width: 3rem; height: 3rem"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
     <div class="row mb-4 mx-5">
       <label for="profile-name" class="col-sm-2 col-form-label"
         >Họ và tên</label
@@ -136,10 +146,14 @@ export default {
       phoneErr: "",
       birthdayErr: "",
       errMsg: null,
+
+      isLoading: false,
     };
   },
   methods: {
     async validateAndSubmitInfo(event) {
+      this.isLoading = true;
+
       event.preventDefault();
 
       // Validate
@@ -173,6 +187,7 @@ export default {
 
       //Nếu không có lỗi thì submit form
       if (!formValid) {
+        this.isLoading = false;
         return;
       }
 
@@ -185,11 +200,15 @@ export default {
         });
 
         if (response.status === 200) {
+          this.isLoading = false;
+
           this.$router.push("/").then(() => {
             this.$router.replace("/profile/info");
           });
         }
       } catch (error) {
+        this.isLoading = false;
+
         if (error.response) {
           const status = error.response.status;
           const message = error.response.data.message;
@@ -213,6 +232,8 @@ export default {
     },
     async handleRouteChange() {
       try {
+        this.isLoading = true;
+
         // Gửi yêu cầu để lấy thông tin người dùng
         const response = await axiosInstance.get("/account/profile");
         if (response.status === 200) {
@@ -224,8 +245,12 @@ export default {
           this.birthday = user.birth_date
             ? new Date(user.birth_date).toLocaleDateString("en-CA") // Sử dụng "en-CA" để có định dạng YYYY-MM-DD
             : null;
+
+          this.isLoading = false;
         }
       } catch (error) {
+        this.isLoading = false;
+
         console.log(error);
         if (error.response.status === 401) {
           // Không có accesstoken

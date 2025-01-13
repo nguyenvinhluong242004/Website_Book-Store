@@ -1,5 +1,15 @@
 <template>
   <div class="login-body">
+    <div v-if="isLoading" class="loading-overlay">
+      <div
+        class="spinner-border text-primary"
+        style="width: 3rem; height: 3rem"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
     <form class="login-container" @submit="validateAndSubmit">
       <h3 class="text-primary mb-4">ĐĂNG NHẬP</h3>
 
@@ -80,10 +90,14 @@ export default {
       emailErr: "",
       passwordErr: "",
       errMsg: null,
+
+      isLoading: false,
     };
   },
   methods: {
     async validateAndSubmit(event) {
+      this.isLoading=true;
+
       event.preventDefault();
 
       // Validate
@@ -116,6 +130,7 @@ export default {
 
       //Nếu không có lỗi thì submit form
       if (!formValid) {
+        this.isLoading=false;
         return;
       }
 
@@ -143,8 +158,11 @@ export default {
           this.$router.push("/");
         }else if(role === '2'){
           this.$router.push("/admin/dashboard");
-        }        
+        }
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading=false;
+        
         // Xử lý lỗi khi đăng nhập
         if (error.response) {
           const status = error.response.status;

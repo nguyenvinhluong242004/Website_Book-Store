@@ -36,6 +36,7 @@ import AdminApprovedOrder from "../components/vue-component/AdminApprovedOrder.v
 import AdminRefuseOrder from "../components/vue-component/AdminRefuseOrder.vue"
 import AdminDeliveryOrder from "../components/vue-component/AdminDeliveryOrder.vue"
 import AdminCompleteOrder from "../components/vue-component/AdminCompleteOrder.vue"
+import axiosInstance from "../services/axiosInstance.js";
 
 
 const routes = [
@@ -71,6 +72,41 @@ const routes = [
   {
     path: "/admin",
     component: AdminApp, // Layout cho admin
+    beforeEnter: async (to, from, next) => {
+      try {
+        const response = await axiosInstance.get("/account/profile");
+        if (response.status === 200) {
+          const user = response.data.user;
+
+          // Nếu là người dùng thường thì đẩy về trang user
+          if (user.role === "1") {
+            alert("Bạn phải là admin để truy cập vào đường dẫn này!");
+            next("/");
+          }
+          else { next(); }
+        }
+        next("/login");
+      } catch (error) {
+        if (error.response) {
+          const status = error.response.status;
+          const message = error.response.data.message;
+
+          // Xử lý các mã lỗi cụ thể
+          if (status === 404) {
+            // Nếu lỗi là ko có người dùng hoặc không hợp lệ thì đẩy về login
+            next("/login");
+          } else if (status === 500) {
+            alert(message);
+            next("/login");
+          }
+          next("/login");
+        } else {
+          // Xử lý lỗi nếu không có phản hồi (chẳng hạn lỗi kết nối mạng)
+          alert("Lỗi mạng: Không thể kết nối đến server.");
+          next("/login")
+        }
+      }
+    },
     children: [
       { path: "", redirect: "admin/dashboard" },
       { path: "dashboard", component: AdminThongKe, name: "AdminDashboard" },

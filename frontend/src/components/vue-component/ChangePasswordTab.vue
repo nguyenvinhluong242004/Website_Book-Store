@@ -1,5 +1,11 @@
 <template>
   <form class="changepw-tab-body" @submit="validateAndSubmitChangePW">
+    <div v-if="isLoading" class="loading-overlay">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
     <div class="row mb-4 mx-5">
       <label for="profile-password" class="col-sm-3 col-form-label"
         >Mật khẩu hiện tại</label
@@ -92,10 +98,14 @@ export default {
       newPasswordAgainErr: "",
 
       errMsg: null,
+
+      isLoading: false,
     };
   },
   methods: {
     async validateAndSubmitChangePW(event) {
+      this.isLoading = true;
+
       event.preventDefault();
 
       // Validate
@@ -141,6 +151,7 @@ export default {
 
       //Nếu không có lỗi thì submit form
       if (!formValid) {
+        this.isLoading = false;
         return;
       }
 
@@ -152,10 +163,13 @@ export default {
         });
 
         if (response.status === 200) {
+          this.isLoading = false;
           alert(response.data.message);
           this.$router.push("/profile/info");
         }
       } catch (error) {
+        this.isLoading = false;
+
         if (error.response) {
           const status = error.response.status;
           const message = error.response.data.message;

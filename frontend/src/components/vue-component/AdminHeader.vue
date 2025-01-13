@@ -1,5 +1,15 @@
 <template>
   <div class="admin-header">
+    <div v-if="isLoading" class="loading-overlay">
+      <div
+        class="spinner-border text-primary"
+        style="width: 3rem; height: 3rem"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
     <router-link to="/admin/dashboard"
       ><div class="admin-header-logo-box text-primary">
         <i class="fas fa-book"></i>
@@ -36,6 +46,8 @@ export default {
     return {
       hoverLogout: false,
       name: null,
+
+      isLoading: false,
     };
   },
   mounted() {
@@ -57,7 +69,7 @@ export default {
 
           // Nếu là người dùng thường thì đẩy về trang user
           if (user.role === "1") {
-            alert('Bạn phải là admin để truy cập vào đường dẫn này!');
+            alert("Bạn phải là admin để truy cập vào đường dẫn này!");
             this.$router.push("/");
           }
         }
@@ -83,12 +95,18 @@ export default {
 
     async handleLogOut() {
       try {
+        this.isLoading = true;
+
         const response = await axiosInstance.post("/logout");
         if (response.status === 204) {
           localStorage.removeItem("accessToken");
+
+          this.isLoading = false;
           this.$router.push("/login");
         }
       } catch (error) {
+        this.isLoading = false;
+
         alert(error);
         this.$router.push("/login");
       }
