@@ -179,7 +179,7 @@
           @click="goToPage(page - 1)"
           :disabled="page === 1"
         >
-          Previous
+        «
         </button>
 
         <!-- Hiển thị các trang với logic -->
@@ -225,7 +225,7 @@
           @click="goToPage(page + 1)"
           :disabled="page === totalPage"
         >
-          Next
+        »
         </button>
       </div>
     </div>

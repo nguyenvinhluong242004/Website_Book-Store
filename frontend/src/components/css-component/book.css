@@ -181,6 +181,7 @@
   font-size: 30px;
   font-weight: bold;
   border-radius: 50px;
+  cursor: pointer;
 }
 
 .book-btn:hover {
@@ -204,6 +205,11 @@
   justify-content: center;
   gap: 1%;
   font-weight: bold;
+  cursor: pointer;
+}
+.h:hover{
+  cursor: pointer;
+  color:#1670ac;
 }
 
 .book-buy-now {
@@ -217,6 +223,7 @@
   font-weight: bold;
   color: white;
   background-color: #1670ac;
+  cursor: pointer;
 }
 
 .book-buy-now:hover {
@@ -583,6 +590,7 @@ body.modal {
 
   color: rgb(199, 199, 199);
   font-size: 45px;
+  cursor: pointer;
 }
 
 .reviews {
