@@ -49,4 +49,4 @@ pool.connect((err, client, release) => {
 route(app);
 
 // Lắng nghe trên localhost
-https.createServer(options, app).listen(port, () => console.log(`Example at: ${process.env.DOMAIN_BACKEND}`));
+https.createServer(options, app).listen(port, '0.0.0.0', () => console.log(`Example at: ${process.env.DOMAIN_BACKEND}`));
