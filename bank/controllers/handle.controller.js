@@ -26,8 +26,18 @@ class DashboardController {
 
         console.log(email, id_invoice, amount)
 
+        const numericAmount = Number(amount);
+
+        // Kiểm tra tính hợp lệ của amount
+        if (isNaN(numericAmount) || numericAmount <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Số tiền không hợp lệ',
+            });
+        }
+
         try {
-            await HandleModel.processPayment(email, id_invoice, amount);
+            await HandleModel.processPayment(email, id_invoice, numericAmount);
 
             res.status(200).json({
                 success: true,
