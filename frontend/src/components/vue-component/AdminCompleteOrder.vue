@@ -56,7 +56,7 @@
                 style="cursor: pointer"
                 aria-label="select status"
                 v-model="order.status"
-                @change="updateStatus(order.id_order, order.status)"
+                @change="updateStatus(order.email, order.id_order, order.status)"
               >
                 <option value="Cancelled">Cancelled</option>
                 <option value="Completed">Completed</option>
@@ -311,13 +311,14 @@ export default {
       return new Intl.NumberFormat("vi-VN").format(price) + " vnđ";
     },
 
-    async updateStatus(id_order, status) {
+    async updateStatus(email, id_order, status) {
       try {
         this.isLoading = true;
 
         const response = await axiosInstance.patch(
           "/admin/order/update-status",
           {
+            email: email,
             id_order: id_order,
             status: status,
           }
