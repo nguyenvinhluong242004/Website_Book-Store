@@ -102,4 +102,4 @@ route(app);
 
 
 // Lắng nghe trên localhost
-https.createServer(options, app).listen(port, () => console.log(`Example at: https://localhost:${port}`));
+https.createServer(options, app).listen(port, () => console.log(`Example at: ${process.env.DOMAIN_BANK}`));
