@@ -133,17 +133,61 @@ export default {
         query: { id_book: id },
       });
     },
-    async getApi() {
+    async getApiEconomy() {
       this.loading = true;
       try {
-        const response = await axios.get(`/api`); // Lấy API qua proxy
+        const response = await axios.get(`/api/book-economy`); // Lấy API qua proxy
 
         if (response.data.success) {
           this.kinhTe = response.data.economyBooks;
-          this.tamLy = response.data.psychologyBooks;
+        }
+      } catch (error) {
+        this.error = "Không thể lấy thông tin sách!";
+        console.error(error);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async getApiLiterary() {
+      this.loading = true;
+      try {
+        const response = await axios.get(`/api/book-literary`); // Lấy API qua proxy
+
+        if (response.data.success) {
           this.vanHoc = response.data.literaryBooks;
-          this.tieuThuyet = response.data.novelBooks;
           //console.log(this.tieuThuyet);
+        }
+      } catch (error) {
+        this.error = "Không thể lấy thông tin sách!";
+        console.error(error);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async getApiNovel() {
+      this.loading = true;
+      try {
+        const response = await axios.get(`/api/book-novel`); // Lấy API qua proxy
+
+        if (response.data.success) {
+          console.log(response.data);
+          this.tieuThuyet = response.data.novelBooks;
+        }
+      } catch (error) {
+        this.error = "Không thể lấy thông tin sách!";
+        console.error(error);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async getApiPsychology() {
+      this.loading = true;
+      try {
+        const response = await axios.get(`/api/book-psychology`); // Lấy API qua proxy
+
+        if (response.data.success) {
+          console.log(response.data);
+          this.tamLy = response.data.psychologyBooks;
         }
       } catch (error) {
         this.error = "Không thể lấy thông tin sách!";
@@ -157,7 +201,10 @@ export default {
     },
   },
   mounted() {
-    this.getApi();
+    this.getApiEconomy();
+    this.getApiLiterary();
+    this.getApiNovel();
+    this.getApiPsychology();
   },
 };
 </script>
