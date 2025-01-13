@@ -11,6 +11,10 @@ import SearchPage from "../components/vue-component/Search.vue"
 import CartPage from "../components/vue-component/Cart.vue"
 import GenrePage from "../components/vue-component/GenreBook.vue"
 import CheckoutPage from "../components/vue-component/CheckoutPage.vue"
+import Intro from "../components/vue-component/Intro.vue"
+import New from "../components/vue-component/New.vue"
+import Colab from "../components/vue-component/Colab.vue"
+import Lookup from "../components/vue-component/Lookup.vue"
 
 import InfoTab from "../components/vue-component/InfoTab.vue"
 import AddressTab from "../components/vue-component/AddressTab.vue"
@@ -68,6 +72,10 @@ const routes = [
       { path: "search", component: SearchPage, name: "SearchPage" },
       { path: "cart", component: CartPage, name: "CartPage" },
       { path: "checkout", component: CheckoutPage, name: "CheckoutPage" },
+      { path: "intro", component: Intro, name: "IntroPage" },
+      { path: "new", component: New, name: "NewPage" },
+      { path: "colab", component: Colab, name: "ColabPage" },
+      { path: "lookup", component: Lookup, name: "LookupPage" },
     ]
   },
   {

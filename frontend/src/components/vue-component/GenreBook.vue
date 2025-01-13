@@ -148,7 +148,7 @@
         />
       </div>
 
-      <div class="pagination d-flex justify-content-center align-items-center">
+      <div v-if="arrayBook.length" class="pagination d-flex justify-content-center align-items-center">
         <!-- Nút Previous -->
         <button 
           class="btn btn-secondary me-2" 
@@ -177,6 +177,17 @@
           :disabled="page === totalPage">
           Next
         </button>
+      </div>
+      <div
+        v-else
+        class="d-flex flex-column align-items-center justify-content-center text-center py-5"
+      >
+        <h4 class="text-danger font-weight-bold">Không tìm thấy kết quả!</h4>
+        <p class="text-muted">
+          Xin lỗi, không có dữ liệu nào phù hợp với tìm kiếm của bạn. <br />
+          Hãy thử lại với từ khóa khác.
+        </p>
+
       </div>
 
     </div>
