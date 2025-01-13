@@ -1,12 +1,12 @@
 <template>
   <div class="header" :class="{ dark: darkMode, light: !darkMode }">
     <div class="grid-item-logo">
-      <router-link to="/"><i class="fas fa-book"></i></router-link>
+      <router-link to="/"><i class="fas fa-book" :class="{ dark: darkMode, light: !darkMode }" ></i></router-link>
 
       <div class="header-logo">BÁCH KHOA SÁCH</div>
     </div>
 
-    <div style="display: flex;flex-direction: column;justify-content: center;">
+    <div style="display: flex; flex-direction: column; justify-content: center">
       <div class="grid-item-search">
         <input
           class="input"
@@ -22,7 +22,7 @@
     </div>
 
     <div class="grid-item-icon">
-      <div
+      <!-- <div
         class="iconNoti"
         @mouseenter="notiVisible = true"
         @mouseleave="notiVisible = false"
@@ -33,7 +33,7 @@
             <div>Thông báo</div>
             <div class="notiBoxTxtAllNoti" type="button">Xem tất cả</div>
           </div>
-          <!-- <div class="notiItemList">
+           <div class="notiItemList">
             <div class="notiItem">
               <div class="notiItemTitle">Thông báo số 1</div>
               <div class="notiItemContent">hello Thong báo đây lo</div>
@@ -58,12 +58,17 @@
               <div class="notiItemTitle">Thông báo số 5</div>
               <div class="notiItemContent">hello haizzz đây lo</div>
             </div>
-          </div> -->
+          </div> 
           <div class="text-secondary p-3 fs-5 fw-bold">
             Chức năng chưa phát triển
           </div>
         </div>
+      </div> -->
+
+      <div id="theme-toggle" @click="toggleDarkMode" class="iconDarkMode">
+        <i class="fas" id="icon" :class="{ 'fa-sun': !darkMode, 'fa-moon': darkMode }"></i>
       </div>
+
       <div class="iconCart">
         <i type="button" class="fas fa-shopping-cart" @click="goToCart"></i>
       </div>
@@ -173,11 +178,9 @@ import axiosInstance from "../../services/axiosInstance.js";
 
 export default {
   name: "HeaderApp",
-  props: {
-    darkMode: Boolean, // Nhận trạng thái từ UserApp
-  },
   data() {
     return {
+      darkMode:false,
       searchQuery: "", // Lưu trữ giá trị tìm kiếm
       notiVisible: false,
       userVisible: false,
@@ -194,6 +197,10 @@ export default {
     },
   },
   methods: {
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      this.$emit("toggle-dark-mode", this.darkMode); // Truyền trạng thái lên UserApp
+    },
     search() {
       const stringSearch = this.searchQuery.trim();
       this.searchQuery = "";

@@ -4,7 +4,7 @@
 }
 .footer.light {
   color: #000000;
-  background-color: #ffffff;
+  background-color: #206484;
 }
 .footer.dark {
   color: #ffffff;
@@ -63,14 +63,12 @@
 }
 .footer .fa-book {
   font-size: 20px;
-  color: rgb(29, 90, 143);
   margin-right: 20px;
 }
 
 .footer-logo {
   font-size: 20px;
   font-weight: bold;
-  color: rgb(29, 90, 143);
   font-style: italic;
 }
 
@@ -94,7 +92,6 @@
   width: 60%;
 }
 .title {
-  color: #005499;
   font-weight: bold;
   font-size: 15px;
 }
