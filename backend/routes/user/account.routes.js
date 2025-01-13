@@ -13,5 +13,6 @@ router.delete('/delete-address', accountController.deleteAddress);
 router.put('/password', accountController.changePassword);
 router.get('/my-order', accountController.getMyOrder);
 router.get('/my-order/detail/:id_order', accountController.getDetailOrder);
+router.get('/bank-account', accountController.getDetailBankAccount);
 
 module.exports = router;

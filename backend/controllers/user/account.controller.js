@@ -1,9 +1,15 @@
 const bcrypt = require('bcrypt');
+const axios = require('axios');
+const https = require('https');
 
 const userModel = require('../../models/user.model');
 const addressModel = require('../../models/user/address.model');
 const orderModel = require('../../models/user/order.model');
 
+const agent =
+    process.env.NODE_ENV === 'development'
+        ? new https.Agent({ rejectUnauthorized: false })
+        : undefined;
 
 class AccountController {
     // [GET]: /account/profile
@@ -251,7 +257,52 @@ class AccountController {
     // [PATCH]: account/my-order/cancel
     // Placeholder
 
-    // [GET]: 
+    // [GET]: account/bank-account
+    async getDetailBankAccount(req, res) {
+        try {
+            const email = req.email;
+
+            let tokenResponse;
+            try {
+                tokenResponse = await axios.post('https://localhost:6868/request-server/generate-token',
+                    { email },
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        httpsAgent: agent
+                    }
+                );
+            } catch (err) {
+                console.error('Lỗi trong quá trình lấy token: ', err.message);
+                return res.status(502).json({ message: 'Không thể lấy token, vui lòng thử lại sau.' });
+            }
+
+            const token = tokenResponse.data.token;
+            const data = { email };
+
+            let bankAccountResponse;
+            try {
+                bankAccountResponse = await axios.post('https://localhost:6868/request-server/get',
+                    data,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`  // Thêm token vào header
+                        },
+                        httpsAgent: agent
+                    }
+                );
+            } catch (err) {
+                console.error('Lỗi trong quá trình lấy chi tiết tài khoản ngân hàng: ', err.message);
+                return res.status(502).json({ message: 'Không thể lấy chi tiết tài khoản ngân hàng, vui lòng thử lại sau.' });
+            }
+
+            return res.status(200).json(bankAccountResponse.data);
+
+        } catch (err) {
+            console.error('Lỗi trong quá trình xử lý yêu cầu: ', err.message);
+            return res.status(500).json({ message: 'Đã có lỗi trong quá trình xử lý yêu cầu.' });
+        }
+    }
 }
 
 module.exports = new AccountController();
