@@ -80,20 +80,20 @@ class OrderModel {
     }
 
     async getLastIdOrder() {
-        const query = 'SELECT ID_Order FROM Orders ORDER BY Created_At DESC LIMIT 1';
+        const query = 'SELECT MAX(ID_Order) AS max_id_order FROM Orders';
         try {
             const result = await pool.query(query);
 
-            if (result.rows.length > 0) {
-                const lastOrderId = parseInt(result.rows[0].id_order, 10);
-                console.log('Last order ID:', lastOrderId);
+            if (result.rows.length > 0 && result.rows[0].max_id_order !== null) {
+                const lastOrderId = parseInt(result.rows[0].max_id_order, 10);
+                console.log('Max order ID:', lastOrderId);
                 return lastOrderId;
             } else {
-                // console.log('No orders found.');
-                return null;
+                // console.log('No orders found or table is empty.');
+                return null; // Không có dữ liệu trong bảng
             }
         } catch (error) {
-            console.error('Lỗi khi lấy ID cuối cùng của bảng order:', error);
+            console.error('Lỗi khi lấy ID lớn nhất của bảng order:', error);
             throw error;
         }
     }

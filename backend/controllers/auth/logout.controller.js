@@ -26,6 +26,13 @@ handleLogout = async (req, res) => {
                 console.error('Lỗi đăng xuất: ', err);
             }
         });
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Lỗi khi hủy session: ', err);
+            } else {
+                console.log('Session đã bị hủy');
+            }
+        });
         console.log('ĐÃ ĐĂNG XUẤT');
         res.sendStatus(204);
     } catch (err) {

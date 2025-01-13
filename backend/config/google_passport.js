@@ -1,6 +1,6 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
-
+const axios = require('axios');
 const userModel = require('../models/user.model');
 
 passport.use(new GoogleStrategy({
@@ -20,6 +20,19 @@ passport.use(new GoogleStrategy({
                 const name = profile.given_name + " " + profile.family_name;
                 const newUser = await userModel.createUserWithGoogle(profile.email, name, 1, profile.id)
 
+                const tokenResponse = await axios.post('https://localhost:6868/request-server/generate-token', {
+                    email: email
+                }, { httpsAgent: agent }); // Public thì bỏ đi
+
+                const token = tokenResponse.data.token;
+                const data = { email };
+                const response = await axios.post('https://localhost:6868/request-server/register', data, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,  // Thêm token vào header
+                        'Content-Type': 'application/json'
+                    },
+                    httpsAgent: agent // Public thì bỏ đi
+                });
                 return done(null, newUser);
             }
         } catch (err) {
