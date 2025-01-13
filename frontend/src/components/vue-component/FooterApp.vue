@@ -1,56 +1,49 @@
 <template>
-  <div class="footer">
-    <div class="header-bottom">
-      <div class="new-register">
-        <i class="fas fa-envelope"></i>
-        <div class="news">ĐĂNG KÍ NHẬN TIN</div>
-      </div>
-      <div class="input-header-bottom">
-        <input
-          type="text"
-          style="border-radius: 5px; border: none; height: 50%; width: 80%"
-          placeholder="Nhập địa chỉ của bạn"
-        />
-        <button class="btn-bottom">Đăng ký</button>
-      </div>
-    </div>
+  <div class="footer" :class="{ dark: isDarkMode, light: !isDarkMode }">
+
     <div class="body-bottom">
-      <div class="address">
-        <div class="grid-item-logo">
-          <i class="fas fa-book"></i>
-          <div class="footer-logo">BÁCH KHOA SÁCH</div>
+      <div class="address row">
+        <div class="col-7">
+          <div class="grid-item-logo">
+            <i class="fas fa-book"></i>
+            <div class="footer-logo">BÁCH KHOA SÁCH</div>
+          </div>
+
+          <div class="content-address">
+            <div class="infor">
+              Lầu 5, 387-389 Hai Bà Trưng Quận 3 TP HCM Công Ty Cổ Phần Phát
+              Hành Sách TP HCM - BKS
+            </div>
+            <div class="infor">
+              BKS.com nhận đặt hàng trực tuyến và giao hàng tận nơi.
+            </div>
+            <div class="infor">
+              KHÔNG hỗ trợ đặt mua và nhận hàng trực tiếp tại văn phòng cũng như
+              tất cả hệ thông BKS trên toàn quốc.
+            </div>
+          </div>
         </div>
-        <div class="content-address">
-          <div class="infor">
-            Lầu 5, 387-389 Hai Bà Trưng Quận 3 TP HCM Công Ty Cổ Phần Phát Hành
-            Sách TP HCM - BKS
-          </div>
-          <div class="infor">
-            BKS.com nhận đặt hàng trực tuyến và giao hàng tận nơi.
-          </div>
-          <div class="infor">
-            KHÔNG hỗ trợ đặt mua và nhận hàng trực tiếp tại văn phòng cũng như
-            tất cả Hệ Thống Fahasa trên toàn quốc.
-          </div>
-          <div class="icon-contact">
+
+        <div class="col-5">
+          <div class="title text-center"> LIÊN HỆ</div>
+
+          <div class="icon-contact mt-2" >
             <i class="fab fa-facebook"></i>
             <i class="fab fa-instagram"></i>
             <i class="fab fa-youtube"></i>
             <i class="fab fa-tiktok"></i>
             <i class="fab fa-pinterest"></i>
           </div>
-          <div class="certificate">
-            <i class="fas fa-certificate"></i>
-            CHỨNG NHẬN
-          </div>
-        </div>
-      </div>
 
-      <div class="vertical-line"></div>
+          <button class="btn btn-primary" @click="toggleDarkMode">Dark Mode</button>
+          
+        </div>
+
+      </div>
 
       <div class="bottom-option">
         <div class="container-bottom-option">
-          <div class="service">
+          <div class="col-lg-4">
             <div class="title">DỊCH VỤ</div>
             <li>Điều khoản và sử dụng</li>
             <li>Chính sách bảo mật</li>
@@ -62,7 +55,8 @@
               <span> 60-62 Lê Lợi, Q.1, TP. HCM</span>
             </div>
           </div>
-          <div class="suport">
+
+          <div class="col-lg-4">
             <div class="title">HỖ TRỢ</div>
             <li>Chính sách đổi trả hoàn tiền</li>
             <li>Chính sách bảo mật</li>
@@ -74,7 +68,8 @@
               <span> cskh@fahasa.com.vn</span>
             </div>
           </div>
-          <div class="account">
+
+          <div class="col-lg-4">
             <div class="title">TÀI KHOẢN CỦA TÔI</div>
             <li>Đăng nhập/ Tạo mới tài khoản</li>
             <li>Thay đổi địa chỉ khách hàng</li>
@@ -87,9 +82,7 @@
             </div>
           </div>
         </div>
-        <div class="ship">
-          <img src="/IMG/ship.jpg" alt="ship" />
-        </div>
+
       </div>
     </div>
   </div>
@@ -100,5 +93,16 @@ import "../css-component/footer-app.css";
 
 export default {
   name: "FooterApp",
+  data() {
+    return {
+      isDarkMode: false, // Trạng thái dark mode, mặc định là false (light mode)
+    };
+  },
+  methods: {
+    toggleDarkMode() {
+      this.isDarkMode = !this.isDarkMode;
+      this.$emit("toggle-dark-mode", this.isDarkMode); // Truyền trạng thái lên UserApp
+    },
+  },
 };
 </script>
