@@ -106,6 +106,7 @@ class PaymentController {
                 bookDetails.push({
                     id_book: book.id_book,
                     list_price: book.list_price,
+                    discounted_price: book.discounted_price,
                     available_quantity: book.available_quantity,
                     sold_quantity: book.sold_quantity,
                     quantity: quantity
@@ -176,9 +177,9 @@ class PaymentController {
 async function saveIntoOrderDetail(id_order, bookDetails) {
     try {
         for (const item of bookDetails) {
-            const { id_book, quantity, list_price } = item;
+            const { id_book, quantity, discounted_price } = item;
 
-            await orderDetailModel.create(id_order, id_book, quantity, list_price);
+            await orderDetailModel.create(id_order, id_book, quantity, discounted_price);
         }
 
         console.log(`Toàn bộ đơn hàng chi tiết của đơn hàng ${id_order} đã được lưu. `);
