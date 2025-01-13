@@ -34,7 +34,7 @@
 
     <!-- Content for each tab -->
     <div v-if="selectedTab === 'skill'" style="min-height: 420px">
-      <img src="/IMG/kinang.jpg" width="100%" height="370px" alt="poster" />
+      <img src="/IMG/KINHTE.png" width="100%" height="370px" alt="poster" />
       <div v-if="loading" class="spinner mt-3"></div>
       <div v-else class="category-book-list-container">
         <ProductCard
@@ -51,7 +51,7 @@
     </div>
 
     <div v-if="selectedTab === 'family'" style="min-height: 420px">
-      <img src="/IMG/giadinh.jpg" width="100%" height="370px" alt="family" />
+      <img src="/IMG/1.png" width="100%" height="370px" alt="Tâm lý" />
       <div v-if="loading" class="spinner mt-3"></div>
       <div v-else class="category-book-list-container">
         <ProductCard
@@ -68,7 +68,7 @@
     </div>
 
     <div v-if="selectedTab === 'science'" style="min-height: 420px">
-      <img src="/IMG/khoahoc.jpg" width="100%" height="370px" alt="science" />
+      <img src="/IMG/khoahoc.jpg" width="100%" height="370px" alt="Văn học" />
       <div v-if="loading" class="spinner mt-3"></div>
       <div v-else class="category-book-list-container">
         <ProductCard
@@ -85,7 +85,7 @@
     </div>
 
     <div v-if="selectedTab === 'literature'" style="min-height: 420px">
-      <img src="/IMG/kinang.jpg" width="100%" height="370px" alt="literature" />
+      <img src="/IMG/2.png" width="100%" height="370px" alt="Tiểu thuyết" />
       <div v-if="loading" class="spinner mt-3"></div>
       <div v-else class="category-book-list-container">
         <ProductCard
@@ -143,6 +143,7 @@ export default {
           this.tamLy = response.data.psychologyBooks;
           this.vanHoc = response.data.literaryBooks;
           this.tieuThuyet = response.data.novelBooks;
+          //console.log(this.tieuThuyet);
         }
       } catch (error) {
         this.error = "Không thể lấy thông tin sách!";
