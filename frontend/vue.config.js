@@ -34,7 +34,7 @@ module.exports = defineConfig({
       : undefined,
     proxy: {
       '/api': {
-        target: 'https://book-store-backend.onrender.com', // Địa chỉ backend
+        target: 'https://book-store-backend-olvp.onrender.com', // Địa chỉ backend
         changeOrigin: true,
         pathRewrite: { '^/api': '' },
       },
