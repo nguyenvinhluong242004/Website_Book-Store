@@ -97,6 +97,8 @@ pool.connect((err, client, release) => {
 });
 
 
+const HTTP_PORT = process.env.HTTP_PORT || 80; // HTTP lắng nghe trên cổng 80
+const HTTPS_PORT = process.env.HTTPS_PORT || 443; // HTTPS lắng nghe trên cổng 443
 
 // Route init
 route(app);
