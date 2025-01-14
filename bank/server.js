@@ -106,8 +106,8 @@ route(app);
 //https.createServer(options, app).listen(port, () => console.log(`Example at: ${process.env.DOMAIN_BANK}`));
 
 if (process.env.NODE_ENV_DEV === "production") {
-    app.listen(process.env.PORT_BANK, () => {
-        console.log(`Server (production) is running on port ${process.env.PORT_BANK}`);
+    app.listen(process.env.PORT, () => {
+        console.log(`Server (production) is running on port ${process.env.PORT}`);
     });
 } else {
     const httpsServer = https.createServer(options, app);
