@@ -18,6 +18,9 @@ const { defineConfig } = require('@vue/cli-service')
 const fs = require('fs');
 const path = require('path');
 
+require('dotenv').config({ path: '../.env' });
+console.log(process.env.NODE_ENV_DEV)
+
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
