@@ -61,7 +61,7 @@ const HTTPS_PORT = process.env.HTTPS_PORT || 443; // HTTPS lắng nghe trên c�
 // Lắng nghe trên localhost
 //https.createServer(options, app).listen(port, () => console.log(`Example at: ${process.env.DOMAIN_BACKEND}`));
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV_DEV === "production") {
     app.listen(process.env.PORT, () => {
         console.log(`Server (production) is running on port ${process.env.PORT}`);
     });
@@ -74,6 +74,7 @@ if (process.env.NODE_ENV === "production") {
 
     // Tạo server HTTP để chuyển hướng sang HTTPS
     http.createServer((req, res) => {
+        console.log(req.headers.host, req.url)
         res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
         res.end();
     }).listen(HTTP_PORT, () => {
