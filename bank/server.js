@@ -32,7 +32,7 @@ const pool = require('./config/database');
 
 // Cấu hình CORS
 app.use(cors({
-    origin: 'https://localhost:8888', // Cho phép origin cụ thể (có thể thay đổi theo nhu cầu)
+    origin: process.env.DOMAIN_BACKEND, // Cho phép origin cụ thể (có thể thay đổi theo nhu cầu)
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], 
     allowedHeaders: ['Content-Type', 'Authorization'], 
     credentials: true, 
