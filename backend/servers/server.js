@@ -7,6 +7,7 @@ const cors = require('cors');
 const corsOptions = require('../config/corsOptions');
 const credentials = require('../middlewares/auth/credentials');
 const https = require('https');
+const http = require('http');
 const fs = require('fs');
 const passport = require('passport');
 const privateKey = fs.readFileSync(path.join(__dirname, '../sslkeys/key.pem'), 'utf8');
