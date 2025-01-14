@@ -9,6 +9,7 @@ const { format } = require('date-fns'); // Import date-fns library
 
 
 const https = require('https');
+const http = require('http');
 const fs = require('fs');
 
 const privateKey = fs.readFileSync(path.join(__dirname, '../backend/sslkeys/key.pem'), 'utf8');
@@ -102,4 +103,25 @@ route(app);
 
 
 // Lắng nghe trên localhost
-https.createServer(options, app).listen(port, () => console.log(`Example at: ${process.env.DOMAIN_BANK}`));
+//https.createServer(options, app).listen(port, () => console.log(`Example at: ${process.env.DOMAIN_BANK}`));
+
+if (process.env.NODE_ENV_DEV === "production") {
+    app.listen(process.env.PORT_BANK, () => {
+        console.log(`Server (production) is running on port ${process.env.PORT_BANK}`);
+    });
+} else {
+    const httpsServer = https.createServer(options, app);
+
+    httpsServer.listen(HTTPS_PORT, () => {
+        console.log(`HTTPS Server is running on port ${HTTPS_PORT}`);
+    });
+
+    // Tạo server HTTP để chuyển hướng sang HTTPS
+    http.createServer((req, res) => {
+        console.log(req.headers.host, req.url)
+        res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
+        res.end();
+    }).listen(HTTP_PORT, () => {
+        console.log(`HTTP Server is redirecting to HTTPS on port ${HTTP_PORT}`);
+    });
+}
