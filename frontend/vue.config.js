@@ -23,7 +23,7 @@ module.exports = defineConfig({
   devServer: {
     port: process.env.PORT || 8080,
     allowedHosts: 'all',
-    server: process.env.NODE_ENV !== 'production'
+    server: process.env.NODE_ENV_DEV !== 'production'
       ? {
           type: 'https',
           options: {
