@@ -66,7 +66,7 @@
 
       <div class="d-flex align-items-center justify-content-center">
         Hoặc đăng nhập với
-        <a href="https://book-store-backend-olvp.onrender.com/auth/google"
+        <a href="https://book-store-bks.onrender.com/auth/google"
           ><img
             src="../../../public/gg_icon.svg"
             alt="Google Logo"
@@ -136,7 +136,7 @@ export default {
 
       try {
         // Gửi yêu cầu đăng nhập
-        const response = await axiosInstance.post("https://book-store-backend-olvp.onrender.com/login", {
+        const response = await axiosInstance.post("/login", {
           email: this.email,
           password: this.password,
         });
