@@ -891,7 +891,7 @@ export default {
         this.isLoadingSendReview = true;
         try {
           const response = await axiosInstance.post(
-            "/detail-book/review",
+            "https://book-store-backend-olvp.onrender.com/detail-book/review",
             formData,
             {
               headers: {
@@ -981,7 +981,7 @@ export default {
     async fetchBookDetails(id) {
       this.isLoadingImage = true;
       try {
-        const response = await axios.get(`/api/detail-book?id=${id}`); // Lấy API qua proxy
+        const response = await axios.get(`https://book-store-backend-olvp.onrender.com/api/detail-book?id=${id}`); // Lấy API qua proxy
         if (response.data.success) {
           this.book = response.data.data;
           console.log(this.book);
@@ -1039,7 +1039,7 @@ export default {
     async addToCart() {
       this.isLoadingCart = true;
       try {
-        const response = await axiosInstance.post("/cart/add", {
+        const response = await axiosInstance.post("https://book-store-backend-olvp.onrender.com/cart/add", {
           id_book: `${this.$route.query.id_book}`,
           quantity: this.quantityOfBook,
         });
@@ -1125,7 +1125,7 @@ export default {
     async getReview(id, page) {
       try {
         const response = await axios.get(
-          `/api/detail-book/get-reviews?id=${id}&page=${page}`
+          `https://book-store-backend-olvp.onrender.com/api/detail-book/get-reviews?id=${id}&page=${page}`
         ); // Lấy API qua proxy
         if (response.data.success) {
           const result = response.data;

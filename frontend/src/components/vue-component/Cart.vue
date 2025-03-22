@@ -173,7 +173,7 @@ export default {
         try {
           this.isLoading = true;
 
-          const response = await axiosInstance.patch("/cart/update", {
+          const response = await axiosInstance.patch("https://book-store-backend-olvp.onrender.com/cart/update", {
             id_book: String(id_book),
             quantity: newQuantity,
           });
@@ -216,7 +216,7 @@ export default {
       try {
         this.isLoading = true;
 
-        const response = await axiosInstance.delete("/cart/delete", {
+        const response = await axiosInstance.delete("https://book-store-backend-olvp.onrender.com/cart/delete", {
           data: {
             id_book: String(id_book),
           },
@@ -256,7 +256,7 @@ export default {
       try {
         this.isLoading = true;
 
-        const response = await axiosInstance.get("/cart");
+        const response = await axiosInstance.get("https://book-store-backend-olvp.onrender.com/cart");
 
         if (response.status === 200) {
           this.listProduct = response.data.cart;
@@ -316,7 +316,7 @@ export default {
       console.log(cart);
 
       try {
-        const response = await axiosInstance.post("/payment/pre-payment", {
+        const response = await axiosInstance.post("https://book-store-backend-olvp.onrender.com/payment/pre-payment", {
           cart: cart,
         });
 
