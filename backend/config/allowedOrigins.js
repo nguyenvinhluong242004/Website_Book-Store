@@ -5,7 +5,8 @@ const allowedOrigins = [
     'https://localhost:8888',
     'https://localhost:6868',
     'https://book-store-bks.onrender.com',
-    'https://book-store-bank.onrender.com'
+    'https://book-store-bank.onrender.com',
+    'https://book-store-backend-olvp.onrender.com'
 ];
 
 module.exports = allowedOrigins;

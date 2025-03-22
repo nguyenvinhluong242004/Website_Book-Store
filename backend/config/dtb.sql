@@ -1,16 +1,15 @@
 DROP TABLE IF EXISTS Poster CASCADE;
-DROP TABLE IF EXISTS Poster Categories;
+DROP TABLE IF EXISTS Categories CASCADE;
 DROP TABLE IF EXISTS Voucher CASCADE;
 DROP TABLE IF EXISTS Users CASCADE;
 DROP TABLE IF EXISTS User_Bank CASCADE;
 DROP TABLE IF EXISTS Deposit CASCADE;
-DROP TABLE IF EXISTS Address CASCADE;
+DROP TABLE IF EXISTS Address_Booking CASCADE;
 DROP TABLE IF EXISTS Book CASCADE;
 DROP TABLE IF EXISTS Img_Book CASCADE;
 DROP TABLE IF EXISTS Review CASCADE;
 DROP TABLE IF EXISTS Orders CASCADE;
 DROP TABLE IF EXISTS Invoice CASCADE;
-DROP TABLE IF EXISTS Payment CASCADE;
 DROP TABLE IF EXISTS Report CASCADE;
 
 
@@ -188,15 +187,24 @@ CREATE TABLE Report (
     Total_Revenue NUMERIC(15, 2)
 );
 
+INSERT INTO Categories (Name) 
+VALUES 
+    ('Thiếu nhi'),
+    ('Giáo khoa'),
+    ('Kinh tế'),
+    ('Tâm lý'),
+    ('Ngoại ngữ'),
+    ('Văn học'),
+    ('Tiểu thuyết');
+
+
 -- Insert sample data
 INSERT INTO Poster (Name, Image_Link, Product_Link) VALUES
-('Poster 1', 'https://example.com/image1.jpg', 'https://example.com/product1'),
-('Poster 2', 'https://example.com/image2.jpg', 'https://example.com/product2'),
-('Poster 3', 'https://example.com/image3.jpg', 'https://example.com/product3'),
-('Poster 4', 'https://example.com/image4.jpg', 'https://example.com/product4'),
-('Poster 5', 'https://example.com/image5.jpg', 'https://example.com/product5'),
-('Poster 6', 'https://example.com/image6.jpg', 'https://example.com/product6'),
-('Poster 7', 'https://example.com/image7.jpg', 'https://example.com/product7');
+('Poster 1', 'https://www.tiendauroi.com/wp-content/uploads/2019/08/fdf614b7094003e1f8208b52734d41906e54031f.jpeg', 'https://book-store-bks.onrender.com/genre?id_genre=1&genre=Thi%E1%BA%BFu+nhi'),
+('Poster 2', 'https://salt.tikicdn.com/ts/brickv2og/5a/eb/43/b6757b308e0195aaad79d8dd19d88fc2.jpg', 'https://book-store-bks.onrender.com/genre?id_genre=2&genre=Gi%C3%A1o+khoa'),
+('Poster 3', 'https://s3-ap-southeast-1.amazonaws.com/storage.adpia.vn/affiliate_document/img/tiki-700x400-tri-an-20-11.jpg', 'https://book-store-bks.onrender.com/genre?id_genre=4&genre=T%C3%A2m+l%C3%BD'),
+('Poster 4', 'https://newshop.vn/public/uploads/news/52999962-994063307450168-3207249248986857472-n.png', 'https://book-store-bks.onrender.com/genre?id_genre=6&genre=V%C4%83n+h%E1%BB%8Dc'),
+('Poster 5', 'https://newshop.vn/public/uploads/news/tin8.jpg', 'https://book-store-bks.onrender.com/genre?id_genre=7&genre=Ti%E1%BB%83u+thuy%E1%BA%BFt');
 
 INSERT INTO Voucher (Voucher_Name, Type, Percent) VALUES
 ('Voucher 1', 'Discount', 10.00),
@@ -231,12 +239,12 @@ INSERT INTO Deposit (Account_Number, Deposit_Date, Amount, Balance_Before_Transa
 ('987654321', '2024-11-02', 500000.00, 3000000.00, 3500000.00, '123456789'),
 ('111122223', '2024-11-03', 200000.00, 7000000.00, 7200000.00, NULL);
 
--- Insert Address
-INSERT INTO Address (Email, Address) VALUES
-('user1@example.com', '123 Main St, City A'),
-('user2@example.com', '456 Elm St, City B'),
-('user3@example.com', '789 Pine St, City C'),
-('user4@example.com', '101 Maple St, City D');
+-- -- Insert Address
+-- INSERT INTO Address (Email, Address) VALUES
+-- ('user1@example.com', '123 Main St, City A'),
+-- ('user2@example.com', '456 Elm St, City B'),
+-- ('user3@example.com', '789 Pine St, City C'),
+-- ('user4@example.com', '101 Maple St, City D');
 
 -- Insert Book
 INSERT INTO Book (Book_Name, Language, Author, Translator, Publisher, Publication_Year, Pages, Description, List_Price, Discounted_Price, Available_Quantity, Sold_Quantity, Genre, Age_Group, Supplier, Cover_Type) 
@@ -461,62 +469,62 @@ ADD COLUMN Status INT DEFAULT 1;
 
 -- Insert Img_Book
 INSERT INTO Img_Book (ID_Book, Image_Link) VALUES
-(1, 'https://via.placeholder.com/1792x1024.png?text=D%E1%BA%BF+M%C3%AAn+Phi%C3%AAu+L%C6%B0u+K%C3%BD'),
-(2, 'https://via.placeholder.com/1792x1024.png?text=Harry+Potter+and+the+Philosopher%27s+Stone'),
-(3, 'https://via.placeholder.com/1792x1024.png?text=Chuy%E1%BB%87n+Con+M%C3%A8o+D%E1%BA%A1y+H%C3%A0i+%C3%82u+Bay'),
-(4, 'https://via.placeholder.com/1792x1024.png?text=Totto-chan%3A+C%C3%B4+B%C3%A9+B%C3%AAn+C%E1%BB%ADa+S%E1%BB%97'),
-(5, 'https://via.placeholder.com/1792x1024.png?text=Where+the+Wild+Things+Are'),
-(6, 'https://via.placeholder.com/1792x1024.png?text=Cu%E1%BB%99c+Phi%C3%AAu+L%C6%B0u+C%E1%BB%A7a+M%C3%ADt+%C4%90%E1%BA%B0c'),
-(7, 'https://via.placeholder.com/1792x1024.png?text=The+Giving+Tree'),
-(8, 'https://via.placeholder.com/1792x1024.png?text=Advanced+Mathematics'),
-(9, 'https://via.placeholder.com/1792x1024.png?text=%C4%90%E1%BA%A1i+S%E1%BB%8F+12'),
-(10, 'https://via.placeholder.com/1792x1024.png?text=Physics+for+Scientists+and+Engineers'),
-(11, 'https://via.placeholder.com/1792x1024.png?text=L%E1%BB%8Bch+S%E1%BB%AD+Th%E1%BB%83+Gi%E1%BB%9Bi+Hi%E1%BB%87n+%C4%90%E1%BA%A1i'),
-(12, 'https://via.placeholder.com/1792x1024.png?text=Organic+Chemistry'),
-(13, 'https://via.placeholder.com/1792x1024.png?text=English+Grammar+in+Use'),
-(14, 'https://via.placeholder.com/1792x1024.png?text=Gi%E1%BA%A3i+T%C3%ADch+1'),
-(15, 'https://via.placeholder.com/1792x1024.png?text=Rich+Dad+Poor+Dad'),
-(16, 'https://via.placeholder.com/1792x1024.png?text=T%C6%B0+Duy+Nhanh+V%C3%A0+Ch%E1%BA%ADm'),
-(17, 'https://via.placeholder.com/1792x1024.png?text=Sapiens%3A+L%C6%B0%E1%BB%A3c+S%E1%BB%AD+Lo%C3%A0i+Ng%C6%B0%E1%BB%9Di'),
-(18, 'https://via.placeholder.com/1792x1024.png?text=The+Intelligent+Investor'),
-(19, 'https://via.placeholder.com/1792x1024.png?text=Zero+to+One'),
-(20, 'https://via.placeholder.com/1792x1024.png?text=C%C3%BA+H%C3%ADch'),
-(21, 'https://via.placeholder.com/1792x1024.png?text=Lean+Startup'),
-(22, 'https://via.placeholder.com/1792x1024.png?text=%C4%90%E1%BA%A1c+Nh%C3%A2n+T%C3%A2m'),
-(23, 'https://via.placeholder.com/1792x1024.png?text=T%C3%A2m+L%C3%BD+H%C3%B3c+%C4%90%C4%83m+Đ%C3%B4ng'),
-(24, 'https://via.placeholder.com/1792x1024.png?text=Thinking%2C+Fast+and+Slow'),
-(25, 'https://via.placeholder.com/1792x1024.png?text=Quiet%3A+S%C3%BAc+M%E1%BA%A7nh+C%E1%BB%ADa+Ng%C6%B0%E1%BB%9Di+H%C6%B0%E1%BB%9Bng+N%E1%BB%99i'),
-(26, 'https://via.placeholder.com/1792x1024.png?text=The+Power+of+Habit'),
-(27, 'https://via.placeholder.com/1792x1024.png?text=Grit%3A+The+Power+of+Passion+and+Perseverance'),
-(28, 'https://via.placeholder.com/1792x1024.png?text=The+Psychopath+Test'),
-(29, 'https://via.placeholder.com/1792x1024.png?text=The+Power+of+Now'),
-(30, 'https://via.placeholder.com/1792x1024.png?text=English+Grammar+in+Use'),
-(31, 'https://via.placeholder.com/1792x1024.png?text=Practical+English+Usage'),
-(32, 'https://via.placeholder.com/1792x1024.png?text=Fluent+English'),
-(33, 'https://via.placeholder.com/1792x1024.png?text=Speak+English+Like+an+American'),
-(34, 'https://via.placeholder.com/1792x1024.png?text=English+Idioms+and+Phrasal+Verbs'),
-(35, 'https://via.placeholder.com/1792x1024.png?text=Barron%27s+TOEFL+iBT'),
-(36, 'https://via.placeholder.com/1792x1024.png?text=The+Elements+of+Style'),
-(37, 'https://via.placeholder.com/1792x1024.png?text=Easy+English'),
-(38, 'https://via.placeholder.com/1792x1024.png?text=Fluent+in+3+Months'),
-(39, 'https://via.placeholder.com/1792x1024.png?text=S%C3%B4ng+M%C3%A3i+V%E1%BB%9Bi+Th%E1%BB%A7+%C4%90%C3%B4'),
-(40, 'https://via.placeholder.com/1792x1024.png?text=The+Great+Gatsby'),
-(41, 'https://via.placeholder.com/1792x1024.png?text=Moby-Dick'),
-(42, 'https://via.placeholder.com/1792x1024.png?text=%C4%90o%C3%A1n+Cu%E1%BB%91i+Con+%C4%90%C6%B0%E1%BB%9Dng'),
-(43, 'https://via.placeholder.com/1792x1024.png?text=1984'),
-(44, 'https://via.placeholder.com/1792x1024.png?text=The+Catcher+in+the+Rye'),
-(45, 'https://via.placeholder.com/1792x1024.png?text=To+Kill+a+Mockingbird'),
-(46, 'https://via.placeholder.com/1792x1024.png?text=Moby-Dick'),
-(47, 'https://via.placeholder.com/1792x1024.png?text=1984'),
-(48, 'https://via.placeholder.com/1792x1024.png?text=B%C3%AD+M%E1%BA%ADt+C%E1%BB%ADa+M%E1%BB%99t+Cu%E1%BB%99c+%C4%90%E1%BB%9Di'),
-(49, 'https://via.placeholder.com/1792x1024.png?text=The+Fault+in+Our+Stars'),
-(50, 'https://via.placeholder.com/1792x1024.png?text=Pride+and+Prejudice'),
-(51, 'https://via.placeholder.com/1792x1024.png?text=The+Girl+on+the+Train'),
-(52, 'https://via.placeholder.com/1792x1024.png?text=Harry+Potter+and+the+Sorcerer%27s+Stone'),
-(53, 'https://via.placeholder.com/1792x1024.png?text=To+All+the+Boys+I%27ve+Loved+Before'),
-(54, 'https://via.placeholder.com/1792x1024.png?text=The+Hunger+Games'),
-(55, 'https://via.placeholder.com/1792x1024.png?text=The+Little+Doll+And+The+Big+Giant'),
-(56, 'https://via.placeholder.com/1792x1024.png?text=The+Catcher+in+the+Rye');
+(1, 'https://placehold.co/1792x1024.png?text=D%E1%BA%BF+M%C3%AAn+Phi%C3%AAu+L%C6%B0u+K%C3%BD'),
+(2, 'https://placehold.co/1792x1024.png?text=Harry+Potter+and+the+Philosopher%27s+Stone'),
+(3, 'https://placehold.co/1792x1024.png?text=Chuy%E1%BB%87n+Con+M%C3%A8o+D%E1%BA%A1y+H%C3%A0i+%C3%82u+Bay'),
+(4, 'https://placehold.co/1792x1024.png?text=Totto-chan%3A+C%C3%B4+B%C3%A9+B%C3%AAn+C%E1%BB%ADa+S%E1%BB%97'),
+(5, 'https://placehold.co/1792x1024.png?text=Where+the+Wild+Things+Are'),
+(6, 'https://placehold.co/1792x1024.png?text=Cu%E1%BB%99c+Phi%C3%AAu+L%C6%B0u+C%E1%BB%A7a+M%C3%ADt+%C4%90%E1%BA%B0c'),
+(7, 'https://placehold.co/1792x1024.png?text=The+Giving+Tree'),
+(8, 'https://placehold.co/1792x1024.png?text=Advanced+Mathematics'),
+(9, 'https://placehold.co/1792x1024.png?text=%C4%90%E1%BA%A1i+S%E1%BB%8F+12'),
+(10, 'https://placehold.co/1792x1024.png?text=Physics+for+Scientists+and+Engineers'),
+(11, 'https://placehold.co/1792x1024.png?text=L%E1%BB%8Bch+S%E1%BB%AD+Th%E1%BB%83+Gi%E1%BB%9Bi+Hi%E1%BB%87n+%C4%90%E1%BA%A1i'),
+(12, 'https://placehold.co/1792x1024.png?text=Organic+Chemistry'),
+(13, 'https://placehold.co/1792x1024.png?text=English+Grammar+in+Use'),
+(14, 'https://placehold.co/1792x1024.png?text=Gi%E1%BA%A3i+T%C3%ADch+1'),
+(15, 'https://placehold.co/1792x1024.png?text=Rich+Dad+Poor+Dad'),
+(16, 'https://placehold.co/1792x1024.png?text=T%C6%B0+Duy+Nhanh+V%C3%A0+Ch%E1%BA%ADm'),
+(17, 'https://placehold.co/1792x1024.png?text=Sapiens%3A+L%C6%B0%E1%BB%A3c+S%E1%BB%AD+Lo%C3%A0i+Ng%C6%B0%E1%BB%9Di'),
+(18, 'https://placehold.co/1792x1024.png?text=The+Intelligent+Investor'),
+(19, 'https://placehold.co/1792x1024.png?text=Zero+to+One'),
+(20, 'https://placehold.co/1792x1024.png?text=C%C3%BA+H%C3%ADch'),
+(21, 'https://placehold.co/1792x1024.png?text=Lean+Startup'),
+(22, 'https://placehold.co/1792x1024.png?text=%C4%90%E1%BA%A1c+Nh%C3%A2n+T%C3%A2m'),
+(23, 'https://placehold.co/1792x1024.png?text=T%C3%A2m+L%C3%BD+H%C3%B3c+%C4%90%C4%83m+Đ%C3%B4ng'),
+(24, 'https://placehold.co/1792x1024.png?text=Thinking%2C+Fast+and+Slow'),
+(25, 'https://placehold.co/1792x1024.png?text=Quiet%3A+S%C3%BAc+M%E1%BA%A7nh+C%E1%BB%ADa+Ng%C6%B0%E1%BB%9Di+H%C6%B0%E1%BB%9Bng+N%E1%BB%99i'),
+(26, 'https://placehold.co/1792x1024.png?text=The+Power+of+Habit'),
+(27, 'https://placehold.co/1792x1024.png?text=Grit%3A+The+Power+of+Passion+and+Perseverance'),
+(28, 'https://placehold.co/1792x1024.png?text=The+Psychopath+Test'),
+(29, 'https://placehold.co/1792x1024.png?text=The+Power+of+Now'),
+(30, 'https://placehold.co/1792x1024.png?text=English+Grammar+in+Use'),
+(31, 'https://placehold.co/1792x1024.png?text=Practical+English+Usage'),
+(32, 'https://placehold.co/1792x1024.png?text=Fluent+English'),
+(33, 'https://placehold.co/1792x1024.png?text=Speak+English+Like+an+American'),
+(34, 'https://placehold.co/1792x1024.png?text=English+Idioms+and+Phrasal+Verbs'),
+(35, 'https://placehold.co/1792x1024.png?text=Barron%27s+TOEFL+iBT'),
+(36, 'https://placehold.co/1792x1024.png?text=The+Elements+of+Style'),
+(37, 'https://placehold.co/1792x1024.png?text=Easy+English'),
+(38, 'https://placehold.co/1792x1024.png?text=Fluent+in+3+Months'),
+(39, 'https://placehold.co/1792x1024.png?text=S%C3%B4ng+M%C3%A3i+V%E1%BB%9Bi+Th%E1%BB%A7+%C4%90%C3%B4'),
+(40, 'https://placehold.co/1792x1024.png?text=The+Great+Gatsby'),
+(41, 'https://placehold.co/1792x1024.png?text=Moby-Dick'),
+(42, 'https://placehold.co/1792x1024.png?text=%C4%90o%C3%A1n+Cu%E1%BB%91i+Con+%C4%90%C6%B0%E1%BB%9Dng'),
+(43, 'https://placehold.co/1792x1024.png?text=1984'),
+(44, 'https://placehold.co/1792x1024.png?text=The+Catcher+in+the+Rye'),
+(45, 'https://placehold.co/1792x1024.png?text=To+Kill+a+Mockingbird'),
+(46, 'https://placehold.co/1792x1024.png?text=Moby-Dick'),
+(47, 'https://placehold.co/1792x1024.png?text=1984'),
+(48, 'https://placehold.co/1792x1024.png?text=B%C3%AD+M%E1%BA%ADt+C%E1%BB%ADa+M%E1%BB%99t+Cu%E1%BB%99c+%C4%90%E1%BB%9Di'),
+(49, 'https://placehold.co/1792x1024.png?text=The+Fault+in+Our+Stars'),
+(50, 'https://placehold.co/1792x1024.png?text=Pride+and+Prejudice'),
+(51, 'https://placehold.co/1792x1024.png?text=The+Girl+on+the+Train'),
+(52, 'https://placehold.co/1792x1024.png?text=Harry+Potter+and+the+Sorcerer%27s+Stone'),
+(53, 'https://placehold.co/1792x1024.png?text=To+All+the+Boys+I%27ve+Loved+Before'),
+(54, 'https://placehold.co/1792x1024.png?text=The+Hunger+Games'),
+(55, 'https://placehold.co/1792x1024.png?text=The+Little+Doll+And+The+Big+Giant'),
+(56, 'https://placehold.co/1792x1024.png?text=The+Catcher+in+the+Rye');
 
 -- Insert sample data into Review table
 INSERT INTO Review (ID_Book, Email, Date, Rating, Content, Image_Link, Like_Count) VALUES
@@ -528,9 +536,8 @@ INSERT INTO Review (ID_Book, Email, Date, Rating, Content, Image_Link, Like_Coun
 
 (2, 'user6@example.com', '2024-12-20', 5, 'Cuốn sách này thực sự tuyệt vời! Cốt truyện hấp dẫn, nhân vật được xây dựng rất chân thật.', NULL, 12),
 (2, 'user7@example.com', '2024-12-21', 4, 'Tôi thích cuốn sách này, nhưng có một vài đoạn hơi nhanh, khiến mạch truyện không liền mạch lắm.', NULL, 9),
-(2, 'admin@gmail.com', '2024-12-22', 3, 'Sách này ở mức trung bình, không quá hay nhưng cũng không quá tệ. Đọc để giải trí thì được.', NULL, 6),
-(2, 'nuser1@gmail.com', '2024-12-23', 2, 'Thật sự không để lại ấn tượng gì sau khi đọc xong. Nội dung không đặc sắc.', NULL, 4),
-(2, 'nuser2@gmail.com', '2024-12-24', 1, 'Hoàn toàn không hài lòng với cuốn sách này. Tiếc tiền và thời gian.', NULL, 2),
+(2, 'user1@example.com', '2024-12-23', 2, 'Thật sự không để lại ấn tượng gì sau khi đọc xong. Nội dung không đặc sắc.', NULL, 4),
+(2, 'user2@example.com', '2024-12-24', 1, 'Hoàn toàn không hài lòng với cuốn sách này. Tiếc tiền và thời gian.', NULL, 2),
 
 (3, 'user1@example.com', '2024-12-20', 5, 'Một tác phẩm xuất sắc! Tác giả đã làm rất tốt trong việc truyền tải thông điệp.', NULL, 15),
 (3, 'user2@example.com', '2024-12-21', 4, 'Sách rất đáng đọc. Tôi rất thích phong cách viết của tác giả.', NULL, 11),
@@ -656,12 +663,6 @@ INSERT INTO Invoice (ID_Order, Invoice_Date, Total_Amount, Delivery_Address) VAL
 (1, '2024-11-01', 90000.00, '123 Main St, City A'),
 (2, '2024-11-02', 280000.00, '456 Elm St, City B'),
 (3, '2024-11-03', 180000.00, '789 Pine St, City C');
-
--- Insert Payment
-INSERT INTO Payment (ID_Invoice, Payment_Date, Payment_Method) VALUES
-(1, '2024-11-01', 'Credit Card'),
-(2, '2024-11-02', 'Bank Transfer'),
-(3, '2024-11-03', 'PayPal');
 
 -- Insert Report
 INSERT INTO Report (Start_Date, End_Date, Total_Revenue) VALUES
