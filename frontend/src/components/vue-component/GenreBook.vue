@@ -345,7 +345,7 @@ export default {
         this.typeSort = "";
       }
 
-      const url = `https://book-store-backend-olvp.onrender.com/api/get-list/filter?genre=${this.searchQuery}&page=${this.page}&age=${this.selectAge}&startPrice=${this.startPrice}&endPrice=${this.endPrice}&${this.sortBy}=${this.typeSort}`;
+      const url = `/api/get-list/filter?genre=${this.searchQuery}&page=${this.page}&age=${this.selectAge}&startPrice=${this.startPrice}&endPrice=${this.endPrice}&${this.sortBy}=${this.typeSort}`;
       console.log(url);
       axios
         .get(url)
@@ -383,7 +383,7 @@ export default {
       this.isLoading = true;
       try {
         const response = await axios.get(
-          `https://book-store-backend-olvp.onrender.com/api/get-list?genre=${this.searchQuery}&page=${this.page}`
+          `/api/get-list?genre=${this.searchQuery}&page=${this.page}`
         ); // Lấy API qua proxy
         if (response.data.success) {
           this.arrayBook = response.data.data;
