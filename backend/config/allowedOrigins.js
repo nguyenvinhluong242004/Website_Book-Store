@@ -7,7 +7,8 @@ const allowedOrigins = [
     'https://localhost:6868',
     'https://book-store-bks.onrender.com',
     'https://book-store-bank.onrender.com',
-    'https://book-store-backend-olvp.onrender.com'
+    'https://book-store-backend-olvp.onrender.com',
+    'https://book-store-bks.vercel.app'
 ];
 
 module.exports = allowedOrigins;
